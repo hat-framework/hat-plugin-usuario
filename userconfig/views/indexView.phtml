@@ -1,0 +1,28 @@
+<?php
+    $bowerComponents = array(
+        'angular/angular.min',
+        'angular-route/angular-route.min',
+    );
+    $this->Html->LoadBowerComponent($bowerComponents);
+    $location = URL."plugins/usuario/userconfig/apps/configapp/js";
+    $this->Html->LoadJs(array(
+        "$location/directives/directives.js",
+        "$location/app.js",
+        "$location/menuRedirect.js",
+        "$location/menu.js",
+        "$location/category.js",
+        "$location/configuration.js",
+        "$location/pessoal/pessoal.js",
+        "$location/pessoal/access.js",
+        "$location/pessoal/address.js",
+        "$location/pessoal/phone.js",
+        "$location/pessoal/mail.js",
+        "lib/global"
+     ));
+    
+?>
+<div id="mainContainer" ng-app="usuario_configApp">
+    <div class="span3"><?php include __DIR__ . "/../apps/configapp/html/menu.html";?></div>
+    
+    <div id="contentArea" class="span9 pull-right" ng-view></div>
+</div>

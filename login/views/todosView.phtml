@@ -1,0 +1,11 @@
+<?php
+
+$gui = new \classes\Component\GUI();
+
+$opt = array('class' => 'span12');
+$gui->opendiv('filt', 'span7');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/login/widgets/searchUserWidget' => $opt,
+        'usuario/login/widgets/listUserWidget'   => $opt,
+    ));
+$gui->closediv();

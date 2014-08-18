@@ -1,0 +1,18 @@
+<div class="span12" ng-controller="usuario_mensagem_usersCTRL">
+    <input type="text" placeholder="Pesquisar" class="span12" ng-hide="hideGroupForm"/>
+    <div class="span12 box-content" ng-show='groups.length'>
+        <div class="container span12">
+            <div class="box-content span12" style="margin-top: 5px;" ng-repeat="group in groups">
+                <a ng-click="currentGroup(group)">{{group.usuario_perfil_nome}}</a>
+            </div>
+            <hr/>
+        </div>
+    </div>
+    <div class="span12 box-content">
+        <div class="container span12">
+            <div class="box-content span12" style="margin-top: 5px;" ng-repeat="friend in friends">
+                <a ng-click="currentUser(friend)">{{friend.user_name}}</a>
+            </div>
+        </div>
+    </div>
+</div>

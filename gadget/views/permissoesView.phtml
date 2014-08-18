@@ -1,0 +1,10 @@
+<?php 
+
+echo "<hr/><h2>". $item['usuario_perfil_nome']."</h2>";
+echo "<h4>". $item['usuario_perfil_descricao']."</h4>";
+echo "<p>Selecione abaixo as permissões de cada perfil de usuário </p><hr/>";
+
+$this->LoadResource("formulario", "form");
+$this->form->NewForm($permissoes, $values);
+
+?>

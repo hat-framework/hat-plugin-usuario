@@ -1,0 +1,20 @@
+<?php
+
+$gui = new \classes\Component\GUI();
+
+$opt = array('class' => 'span12');
+
+
+$gui->opendiv('', 'span7 widget');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/acesso/widgets/pluginsReportWidget' => $opt
+    ));
+$gui->closediv();        
+        
+        
+$gui->opendiv('', 'span5 pull-right widget');
+    classes\Component\widget::executeWidgets(array(
+        'carteira/carteira/widgets/createCarteiraReportWidget' => $opt,
+        'carteira/operacao/widgets/operacaoReportWidget' => $opt
+    ));
+$gui->closediv();

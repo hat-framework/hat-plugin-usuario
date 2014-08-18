@@ -1,0 +1,25 @@
+<?php
+
+$this->LoadModel('usuario/login', 'uobj');
+$user = $this->uobj->getUserNick($item, TRUE);
+if(empty($user)) {
+    $temp['user_name']  = "Usuário Anônimo";
+    $temp['user_cargo'] = "";
+}
+else{
+    $temp['user_name']  = $user['user_name'];
+    $temp['user_cargo'] = $user['user_cargo'];
+    $temp['cod_usuario'] = $user['cod_usuario'];
+}
+
+$this->LoadComponent('usuario/login', 'logcomp');
+//$this->logcomp->show('usuario/login',$temp);
+
+$this->LoadComponent('usuario/login/alterar', 'comp'); 
+if($type == "" || empty($type)){
+    $type = array('email', 'pessoal', 'senha', 'telefone');
+}
+foreach($type as $t){
+    if(!method_exists($this->comp, $t)){continue;}
+    call_user_func(array($this->comp, $t), $item);
+}

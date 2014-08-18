@@ -1,0 +1,10 @@
+<div ng-controller="usuario_mensagem_formCTRL" class="box-content">
+    <div ng-show="cansend">
+        <textarea rows="4" class="span11" ng-model="content" placeholder="Escreva uma mensagem"></textarea>
+        <button class="span2 btn" ng-click="sendMessage()">Enviar</button>
+    </div>
+    
+    <h4 ng-hide="cansend">
+        Você não pode enviar mensagens nesta conversa
+    </h4>
+</div>

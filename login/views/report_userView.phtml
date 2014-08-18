@@ -1,0 +1,17 @@
+<?php
+
+$gui = new \classes\Component\GUI();
+
+$opt = array('class' => 'span12');
+$gui->opendiv('filt', 'span7');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/acesso/widgets/log_usuarioWidget' => array('user' => $cod, 'title' => 'Ações do usuário')
+    ));
+$gui->closediv();
+
+$gui->opendiv('filt', 'span5 pull-right widget');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/acesso/widgets/errosWidget' => array('user' => $cod, 'title' => 'Mais acessadas pelo usuário contendo erros'),
+        'usuario/acesso/widgets/pagesWidget' => array('user' => $cod, 'title' => 'Mais acessadas pelo usuário'),
+    ));
+$gui->closediv();

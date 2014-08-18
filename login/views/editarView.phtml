@@ -1,0 +1,11 @@
+<?php if(!isset($success)){?>
+<h1>Dados da conta</h1>
+<?php 
+    $this->LoadModel('usuario/login', 'uobj');
+    $dados = $this->uobj->getDados();
+    unset($dados['permissao']);
+    unset($dados['senha']);
+    $this->LoadResource("formulario", "form");
+    $this->form->NewForm($dados, $item, array(), $ajax = false);
+}
+?>

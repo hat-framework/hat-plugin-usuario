@@ -1,0 +1,9 @@
+<div class="span12">
+    <h1 class="title">{{config.name}}</h1>
+    <hr/>
+    <div class="subitem" ng-repeat="item in config.files_of_grupo">
+        <h2 class="title">{{item.title}}</h2>
+        <div class="descricao">{{item.descricao}}</div>
+        <div class="acoes"><a ng-href="#/menu/{{category}}/{{item.cod_cfile}}">Editar</a></div>
+    </div>
+</div>

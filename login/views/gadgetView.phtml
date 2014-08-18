@@ -1,0 +1,27 @@
+<?php
+
+$this->LoadModel('usuario/login', 'uobj');
+$user = $this->uobj->getUserNick($item, TRUE);
+
+if(empty($user)) {
+    $temp['user_name']  = "Usuário Anônimo";
+    $temp['user_cargo'] = "";
+}
+else{
+    $temp['user_name']  = $user['user_name'];
+    $temp['user_cargo'] = $user['user_cargo'];
+    $temp['cod_usuario'] = $user['cod_usuario'];
+}
+$link1 = $this->Html->getLink('usuario/login/email');
+$link2 = $this->Html->getLink('usuario/login/senha');
+
+$this->LoadComponent('usuario/login', 'logcomp');
+$this->logcomp->show('usuario/login',$temp);
+
+echo "<h4>".$gadget['titulo']."</h4>";
+$method = $gadget['comp_method'];
+$this->LoadComponent($gadget['model'], 'comp');
+if(method_exists($this->comp, $method)){
+    $this->comp->$method($gadgetData, $temp['cod_usuario']);
+}
+?>

@@ -1,0 +1,21 @@
+<style>
+    .description-container .description-text {
+    margin-left:-250px;
+    }
+</style>
+
+<div class='span6'>
+<div class='span11'>
+<?php 
+
+$this->Html->LoadCss('tela_login');
+$this->LoadComponent('usuario/login', 'lcomp');
+$this->lcomp->tela_login();
+$this->lcomp->Subscribe();
+
+?>
+</div>
+</div>
+<div class="span6">
+<?php $this->Html->LoadImage('descanso.jpg','widget none-767');?>
+</div>
