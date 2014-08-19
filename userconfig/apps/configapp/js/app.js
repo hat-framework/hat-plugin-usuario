@@ -1,7 +1,8 @@
 'use strict';
 var usuario_configApp = angular.module('usuario_configApp',['ngRoute', 'crudModule']);
 usuario_configApp.config(['$routeProvider', function ($routeProvider) {
-    var url = window.location.protocol + "//"+window.location.host+ "/plugins/usuario/userconfig/apps/configapp/html/";
+        
+    var url = getPluginUrl('usuario')+"userconfig/apps/configapp/html/";
     $routeProvider.
         when('/menu', {
             templateUrl: url + 'redirect.html',

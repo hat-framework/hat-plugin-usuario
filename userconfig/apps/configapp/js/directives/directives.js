@@ -2,7 +2,7 @@ var crudModule = angular.module('crudModule', []);
 crudModule.directive('multicrud',function (){
     return {
         restrict: 'EA',
-        templateUrl: window.location.protocol+"//"+window.location.host+'/plugins/usuario/userconfig/apps/configapp/html/directives/directives.html',
+        templateUrl: getPluginUrl('usuario')+ '/userconfig/apps/configapp/html/directives/directives.html',
         replace: true,
         scope: {
             "itens"    : "=itens",

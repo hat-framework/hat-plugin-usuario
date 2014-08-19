@@ -9,12 +9,12 @@
         );
         $this->Html->LoadBowerComponent($bowerComponents);
         
-        $location = URL."plugins/usuario/mensagem/js";
+        $location = \classes\Classes\Registered::getPluginLocationUrl('usuario')."/mensagem/js";
         $this->Html->LoadJs(array(
             "$location/app.js", "$location/sync.js",
             "$location/formulario.js", "$location/messages.js",
             "$location/users.js", "$location/talkWith.js"
-        ));
+        ), true);
 
     ?>
     <div class="span9 pull-right box-content">
