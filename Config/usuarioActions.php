@@ -477,5 +477,14 @@ class usuarioActions extends Actions{
             'descricao' => 'Perfil destinado aos visitantes do site, qualquer usuário que fizer o próprio cadastro automaticamente',
             'permissions' => array( 'usuario_AC'=> 's','usuario_FL'=> 's')
         ),
+        'Analista_Informacao' => array(
+            'cod'       => Analista_Informacao,
+            'pai'       => Admin,
+            'nome'      => 'Analista Informação',
+            'default'   => '0',
+            'tipo'      => 'usuario',
+            'descricao' => 'Perfil destinado para analistas que terão acesso as métricas e aos acessos premium',
+            'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','analisar_usuarios' => 's')
+        ),
     );
 }
