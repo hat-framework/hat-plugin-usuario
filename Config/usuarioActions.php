@@ -418,32 +418,6 @@ class usuarioActions extends Actions{
             'permission' => 'usuario_AC', 'needcod' => true,
             'menu' => array('Voltar' => 'usuario/endereco/show')
         ),
-        
-        
-        'usuario/mensagem/index' => array(
-            'label' => 'Todas as mensagens', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-            'breadscrumb' => array('usuario/login/logado', 'usuario/mensagem/index'),
-        ),
-        
-        'usuario/mensagem/formulario' => array(
-            'label' => 'Enviar Mensagem', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-            'breadscrumb' => array('usuario/login/logado', 'usuario/mensagem/index', 'usuario/mensagem/formulario' ),
-        ),
-        
-        'usuario/mensagem/data' => array(
-            'label' => 'Recuperar dados', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-        ),
-        'usuario/mensagem/conversa' => array(
-            'label' => 'Recuperar conversa', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-        ),
-        'usuario/mensagem/notify' => array(
-            'label' => 'Notificar', 'publico' => 's', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-        ),
 
     );
     

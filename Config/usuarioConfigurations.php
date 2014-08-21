@@ -4,12 +4,6 @@ class usuarioConfigurations extends \classes\Classes\Options{
           
     protected $menu = array(
         array(
-            'menuid' => 'usuario_mensagem',
-            'menu'   => 'Minhas Mensagems',
-            'url'    => 'usuario/mensagem/index',
-            'ordem'  => '9',
-        ),
-        array(
             'menuid' => 'usuarios',
             'menu'   => 'Usuários',
             'url'    => 'usuario/login/todos',
@@ -75,16 +69,6 @@ class usuarioConfigurations extends \classes\Classes\Options{
                         por quem já estiver participando do sistema.',
                     'value'         => 'true',
                     'value_default' => 'true'
-                ),
-                
-                'USUARIO_MENSAGEM' => array(
-                    'name'          => 'USUARIO_MENSAGEM',
-                    'label'         => 'Habilitar envio de mensagens para os usuários',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
                 ),
                 
                 'USUARIO_FB_ACCESS' => array(
@@ -234,96 +218,6 @@ class usuarioConfigurations extends \classes\Classes\Options{
                 ),
                 
             ),
-        ),
-        'usuario/messages' => array(
-            'title'        => 'Opções de envio de mensagens',
-            'descricao'    => 'Exibe as opções do plugin de mensagens',
-            'visibilidade' => 'admin', //'usuario', 'admin', 'webmaster'
-            'grupo'        => 'Plugin de Usuários',
-            'path'         => 'usuario/options',
-            'updateplugins' => 'true',
-            'configs'      => array(
-                'USUARIO_MENSAGEM' => array(
-                    'name'          => 'USUARIO_MENSAGEM',
-                    'label'         => 'Habilitar envio de mensagens para os usuários',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                'USUARIO_MENSAGEM_LIMIT_DATA' => array(
-                    'name'          => 'USUARIO_MENSAGEM_LIMIT_DATA',
-                    'label'         => 'Não permitir que usuários vejam mensagens enviadas para grupos anteriores a data do cadastro?',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'true',
-                    'value'         => 'true',
-                    'value_default' => 'true'
-                ),
-                'USUARIO_MENSAGEM_EMAIL' => array(
-                    'name'          => 'USUARIO_MENSAGEM_EMAIL',
-                    'label'         => 'Habilitar notificação por email quando novas mensagens forem enviadas',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'true',
-                    'value'         => 'true',
-                    'value_default' => 'true'
-                ),
-                
-                'USUARIO_MENSAGEM_EMAIL_BODY' => array(
-                    'name'          => 'USUARIO_MENSAGEM_EMAIL_BODY',
-                    'label'         => 'Permitir que a notificação por email contenha todo o corpo da mensagem? (do contrário haverá apenas um link para o sistema)',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                'USUARIO_MENSAGEM_ANY_USER' => array(
-                    'name'          => 'USUARIO_MENSAGEM_ANY_USER',
-                    'label'         => 'Permitir que qualquer usuário envie mensagens para os administradores',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                'USUARIO_MENSAGEM_FULL_CHAT' => array(
-                    'name'          => 'USUARIO_MENSAGEM_FULL_CHAT',
-                    'label'         => 'Permitir que qualquer usuário envie mensagens para qualquer outro usuário',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                'USUARIO_MENSAGEM_GROUP_CHAT' => array(
-                    'name'          => 'USUARIO_MENSAGEM_GROUP_CHAT',
-                    'label'         => 'Permitir que qualquer usuário envie mensagens para seu grupo de usuário',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                'USUARIO_MENSAGEM_ALL_CHAT' => array(
-                    'name'          => 'USUARIO_MENSAGEM_ALL_CHAT',
-                    'label'         => 'Permitir que qualquer usuário responda as mensagens enviadas para todos usuários (todos usuários visualizarão a resposta)',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-            ),
-        ),
+        )
     );
-    
-    public function getMenu(){
-        if(false === getBoleanConstant("USUARIO_MENSAGEM")){
-            unset($this->menu['0']);
-        }
-        return $this->menu;
-    }
 }
