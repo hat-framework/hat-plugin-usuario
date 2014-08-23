@@ -28,7 +28,10 @@ class usermenuComponent extends classes\Classes\Object{
         $nick = '<i class="icon-user"></i><span class="caret"></span>';
         $msg  = '<i class="icon-envelope"></i>';
         return array(
-             $msg => 'mensagem/mensagem/index',
+             $msg => array(
+                 $msg => 'mensagem/mensagem/index',
+                 '__id' => 'messages'
+             ),
              $nick => array(
                 //'Área Administrativa'    => "admin/",
                 '__id'                   => "$nick",

@@ -17,5 +17,3 @@ class usuarioComponent extends classes\Component\Component{
         else return $this->menu; 
     }
 }
-
-?>

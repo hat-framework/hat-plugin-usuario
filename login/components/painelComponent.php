@@ -41,5 +41,3 @@ class painelComponent extends classes\Component\Component{
         }
     }
 }
-
-?>
