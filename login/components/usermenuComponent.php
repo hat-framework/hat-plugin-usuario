@@ -25,18 +25,18 @@ class usermenuComponent extends classes\Classes\Object{
     }
     
     private function LoggedMenu(){
-        //$tutorial = ($this->lobj->IsEnabledTutorial())? "Desativar Tutorial":"Ativar Tutorial";
-        $nick = MOBILE?"": $this->lobj->getUserNick();
-        if($nick == "") $nick = "Conta";
+        $nick = '<i class="icon-user"></i><span class="caret"></span>';
+        $msg  = '<i class="icon-envelope"></i>';
         return array(
+             $msg => 'mensagem/mensagem/index',
              $nick => array(
-                'Área Administrativa' => "admin/",
-                '__id'             => "Minha Conta",
-                'Meus dados'       => 'usuario/login/',
-                //$tutorial          => 'usuario/login/tutorial',
-                'Configurações'         => 'site/configuracao/index',
+                //'Área Administrativa'    => "admin/",
+                '__id'                   => "$nick",
+                'Meus dados'             => 'usuario/login/',
+                //'tutorial'               => 'usuario/login/tutorial',
+                'Configurações'          => 'site/configuracao/index',
                 'Central de Aplicativos' => 'plugins/plug/index', 
-                'Sair'             => 'usuario/login/logout/',
+                'Sair'                   => 'usuario/login/logout/',
         ));
     }
     
