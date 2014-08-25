@@ -909,6 +909,7 @@ class usuario_loginModel extends \classes\Model\Model{
         if($loguser == "acesso" && (is_array($loggroup) || $loggroup == "")){
             $loggroup = array('plugins');
         }
+        if(in_array($loguser, array('notificacao/notifycount/load'))){return;}
         $obj = new \classes\Classes\Object();
         $obj->LoadModel('usuario/acesso', 'acc')->saveLog($loguser,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg, $loggroup);
         /*if(!\classes\Utils\Log::exists($logname))
