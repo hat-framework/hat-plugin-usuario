@@ -353,8 +353,15 @@ class usuario_loginModel extends \classes\Model\Model{
     public function editar($id, $dados, $camp = ""){
         
         $this->getMessages(true);
+        
+        //se usuário não tem permissão para alterar outros usuários
+        if(false === $this->UserCanAlter($id)){return false;}
         if(!isset($dados['senha_confirmacao'])){
-            return $this->setErrorMessage("Para alterar seus dados a senha de confirmação deve ser enviada!");
+            //se usuário que está alterando os dados é o dono da conta
+            $cod_user = self::CodUsuario();
+            if($id === $cod_user){
+                return $this->setErrorMessage("Para alterar seus dados a senha de confirmação deve ser enviada!");
+            }
         }
         
         $camp = ($camp == "")?$this->pkey:$camp;
@@ -837,13 +844,17 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function UserCanAlter($cod_usuario){
+        
+        //se usuário está alterando a própria conta.
         $cod_autor = $this->getCodUsuario();
-        if($cod_autor == $cod_usuario) return true;
+        if($cod_autor == $cod_usuario) {return true;}
+        
+        //se usuário é webmaster
         if($this->IsWebmaster()) return true;
         
-        $cod_perfil = $this->getCodPerfil($cod_usuario);
         
         //Somente um webmaster pode editar o próprio perfil
+        $cod_perfil = $this->getCodPerfil($cod_usuario);
         if($cod_perfil == Webmaster){
             $this->setErrorMessage('Você não tem permissão para modificar um usuário com perfil de Webmaster!');
             return false;
@@ -858,7 +869,9 @@ class usuario_loginModel extends \classes\Model\Model{
             $this->setErrorMessage('Você não tem permissão para modificar um usuário com perfil de Administrador!');
             return false;
         }
-        return true;
+        
+        //verifica se usuário tem permissão de alterar dados de outros usuários
+        return $this->LoadModel('usuario/perfil', 'perf')->hasPermissionByName('usuario_GU');
     }
     
     public function paginate($page, $link = "", $cod_item = "", $campo = "", $qtd = 20, $campos = array(), $adwhere = "", $order = "") {
