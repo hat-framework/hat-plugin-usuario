@@ -12,7 +12,7 @@ class usuario_enderecoModel extends \classes\Model\Model{
     }
     
     public function inserir($dados) {
-        if(false === $this->LoadModel('usuario/login', 'uobj')->autentica($post['senha_confirmacao'])){
+        if(false === $this->LoadModel('usuario/login', 'uobj')->autentica($dados['senha_confirmacao'])){
             return $this->setErrorMessage('A senha que você digitou está incorreta!');
         }
         $dados['login'] = usuario_loginModel::CodUsuario();
