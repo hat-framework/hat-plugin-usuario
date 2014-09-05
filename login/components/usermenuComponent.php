@@ -25,8 +25,9 @@ class usermenuComponent extends classes\Classes\Object{
     }
     
     private function LoggedMenu(){
-        $nick = '<i class="icon-user"></i><span class="caret"></span>';
-        $msg  = '<i class="icon-envelope"></i>';
+        $var  = $this->LoadModel('usuario/login', 'uobj')->getUserNick();
+        $nick = "<i class='glyphicon glyphicon-user'></i>$var<span class='caret'></span>";
+        $msg  = '<i class="glyphicon glyphicon-envelope"></i>';
         return array(
              $msg => array(
                  $msg => 'mensagem/mensagem/index',
@@ -34,7 +35,7 @@ class usermenuComponent extends classes\Classes\Object{
              ),
              $nick => array(
                 //'Área Administrativa'    => "admin/",
-                '__id'                   => "$nick",
+                '__id'                   => "user",
                 'Meus dados'             => 'usuario/login/',
                 //'tutorial'               => 'usuario/login/tutorial',
                 'Configurações'          => 'site/configuracao/index',
