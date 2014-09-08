@@ -26,8 +26,9 @@ class usermenuComponent extends classes\Classes\Object{
     
     private function LoggedMenu(){
         $var  = $this->LoadModel('usuario/login', 'uobj')->getUserNick();
-        $nick = "<i class='glyphicon glyphicon-user'></i>$var<span class='caret'></span>";
-        $msg  = '<i class="glyphicon glyphicon-envelope"></i>';
+        $nick = "<i class='glyphicon glyphicon-user icon-user'></i>$var<span class='caret'></span>";
+        $msg  = '<i class="glyphicon glyphicon-envelope icon-envelope"></i>';
+
         return array(
              $msg => array(
                  $msg => 'mensagem/mensagem/index',
