@@ -738,8 +738,10 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function UserIsAdmin($cod_usuario = "", $perm = ""){
         $var = cookie::getVar($this->cookie);
-        $cod_usuario = ($cod_usuario == "")?$var['cod_usuario']:$cod_usuario;
-        if($cod_usuario == "") return false;
+        if($var !== ""){
+            $cod_usuario = ($cod_usuario == "")?$var['cod_usuario']:$cod_usuario;
+        }
+        if($cod_usuario == "") {return false;}
         $item = ($this->getItem($cod_usuario, '', false, array('cod_usuario', 'permissao')));
         //print_r($item); die();
         if(empty($item)) return false;

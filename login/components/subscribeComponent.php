@@ -31,6 +31,7 @@ class subscribeComponent extends classes\Classes\Object{
             'especial' => 'equalto',
             'equalto'  => 'senha',
             'notnull'  => true,
+            'tela'     => true,
         );
         
         $out = array();
@@ -39,12 +40,13 @@ class subscribeComponent extends classes\Classes\Object{
             $arr['placeholder'] = true;
             $out[$name] = $arr;
         }
-        $out['button'] = array('button'   => 'Criar Conta');
-        
-        $arr = array();
-        foreach($arr as $name){
-            if(!isset($dados[$name])){continue;}
+        //pog para enviar o codigo da corretora por ultimo
+        if(isset($out['codcorretora'])){
+            $temp = $out['codcorretora'];
+            unset($out['codcorretora']);
+            $out['codcorretora'] = $temp;
         }
+        $out['button'] = array('button'   => 'Criar Conta');
         return $out;
     }
     
