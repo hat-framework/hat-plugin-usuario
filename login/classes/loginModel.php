@@ -736,11 +736,9 @@ class usuario_loginModel extends \classes\Model\Model{
         return ($this->getCodPerfil($cod_usuario) == Webmaster);
     }
     
-    public function UserIsAdmin($cod_usuario = "", $perm = ""){
+    public function UserIsAdmin($codusuario = "", $perm = ""){
         $var = cookie::getVar($this->cookie);
-        if($var !== ""){
-            $cod_usuario = ($cod_usuario == "")?$var['cod_usuario']:$cod_usuario;
-        }
+        $cod_usuario = ($codusuario === "" && isset($var['cod_usuario']))?$var['cod_usuario']:$codusuario;
         if($cod_usuario == "") {return false;}
         $item = ($this->getItem($cod_usuario, '', false, array('cod_usuario', 'permissao')));
         //print_r($item); die();

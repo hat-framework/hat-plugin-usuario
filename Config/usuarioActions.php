@@ -458,7 +458,7 @@ class usuarioActions extends Actions{
             'default'   => '0',
             'tipo'      => 'usuario',
             'descricao' => 'Perfil destinado para analistas que terão acesso as métricas e aos acessos premium',
-            'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','analisar_usuarios' => 's')
+            'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','analisar_usuarios' => 's', 'Plugins_ANA'=> 's')
         ),
     );
 }
