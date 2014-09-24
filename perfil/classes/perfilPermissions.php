@@ -23,6 +23,7 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadModel('plugins/acesso'   , 'acc');
         $this->LoadModel('plugins/permissao', 'perm');
         $this->LoadResource('database', 'db');
+        $this->user_cod_perfil = $this->uobj->getCodPerfil();
     }
     
     public function getPerfilPermissions($cod_perfil){
@@ -45,9 +46,10 @@ class perfilPermissions extends classes\Classes\Object{
         //se permissão é negativa, verifica se existe alguma pemissão explícita para o usuário
         $bool = true;
         if($permission == "n"){
-            $this->LoadModel('usuario/login', 'uobj');
-            $bool = ($this->uobj->getCodPerfil() == Webmaster);
-            if($bool || $action_name === "usuario/login/index") $permission = 's';
+            $bool = ($this->user_cod_perfil == Webmaster);
+            $new_perf = $this->perfilVisualization();
+            if($bool === true && $new_perf !== $this->user_cod_perfil){$bool = false;}
+            if($bool || $action_name === "usuario/login/index") {$permission = 's';}
         }
         $action_name = $this->changeActionName($action_name);
         
@@ -105,14 +107,17 @@ class perfilPermissions extends classes\Classes\Object{
     }
     
     public function hasPermissionByName($permname){
-        if(usuario_loginModel::IsWebmaster()){return true;}
-        $perm = cookie::getVar($this->cookie_perm);
+        if(usuario_loginModel::IsWebmaster() && !array_key_exists('_perfil', $_GET)){return true;}
+        $cod_perfil = $this->perfilVisualization();
+        $true_perf  = usuario_loginModel::CodPerfil();
+        $perm       = array();
+        if($cod_perfil === $true_perf){$perm = cookie::getVar($this->cookie_perm);}
         
         if(empty($perm)){
-            $cod_perfil = $this->uobj->getCodPerfil();
+            $cod_perfil = $this->perfilVisualization();
             if($cod_perfil != ""){
                 $perm = $this->getPerfilPermissions($cod_perfil);
-                cookie::setVar($this->cookie_perm, $perm);
+                if($cod_perfil === $true_perf){cookie::setVar($this->cookie_perm, $perm);}
             }
         }
         
@@ -121,16 +126,11 @@ class perfilPermissions extends classes\Classes\Object{
         return(array_key_exists($permname, $perm) && $perm[$permname] == 1);
     }
     
-    
-    
-    
-    
-    
     private function init($action_name, $getPermissionString, $update_permissions){
         $this->action_name         = $action_name;
         $this->getPermissionString = $getPermissionString;
         $this->update_permissions  = $update_permissions;
-        $this->cod_perfil          = $this->uobj->getCodPerfil();
+        $this->cod_perfil          = $this->perfilVisualization();
     }
     
     /*
@@ -258,9 +258,17 @@ class perfilPermissions extends classes\Classes\Object{
     public function isPublic($action_name){
         $this->act->prepare_action($action_name);
         $var = cookie::getVar($this->cookie_public);
-        if(!is_array($var)) return true;
+        if(!is_array($var)) {return true;}
         //print_r($var); echo "$action_name";
         return(array_key_exists($action_name, $var));
+    }
+    
+    private function perfilVisualization(){
+        $cod_perfil = usuario_loginModel::CodPerfil();
+        $perfil = filter_input(INPUT_GET, '_perfil');
+        if(trim($perfil) === "" || $perfil === Webmaster){return $cod_perfil;}
+        $this->LoadModel('usuario/perfil', 'perf');
+        return(false === $this->perf->checkUserCanAlter(usuario_loginModel::CodUsuario()))?$cod_perfil:$perfil;
     }
 }
 
