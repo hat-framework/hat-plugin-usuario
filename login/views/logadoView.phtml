@@ -17,7 +17,7 @@ $this->LoadComponent('usuario/login', 'logcomp');
 
 $this->LoadComponent('usuario/login/alterar', 'comp'); 
 if($type == "" || empty($type)){
-    $type = array('email', 'pessoal', 'senha', 'telefone');
+    $type = array('email', 'pessoal', 'senha', 'telefone', 'endereco');
 }
 foreach($type as $t){
     if(!method_exists($this->comp, $t)){continue;}
