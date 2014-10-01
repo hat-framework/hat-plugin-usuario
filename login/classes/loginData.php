@@ -139,15 +139,6 @@ class usuario_loginData extends \classes\Model\DataModel{
             'especial'    => 'hide',
             'display'     => true,
         ),
-        
-         'user_dtpago' => array(
-	    'name'     => 'Data de Pagamento',
-	    'type'     => 'datetime',
-             'private' => true,
-            'feature'  => 'USUARIO_ASSINATURA',
-            'default' => "CURRENT_TIMESTAMP",
-        ),
-
         'status' => array(
             'name'     => 'Status',
             'type'     => 'enum',

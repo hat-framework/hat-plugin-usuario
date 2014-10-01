@@ -15,15 +15,6 @@ class usuario_loginModel extends \classes\Model\Model{
         update usuario set status = 'inativo' WHERE status != 'bloqueado' AND ((NOW() - user_uacesso) > 900 AND (NOW() - user_uacesso) <= 3600 $wh);
         update usuario set status = 'offline' WHERE status != 'bloqueado' AND ((NOW() - user_uacesso) > 3600 OR isnull(user_uacesso) $wh);
         ");
-        $this->atualizaPermissao();
-    }
-    
-    public function atualizaPermissao(){
-        $date = date('Y-m-d H:i:s');
-        $dtpago = \classes\Classes\timeResource::subDateTime($date, 30);
-        $dtpagoano = \classes\Classes\timeResource::subDateTime($date, 1, 'year');
-        $this->db->ExecuteQuery("UPDATE usuario SET cod_perfil = '1' WHERE user_dtpago < '$dtpago' and cod_perfil = '".Assinante_Temporario."'");
-        $this->db->ExecuteQuery("UPDATE usuario SET cod_perfil = '1' WHERE user_dtpago < '$dtpagoano' and cod_perfil = '".Assinante_Analise."'");
     }
 
     public function setLastAccessOfUser(){
@@ -289,7 +280,6 @@ class usuario_loginModel extends \classes\Model\Model{
         if(!isset($array['senha'])){
             $array['senha'] = genKey(12);
         }
-        $array['user_dtpago'] = date('Y-m-d H:i:s');
         $senha = $array['senha'];
         $array['cod_perfil'] = isset($array['cod_perfil'])?$array['cod_perfil']:'4';
         $array['senha']      = "FUNC_PASSWORD('{$array['senha']}')";
@@ -947,7 +937,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function getDailyPay(){
-        return $this->getDailyAccess('user_criadoem',"date(user_dtpago) >= date(user_criadoem) and cod_perfil = '".Assinante_Analise."'");
+        return $this->getDailyAccess('user_criadoem',"cod_perfil = '".Assinante_Analise."'");
     }
     
      private function getDailyAccess($data_name, $where = "", $group = ""){
