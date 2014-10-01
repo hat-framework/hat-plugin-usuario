@@ -18,11 +18,11 @@ class usuario_acessoModel extends \classes\Model\Model{
             'msg'         => $msg,
         );
         $this->findGroups($log, $action, $loggroup);
-        if($this->importDataFromArray(array($log)) === false){
+        if(false === $this->db->Insert($this->tabela, $log)){
             $logname = "usuario/usuario/u$cod_usuario/$logname";
-            \classes\Utils\Log::save('usuario/acesso/erro', "erro ao salvar log de usuário!");
-            \classes\Utils\Log::save('usuario/acesso/erro', $this->getMessages());
-            \classes\Utils\Log::save('usuario/acesso/erro', "$logname, '$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");
+            \classes\Utils\Log::save('usuario/acesso/erro', "<hr/>Erro ao salvar log de usuário!");
+            \classes\Utils\Log::save('usuario/acesso/erro', $this->db->getMessages());
+            \classes\Utils\Log::save('usuario/acesso/erro', "$logname, '$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';<hr/>");
             \classes\Utils\Log::save($logname, ",'$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");
         }
         return true;

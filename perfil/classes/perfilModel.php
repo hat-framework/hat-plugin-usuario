@@ -12,9 +12,13 @@ class usuario_perfilModel extends \classes\Model\Model{
     }
     
     public function setModelName($model) {
+        static $path = "";
+        static $cod = "";
         parent::setModelName($model);
-        $cod = $this->uobj->getCodPerfil();
-        $path = ($cod == "")?"/".Webmaster:$this->getPathPerfil($cod);
+        if($path === ""){
+            $cod = $this->uobj->getCodPerfil();
+            $path = ($cod == "")?"/".Webmaster:$this->getPathPerfil($cod);
+        }
         $this->dados['path']['default'] = $path;
         $this->pathWhere = ($cod == Admin || $cod == Webmaster)?"":"usuario_perfil.path LIKE '$path%'";
     }
@@ -69,7 +73,6 @@ class usuario_perfilModel extends \classes\Model\Model{
      * de visitante é retornado
      */
     public function getDefaultPerfil(){
-        return array();
         $var = $this->selecionar(array('usuario_perfil_cod', 'usuario_perfil_nome'), "usuario_perfil_default = '1'", 1);
         if(empty($var)) return array('1' => "Visitante");
         $var = array_shift($var);
@@ -93,17 +96,19 @@ class usuario_perfilModel extends \classes\Model\Model{
     
     //edita os dados contanto que o perfil não seja de um perfil incial do sistema
     public function editar($id, $post, $camp = "") {
-        if(!$this->checkUserCanAlter($id)) return false;
-        if(!$this->perfil_padrao_erro($id, false)) return false;
-        if(!parent::editar($id, $post, $camp)) return false;
+        if(!$this->checkUserCanAlter($id)) {return false;}
+        if(!$this->perfil_padrao_erro($id, false)) {return false;}
+        if(!parent::editar($id, $post, $camp)) {return false;}
         
-        if($camp != "") return true;
+        if($camp != "") {return true;}
         $data['path'] = $this->getPath($id);
-        return parent::editar($id, $data, $camp);
+        if(false === parent::editar($id, $data, $camp)){return false;}
+        $this->updatePermissions();
+        return true;
     }
     
     public function inserir($dados) {
-        if(!parent::inserir($dados)) return false;
+        if(!parent::inserir($dados)) {return false;}
         $id = (isset($dados['usuario_perfil_cod']) && $dados['usuario_perfil_cod'] != "") ? 
               $dados['usuario_perfil_cod']: $this->getLastId();
         
@@ -112,14 +117,21 @@ class usuario_perfilModel extends \classes\Model\Model{
             $this->setAlertMessage($this->getErrorMessage());
             $this->setErrorMessage("");
         }
-        $this->setSuccessMessage("Perfil ".$dados['usuario_perfil_nome']." criado corretamente!");
-        return true;
+        $this->LoadModel('plugins/acesso', 'acc')->setDefaultPermissions($id);
+        $this->updatePermissions();
+        return $this->setSuccessMessage("Perfil ".$dados['usuario_perfil_nome']." criado corretamente!");
+    }
+    
+    private function updatePermissions(){
+        if(in_array(CURRENT_ACTION, array('formulario', 'edit'))){
+            $this->LoadModel('plugins/plug','plug')->mountPerfilPermissions();
+        }
     }
     
     //apaga os dados contanto que o perfil não seja de um perfil incial do sistema
     public function apagar($valor, $chave = "") {
-        if(!$this->checkUserCanAlter($valor)) return false;
-        if(!$this->perfil_padrao_erro($valor, true)) return false;
+        if(!$this->checkUserCanAlter($valor)) {return false;}
+        if(!$this->perfil_padrao_erro($valor, true)) {return false;}
         return parent::apagar($valor, $chave);
     }
     
@@ -176,8 +188,6 @@ class usuario_perfilModel extends \classes\Model\Model{
     }
     
 
-    
-    
     public function hasPermissionByName($permname){
         $this->LoadClassFromPlugin('usuario/perfil/perfilPermissions', 'pp');
         return $this->pp->hasPermissionByName($permname);
@@ -188,9 +198,9 @@ class usuario_perfilModel extends \classes\Model\Model{
      * Retorna true caso o usuário tenha permissão de acessar o sistema,
      * false caso contrário
      */
-    public function hasPermission(&$action_name, $getPermissionString = false, $update_permissions = false){
+    public function hasPermission(&$action_name, $getPermissionString = false){
         $this->LoadClassFromPlugin('usuario/perfil/perfilPermissions', 'pp');
-        return $this->pp->hasPermission($action_name, $getPermissionString, $update_permissions);
+        return $this->pp->hasPermission($action_name, $getPermissionString);
     }
     
     private function getPath($id){
@@ -205,16 +215,6 @@ class usuario_perfilModel extends \classes\Model\Model{
         $path = array_shift($temp);
         return $path['path']."/$id";
     }
-    /*
-    private function mountHierarquia(){
-        $perfis = $this->selecionar(array('usuario_perfil_cod', 'usuario_perfil_pai'));
-        $out = array();
-        foreach($perfis as $perf){
-            if($perf['usuario_perfil_pai'] == "") $perf['usuario_perfil_pai'] = 0;
-            $out[$perf['usuario_perfil_pai']][] = $perf['usuario_perfil_cod'];
-        }
-        return $out;
-    }*/
     
     public function getPathPerfil($cod){
         $select = parent::selecionar(array('path'), "usuario_perfil_cod = '$cod'");
@@ -227,6 +227,16 @@ class usuario_perfilModel extends \classes\Model\Model{
         $arr = $this->selecionar(array('usuario_perfil_cod', 'usuario_perfil_nome'));
         foreach($arr as $a){
             $out[$a['usuario_perfil_cod']] = $a['usuario_perfil_nome'];
+        }
+        return $out;
+    }
+    
+    public function getPermissoes($cod){
+        $arr = $this->LoadModel('plugins/acesso', 'acc')->getPermittedOfPerfil($cod);
+        if(empty($arr)){return $arr;}
+        $out = array();
+        foreach($arr as $a){
+            $out[$a] = 1;
         }
         return $out;
     }

@@ -62,7 +62,7 @@ class perfilPermissionsForm extends classes\Classes\Object{
         $permissions = $this->getPermissionsOfUser();        
         foreach($actions as $act){
             $name       = $act['plugins_permissao_nome'];
-            if(!array_key_exists($name, $permissions)) continue;
+            if(!array_key_exists($name, $permissions)) {continue;}
             if($plugin != $act['cod_plugin']){
                 $plugin = $act['cod_plugin'];
                 $data[$name]['fieldset'] = ($act['pluglabel'] == "")?ucfirst($act['plugnome']):$act['pluglabel'];

@@ -820,11 +820,9 @@ class usuario_loginModel extends \classes\Model\Model{
     public function isBloqued(){
         if($this->getCodPerfil() == Webmaster) return false ;
         $cod_usuario = $this->getCodUsuario();
-        $total = $this->getCount("cod_usuario = '$cod_usuario' AND status = 'bloqueado'");
-        return ($total != 0);
+        $total = $this->selecionar(array('cod_usuario'),"cod_usuario = '$cod_usuario' AND status = 'bloqueado'");
+        return (!empty($total));
     }
-    
-    
     
     public function permissoes_alteradas($cod_perfil){
         return parent::editar($cod_perfil, array('update_permission' => 's'), 'cod_perfil');
@@ -833,8 +831,8 @@ class usuario_loginModel extends \classes\Model\Model{
     public function has_permission_alterada($cod_usuario = ""){
         if($cod_usuario == "") $cod_usuario = $this->getCodUsuario ();
         if($cod_usuario == 0) return false;
-        $total = $this->getCount("cod_usuario = '$cod_usuario' AND update_permission = 's'");
-        return ($total != 0);
+        $total = $this->selecionar(array('cod_usuario'), "cod_usuario = '$cod_usuario' AND update_permission = 's'", 1);
+        return (!empty($total));
     }
     
     public function isUpdatedPermissions(){

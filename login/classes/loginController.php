@@ -21,7 +21,7 @@ class loginController extends CController{
         //se o usuario já está logado
         if($this->model->IsLoged()){
             if(!$this->model->Redirect()){
-                Redirect("usuario/login/logado");
+                return $this->logado();
             }
         }
 

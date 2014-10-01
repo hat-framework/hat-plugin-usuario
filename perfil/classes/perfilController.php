@@ -1,7 +1,11 @@
 <?php 
- use classes\Controller\CController;
-class perfilController extends CController{
+class perfilController extends classes\Controller\CController{
     public $model_name = "usuario/perfil";
+    
+    public function __construct($var) {
+        $this->addToFreeCod("tests");
+        parent::__construct($var);
+    }
     
     public function index($display = true, $link = "") {
         $this->genTags("Perfis do Sistema");
@@ -26,15 +30,13 @@ class perfilController extends CController{
         }
         
         $this->LoadClassFromPlugin('usuario/perfil/perfilPermissionsForm', 'ppf');
-        $this->LoadClassFromPlugin('usuario/perfil/perfilPermissions'    , 'pp');
         if(!empty($_POST)){
             $this->registerVar('status', $this->ppf->savePermissions($this->cod, $_POST)?"1":"0");
             $this->setVars($this->ppf->getMessages());
+            $this->LoadModel('plugins/plug','plug')->mountPerfilPermissions();
         }
-        $item   = $this->ppf->genarateForm($this->cod);
-        $values = $this->pp->getPerfilPermissions($this->cod);
-        $this->registerVar('permissoes', $item);
-        $this->registerVar('values', $values);
+        $this->registerVar('permissoes', $this->ppf->genarateForm($this->cod));
+        $this->registerVar('values', $this->model->getPermissoes($this->cod));
         $this->display(LINK."/permissoes");
     }
     
@@ -44,4 +46,3 @@ class perfilController extends CController{
         $this->index();
     }
 }
-?>
