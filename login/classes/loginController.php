@@ -1,5 +1,5 @@
 <?php
- use classes\Controller\CController;
+use classes\Controller\CController;
 use classes\Classes\cookie;
 class loginController extends CController{
 
@@ -115,6 +115,9 @@ class loginController extends CController{
             $vars           = $this->model->getMessages();
             $vars['status'] = ($status == true)? 1:0;
             $this->setVars($vars);
+            if($status == true){
+                $this->detectRedirect();
+            }
         }
         $this->registerVar('item', $this->model->getItem($cod, "", true));
         $this->genTags("Modificar Dados");
@@ -284,6 +287,12 @@ class loginController extends CController{
     
     public function seelog(){
         $this->display(LINK.'/report_user');
+    }
+    
+    private function detectRedirect(){
+        if(isset($_GET['redirect'])){
+            Redirect($_GET['redirect']);
+        }
     }
     
 }
