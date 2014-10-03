@@ -25,9 +25,37 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadResource('database', 'db');
         $this->user_cod_perfil = $this->uobj->getCodPerfil();
         $this->cod_perfil      = $this->perfilVisualization();
-        $this->permissions     = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+        $this->LoadPermissionFile();
     }
     
+    /**
+     * Load file with all user permissions
+     * @throws classes\Exceptions\AcessBloquedException (if permission's file doesn't exists and system cannot create)
+     * @author Thom <thom@hat-framework.com>
+     */
+    private function LoadPermissionFile(){
+        //Load permissions from file
+        $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
+        $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+        if(!empty($this->permissions)){return;}
+        
+        //if file don't exists or if permissions not setted, create permissions file
+        $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
+        $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+        
+        //if permission file doesn't exists, throw exception
+        if(empty($this->permissions)){
+            throw new classes\Exceptions\AcessBloquedException("Este perfil de usuário não possui permissão de acessar o sistema");
+        }
+    }
+    
+    /**
+     * Verify if user has permission to access some page
+     * @param string $action_name name of haturl
+     * @param boolean $getPermissionString
+     * @return mixed string if getPermissionString === true, boolena otherwise
+     * @author Thom <thom@hat-framework.com>
+     */
     public function hasPermission(&$action_name, $getPermissionString){
         //corrige o nome da action
         $this->act->prepare_action($action_name);
@@ -42,6 +70,12 @@ class perfilPermissions extends classes\Classes\Object{
         return ($getPermissionString)?'s':true;
     }
     
+    /**
+     * Load all urls with perfil permissions.
+     * @param int $cod_perfil cod of user perfil
+     * @return array array with all $cod_perfil's permissions
+     * @author Thom <thom@hat-framework.com>
+     */
     public function getPerfilPermissions($cod_perfil){
         $permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$cod_perfil", 'php'));
         if(empty($permissions)){return array();}
@@ -51,6 +85,12 @@ class perfilPermissions extends classes\Classes\Object{
         return $out;
     }
     
+    /**
+     * Verify if an action need code
+     * @param string $action_name name of haturl
+     * @return boolean true if action need code, false otherwise
+     * @author Thom <thom@hat-framework.com>
+     */
     private function NeedCod($action_name){
         static $obj_arr = array();
         
@@ -78,6 +118,11 @@ class perfilPermissions extends classes\Classes\Object{
         //return(array_key_exists($action_name, $cookie));
     }
     
+    /**
+     * Redirect user to $action_name page, if he has $action_name's permission
+     * @param string $action_name name of haturl
+     * @author Thom <thom@hat-framework.com>
+     */
     public function RedirectIfHasPermission($action_name){
         if($this->hasPermission($action_name, false, false)){
             Redirect($action_name);
