@@ -31,7 +31,7 @@ class alterarComponent extends \classes\Classes\Object{
         if(false === getBoleanConstant('USUARIO_TELEFONE')) {return;}
         $out   = array();
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
-        if(isset($this->dados['fixo'])) {$out['celular'] = $this->dados['celular'];}
+        if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
         $this->makeWidget("Telefone", $out, $item, 'usuario/login/alterar/telefone');
     }
     
@@ -52,6 +52,15 @@ class alterarComponent extends \classes\Classes\Object{
         $out = $this->assocDados(array('nascimento', 'cpf', 'rg'));
         if(empty($out)){return;}
         $this->makeWidget("Dados pessoais", $out, $item, 'usuario/login/editar');
+    }
+    
+    public function corretora($item){
+        if(false === getBoleanConstant('USUARIO_CORRETORA')) {return;}
+        $out   = array();
+        if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
+        if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
+        if(isset($this->dados['codcorretora'])) {$out['codcorretora'] = $this->dados['codcorretora'];}
+        $this->makeWidget("Telefone & Corretora", $out, $item, 'usuario/login/alterar/telefone');
     }
     
     public function endereco($item){

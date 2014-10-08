@@ -17,7 +17,12 @@ $this->LoadComponent('usuario/login', 'logcomp');
 
 $this->LoadComponent('usuario/login/alterar', 'comp'); 
 if($type == "" || empty($type)){
+   if(false === getBoleanConstant('USUARIO_CORRETORA')) {
     $type = array('email', 'pessoal', 'senha', 'telefone', 'endereco');
+   }
+   else{
+       $type = array('email', 'pessoal', 'senha', 'corretora', 'endereco');
+   }
 }
 foreach($type as $t){
     if(!method_exists($this->comp, $t)){continue;}
