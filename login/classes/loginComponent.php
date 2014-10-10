@@ -60,7 +60,7 @@ class loginComponent extends classes\Component\Component{
         //gera o menu superior
         $this->LoadJsPlugin('menu/dropdown', 'mn');
         $this->mn->imprime();
-        $var = $this->mn->draw($menu_array, "", 'user-menu');
+        $var = $this->mn->draw($menu_array, "navbar-right", 'user-menu');
         
         EventTube::addEvent($region, $var);
         

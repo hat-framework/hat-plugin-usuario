@@ -10,16 +10,24 @@ class subscribeComponent extends classes\Classes\Object{
         $this->gui = new \classes\Component\GUI();
     }
     
-    public function screen($class = 'span12'){
+    public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-8'){
         if(\usuario_loginModel::CodUsuario() !== 0) {return;}
         if(!defined('USUARIO_CREATE_ACCOUNT') || USUARIO_CREATE_ACCOUNT === false) {return;}
-        $this->gui->widgetOpen('', $class);
-            $this->gui->title('Cadastre-se Gratuitamente');
-            $form = $this->getArr();
-            $this->LoadResource("formulario", "form");
-            $this->form->NewForm($form, array(), array(), false, "usuario/login/inserir");
-            $this->facebook();
-        $this->gui->widgetClose();
+        
+        $this->gui->opendiv('tela_cadastro', $class);
+            $this->gui->widgetOpen('', "panel panel-default");
+                $this->gui->opendiv('', 'panel-heading');
+                    echo "<h3 class='title panel-title'>Cadastre-se Gratuitamente</h3>";
+                $this->gui->closediv();
+
+                $this->gui->opendiv('', 'panel-body');
+                    $form = $this->getArr();
+                    $this->LoadResource("formulario", "form");
+                    $this->form->NewForm($form, array(), array(), false, "usuario/login/inserir");
+                    $this->facebook();
+                $this->gui->closediv();
+            $this->gui->widgetClose();
+        $this->gui->closediv();
     }
     
     private function getArr(){
@@ -46,7 +54,11 @@ class subscribeComponent extends classes\Classes\Object{
             unset($out['codcorretora']);
             $out['codcorretora'] = $temp;
         }
-        $out['button'] = array('button'   => 'Criar Conta');
+        
+        $class = classes\Classes\Template::getClass('formbutton');
+        if($class === ""){$class = 'btn btn-lg'; }
+        $out['button'] = array('button'   => array('text' => 'Criar Conta', 'attrs'=>array('class'=>$class)));
+        
         return $out;
     }
     

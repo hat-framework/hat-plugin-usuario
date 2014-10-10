@@ -2,7 +2,7 @@
 
 use classes\Classes\Object;
 class telaLoginComponent extends classes\Classes\Object{
-    
+
     private $dados = array(
         'email_login' => array(
             'name'        => 'Email',
@@ -15,8 +15,12 @@ class telaLoginComponent extends classes\Classes\Object{
             'notnull'  => 'true',
             'placeholder' => true,
             'especial' => 'senha',
-            'button'   => 'Login'
+            'button'   => array(
+                'text' => 'Login', 
+                'attrs'=>array('class'=>'btn btn-lg btn-dcoracoes btn-block')
+             )
         ),
+        
     );
     
     public function __construct() {
@@ -24,17 +28,26 @@ class telaLoginComponent extends classes\Classes\Object{
         $this->gui = new \classes\Component\GUI();
     }
 
-    public function screen($class = 'span12'){
-        $this->gui->widgetOpen('', $class);
-            $this->gui->opendiv('tela_login');
-                $this->gui->title("Já Sou Registrado");
-                $this->formLogin();
-                $this->bottom();
-            $this->gui->closediv();
-        $this->gui->widgetClose();
+    public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-4'){
+        $this->gui->opendiv('tela_login', $class);
+            $this->gui->widgetOpen('', "panel panel-default");
+                $this->gui->opendiv('', 'panel-heading');
+                    echo "<h3 class='title panel-title'>Já Sou Registrado</h3>";
+                $this->gui->closediv();
+
+                $this->gui->opendiv('tela_login', 'panel-body');
+                    $this->formLogin();
+                    $this->bottom();
+                $this->gui->closediv();
+            $this->gui->widgetClose();
+        $this->gui->closediv();
     }
     
     private function formLogin(){
+        $class = classes\Classes\Template::getClass('usuario/telalogin/button');
+        if($class !== ""){
+            $this->dados['senha_login']['button'] = $class;
+        }
         $this->LoadResource("formulario", "form");
         $ref = (isset($_GET['refer']))?'&refer='.$_GET['refer']:'';
         $link = URL."?url=usuario/login/$ref";

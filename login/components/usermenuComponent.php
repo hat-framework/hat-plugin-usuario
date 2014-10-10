@@ -26,17 +26,17 @@ class usermenuComponent extends classes\Classes\Object{
     
     private function LoggedMenu(){
         $var  = $this->LoadModel('usuario/login', 'uobj')->getUserNick();
-        $nick = "<i class='glyphicon glyphicon-user icon-user'></i>$var<span class='caret'></span>";
-        $msg  = '<i class="glyphicon glyphicon-envelope icon-envelope"></i>';
-
+        $msg  = '';
         return array(
              $msg => array(
-                 $msg => 'mensagem/mensagem/index',
-                 '__id' => 'messages'
+                 $msg      => 'mensagem/mensagem/index',
+                 '__id'    => 'messages',
+                 '__icon'  => 'glyphicon glyphicon-envelope icon-envelope'
              ),
-             $nick => array(
+             $var => array(
                 //'Área Administrativa'    => "admin/",
                 '__id'                   => "user",
+                '__icon'                 => 'glyphicon glyphicon-user icon-user',
                 'Meus dados'             => 'usuario/login/',
                 //'tutorial'               => 'usuario/login/tutorial',
                 'Configurações'          => 'site/configuracao/index',

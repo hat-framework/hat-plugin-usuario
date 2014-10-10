@@ -74,16 +74,23 @@ class alterarComponent extends \classes\Classes\Object{
         $dados['button'] = array('button' => $button_name);
         
         $link = (isset($_GET['redirect']))?$this->LoadResource('html', 'html')->getLink("$action&redirect=".$_GET['redirect'], true,true):$action;
-        $this->gui->widgetOpen($this->id, $this->class);
-            $this->gui->subtitle($title);
-            $this->LoadResource("formulario", "form");
-            $this->form->NewForm($dados, $item, array(), true, $link);
-        $this->gui->widgetClose();
+        $this->reset();
+        $this->gui->opendiv($this->id, $this->class);
+            $this->gui->widgetOpen('change_widget', "panel panel-default");
+                $this->gui->opendiv('', 'panel-heading');
+                    echo "<h3 class='title panel-title'>$title</h3>";
+                $this->gui->closediv();
+
+                $this->gui->opendiv('', 'panel-body');
+                    $this->LoadResource("formulario", "form")->NewForm($dados, $item, array(), true, $link);
+                $this->gui->closediv();
+            $this->gui->widgetClose();
+        $this->gui->closediv();
         $this->reset();
     }
     
     private function reset(){
-        $this->class = 'span4';
+        $this->class = 'span4 col-xs-12 col-sm-6 col-md-6 col-lg-4';
         $this->id    = 'alterar_widget';
     }
        
