@@ -86,6 +86,16 @@ class perfilPermissions extends classes\Classes\Object{
     }
     
     /**
+     * Load all perfil permissions name.
+     * @param int $cod_perfil cod of user perfil
+     * @return array array with all $cod_perfil's permissions
+     * @author Thom <thom@hat-framework.com>
+     */
+    public function getPerfilPermissionsName($cod_perfil){
+        return json_decode(classes\Utils\cache::get("plugins/permissions/p$cod_perfil", 'php'));
+    }
+    
+    /**
      * Verify if an action need code
      * @param string $action_name name of haturl
      * @return boolean true if action need code, false otherwise
@@ -134,18 +144,17 @@ class perfilPermissions extends classes\Classes\Object{
         $cod_perfil = $this->perfilVisualization();
         $true_perf  = usuario_loginModel::CodPerfil();
         $perm       = array();
-        if($cod_perfil === $true_perf){$perm = cookie::getVar($this->cookie_perm);}
+        if($cod_perfil === $true_perf){$perm = cookie::getVar($this->cookie);}
         
         if(empty($perm)){
             $cod_perfil = $this->perfilVisualization();
             if($cod_perfil != ""){
-                $perm = $this->getPerfilPermissions($cod_perfil);
-                if($cod_perfil === $true_perf){cookie::setVar($this->cookie_perm, $perm);}
-            }
+                $perm = $this->getPerfilPermissionsName($cod_perfil);
+                if($cod_perfil === $true_perf){cookie::setVar($this->cookie, $perm);}
+            }else{die("foo");}
         }
-        
         if(!is_array($perm))$perm = array();
-        return(array_key_exists($permname, $perm) && $perm[$permname] == 1);
+        return(in_array($permname, $perm));
     }
     
     public function isPublic($action_name){
