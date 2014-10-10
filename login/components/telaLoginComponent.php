@@ -17,7 +17,7 @@ class telaLoginComponent extends classes\Classes\Object{
             'especial' => 'senha',
             'button'   => array(
                 'text' => 'Login', 
-                'attrs'=>array('class'=>'btn btn-lg btn-dcoracoes btn-block')
+                'attrs'=>array('class'=>'btn')
              )
         ),
         
@@ -44,10 +44,11 @@ class telaLoginComponent extends classes\Classes\Object{
     }
     
     private function formLogin(){
-        $class = classes\Classes\Template::getClass('usuario/telalogin/button');
-        if($class !== ""){
-            $this->dados['senha_login']['button'] = $class;
-        }
+        
+        $class = classes\Classes\Template::getClass('formbutton');
+        if($class === ""){$class = 'btn btn-lg'; }
+        $this->dados['senha_login']['button']['attrs']['class'] = $class;
+        
         $this->LoadResource("formulario", "form");
         $ref = (isset($_GET['refer']))?'&refer='.$_GET['refer']:'';
         $link = URL."?url=usuario/login/$ref";
