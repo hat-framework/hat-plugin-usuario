@@ -145,7 +145,6 @@ class perfilPermissions extends classes\Classes\Object{
         }
         
         if(!is_array($perm))$perm = array();
-        
         return(array_key_exists($permname, $perm) && $perm[$permname] == 1);
     }
     
@@ -157,7 +156,7 @@ class perfilPermissions extends classes\Classes\Object{
         return(array_key_exists($action_name, $var));
     }
     
-    private function perfilVisualization(){
+    public function perfilVisualization(){
         $cod_perfil = usuario_loginModel::CodPerfil();
         $perfil = filter_input(INPUT_GET, '_perfil');
         if(trim($perfil) === "" || $perfil === Webmaster){return $cod_perfil;}
