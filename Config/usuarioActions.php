@@ -386,9 +386,6 @@ class usuarioActions extends Actions{
          'usuario/notify/index' => array(
             'label' => 'Preferência de Notificação', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_AC', 
-            'menu' => array(
-                'Minha Conta'        => 'usuario/login/logado', 
-             ),
              'breadscrumb' => array('usuario/login/logado','usuario/notify/index')
         ),
         

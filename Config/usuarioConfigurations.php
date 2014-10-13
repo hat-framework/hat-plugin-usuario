@@ -7,6 +7,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'menuid' => 'usuarios',
             'menu'   => 'Usuários',
             'url'    => 'usuario/login/todos',
+            'icon'   => 'glyphicon glyphicon-user',
             'ordem'  => '10',
         ),
         
@@ -14,6 +15,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'menuid' => 'novo_usuario',
             'menu'   => 'Criar Usuário',
             'pai'    => 'usuarios',
+            'icon'   => 'glyphicon glyphicon-plus',
             'url'    => 'usuario/login/formulario',
         ),
         
@@ -21,6 +23,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'menuid' => 'pessoas',
             'menu'   => 'Relatórios',
             'pai'    => 'usuarios',
+            'icon'   => 'glyphicon glyphicon-tasks',
             'url'    => 'usuario/login/report',
         ),
         
@@ -28,6 +31,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'menuid' => 'perfil',
             'menu'   => 'Perfil de Usuário',
             'pai'    => 'usuarios',
+            'icon'   => '',
             'url'    => 'usuario/perfil/index',
         )
         
