@@ -13,14 +13,15 @@ class subscribeComponent extends classes\Classes\Object{
     public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-8'){
         if(\usuario_loginModel::CodUsuario() !== 0) {return;}
         if(!defined('USUARIO_CREATE_ACCOUNT') || USUARIO_CREATE_ACCOUNT === false) {return;}
-        
+        $data = classes\Classes\Template::getClass('subscribe');
+        if(isset($data['subscribeClass']))$class = $data['subscribeClass'];
         $this->gui->opendiv('tela_cadastro', $class);
             $this->gui->widgetOpen('', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
                     echo "<h3 class='title panel-title'>Cadastre-se Gratuitamente</h3>";
                 $this->gui->closediv();
 
-                $this->gui->opendiv('', 'panel-body');
+                $this->gui->opendiv('', 'panel-body pull-left');
                     $form = $this->getArr();
                     $this->LoadResource("formulario", "form");
                     $this->form->NewForm($form, array(), array(), false, "usuario/login/inserir");
@@ -45,14 +46,8 @@ class subscribeComponent extends classes\Classes\Object{
         $out = array();
         foreach($dados as $name => $arr){
             if(!array_key_exists('tela', $arr)){continue;}
-            $arr['placeholder'] = true;
+            //$arr['placeholder'] = true;
             $out[$name] = $arr;
-        }
-        //pog para enviar o codigo da corretora por ultimo
-        if(isset($out['codcorretora'])){
-            $temp = $out['codcorretora'];
-            unset($out['codcorretora']);
-            $out['codcorretora'] = $temp;
         }
         
         $class = classes\Classes\Template::getClass('formbutton');
@@ -64,9 +59,12 @@ class subscribeComponent extends classes\Classes\Object{
     
     private function facebook(){
         if(!defined('USUARIO_FB_ACCESS')      || USUARIO_FB_ACCESS === false) {return;}
+        $class = classes\Classes\Template::getClass('facebook');
+        echo "<div class='$class'>";
         //echo "<h3>Para Criar uma nova conta <a href='$link2'><b>clique aqui</b></a></h3>";
         $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
         echo $this->fb->getFBLink('Cadastre-se com Facebook', 'btn btn-primary');
+        echo "</div>";
         
     }
 }

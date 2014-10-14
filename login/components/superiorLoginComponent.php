@@ -1,7 +1,7 @@
 <?php
 
 use classes\Classes\Object;
-class telaLoginComponent extends classes\Classes\Object{
+class superiorLoginComponent extends classes\Classes\Object{
 
     private $dados = array(
         'email_login' => array(
@@ -28,27 +28,20 @@ class telaLoginComponent extends classes\Classes\Object{
         $this->gui = new \classes\Component\GUI();
     }
 
-    public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-4'){
-        $data = classes\Classes\Template::getClass('tela_login');
-        if(isset($data['tela_loginClass']))$class = $data['tela_loginClass'];
-        $this->gui->opendiv('tela_login', $class);
-            $this->gui->widgetOpen('', "panel panel-default");
-                $this->gui->opendiv('', 'panel-heading');
-                    echo "<h3 class='title panel-title'>Já Sou Registrado</h3>";
-                $this->gui->closediv();
-
-                $this->gui->opendiv('tela_login', 'panel-body');
+    public function screen($class = 'pull-right col-md-3'){
+        $this->data = classes\Classes\Template::getClass('superior_login');
+        if(isset($this->data['superior_loginClass']))$class = $this->data['superior_loginClass'];
+        $this->gui->opendiv('superior_login', $class);
+                $this->gui->opendiv('superior_login', 'panel-body');
                     $this->formLogin();
                     $this->bottom();
-                $this->gui->closediv();
             $this->gui->widgetClose();
         $this->gui->closediv();
     }
     
     private function formLogin(){
-        
-        $class = classes\Classes\Template::getClass('formbutton');
-        if($class === ""){$class = 'btn btn-lg'; }
+        if(isset($this->data['s_formbutton']))$class = $this->data['s_formbutton'];
+        if($class === ""){$class = 'btn btn-xs'; }
         $this->dados['senha_login']['button']['attrs']['class'] = $class;
         
         $this->LoadResource("formulario", "form");
@@ -60,15 +53,16 @@ class telaLoginComponent extends classes\Classes\Object{
     private function bottom(){
         $link1 = $this->Html->getLink("usuario/login/recuperar");
         $link2 = $this->Html->getLink("usuario/login/inserir");
+        echo "<div class='col-xs-12'>";
         if(defined('USUARIO_FB_ACCESS') && USUARIO_FB_ACCESS === true){
-            $class = classes\Classes\Template::getClass('facebook');
-            echo "<div class='$class'>";
+            if(isset($this->data['s_facebook']))$class = $this->data['s_facebook'];
+            $text = (isset($this->data['text_facebook']))?$this->data['text_facebook']:'';
             //echo "<h3>Para Criar uma nova conta <a href='$link2'><b>clique aqui</b></a></h3>";
             $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
-            echo $this->fb->getFBLink('', 'btn btn-primary');
-            echo "</div>";
+            echo $this->fb->getFBLink($text, "$class btn btn-primary btn-xs");
         }
-        $classEsqueci = classes\Classes\Template::getClass('esqueci_senha');
-        echo "<div class='$classEsqueci esqueci_senha'><a href='$link1' class=''>Esqueci minha senha</a></div>";
+        if(isset($this->data['s_esqueci_senha']))$classEsqueci = $this->data['s_esqueci_senha'];
+        echo "<div class='$classEsqueci esqueci_senha'><a href='$link1' class=''>Esqueci senha</a></div>";
+        echo "</div>";
     }
 }

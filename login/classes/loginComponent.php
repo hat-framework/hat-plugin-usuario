@@ -11,6 +11,10 @@ class loginComponent extends classes\Component\Component{
         $this->callUserComponent("telaLogin");
     }
     
+     public function superior_login(){
+        $this->callUserComponent("superiorLogin");
+    }
+    
     public function LoggedMenu(){
         return $this->callUserComponent("usermenu", 'getLoggedMenu');
     }

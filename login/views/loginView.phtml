@@ -1,21 +1,8 @@
-<style>
-    .description-container .description-text {
-    margin-left:-250px;
-    }
-</style>
-
-<div class='span6'>
-<div class='span11'>
+<div class='col-xs-6'>
 <?php 
-
-$this->Html->LoadCss('tela_login');
 $this->LoadComponent('usuario/login', 'lcomp');
 $this->lcomp->tela_login();
 $this->lcomp->Subscribe();
-
 ?>
 </div>
-</div>
-<div class="span6">
-<?php $this->Html->getImageIfExists('descanso.jpg','widget none-767');?>
-</div>
+<?php $this->Html->getImageIfExists('descanso.jpg','none-767 col-xs-6');?>
