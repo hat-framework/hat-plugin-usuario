@@ -15,6 +15,10 @@ class loginComponent extends classes\Component\Component{
         $this->callUserComponent("superiorLogin");
     }
     
+    public function recuperar(){
+        $this->callUserComponent("recuperar");
+    }
+    
     public function LoggedMenu(){
         return $this->callUserComponent("usermenu", 'getLoggedMenu');
     }

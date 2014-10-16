@@ -1,14 +1,6 @@
-<h2>Recuperar Minha senha</h2>
-<?php
-    $this->Html->LoadCss('tela_login');
-    $arr = array(
-        'email'  => array(
-            'name'     => 'Email',
-            'especial' => 'email',
-            'description' => 'Digite o email cadastrado no sistema para que a nova senha seja enviada para este mesmo email',
-            'button'   => 'Recuperar'
-        )
-    );
-    $this->LoadResource('formulario', 'form');
-    $this->form->NewForm($arr, $_POST, array(), false);
+<div class='col-xs-6'>
+<?php 
+$this->LoadComponent('usuario/login', 'lcomp');
+$this->lcomp->recuperar();
 ?>
+</div>
