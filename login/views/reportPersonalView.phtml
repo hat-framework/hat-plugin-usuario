@@ -1,14 +1,11 @@
 <?php
 
 $gui = new \classes\Component\GUI();
-
-$opt = array('class' => 'col-xs-12');
-
 $gui->opendiv('filt', 'col-xs-12');
     classes\Component\widget::executeWidgets(array(
-        'usuario/login/widgets/searchUserWidget' => $opt,
+        'usuario/login/widgets/searchUserWidget' => array('class' => 'col-xs-12'),
         //'usuario/login/widgets/listUserWidget'   => $opt,
-        'usuario/login/widgets/cadastrosWidget'  => $opt,
-        'usuario/login/widgets/acessosWidget'    => $opt,
+        'usuario/login/widgets/cadastrosWidget'  => array('class' => 'col-xs-12 pull-left'),
+        'usuario/login/widgets/acessosWidget'    => array('class' => 'col-xs-12 pull-right'),
     ));
 $gui->closediv();

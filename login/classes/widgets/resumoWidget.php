@@ -14,8 +14,10 @@ class resumoWidget extends \classes\Component\widget{
     }
     
     private function total(){
+        $this->gui->opendiv('total_users');
         $total  = $this->uobj->getCount();
-        echo "Total de Usuários: $total";
+        echo "Total de Usuários: $total";  
+        $this->gui->closediv();
     }
     
     private function cadastroGraf(){

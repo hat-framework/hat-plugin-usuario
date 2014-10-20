@@ -37,11 +37,27 @@ class usermenuComponent extends classes\Classes\Object{
                 //'Área Administrativa'    => "admin/",
                 '__id'                   => "user",
                 '__icon'                 => 'glyphicon glyphicon-user icon-user',
-                'Meus dados'             => 'usuario/login/',
+                'Meus dados'             => array(
+                    'Meus dados' => 'usuario/login/',
+                    '__icon'     => 'fa fa-user'
+                ),
+                /*'Tutorial'             => array(
+                    'Tutorial' => 'usuario/login/tutorial',
+                    '__icon'     => ''
+                ),*/
                 //'tutorial'               => 'usuario/login/tutorial',
-                'Configurações'          => 'site/configuracao/index',
-                'Central de Aplicativos' => 'plugins/plug/index', 
-                'Sair'                   => 'usuario/login/logout/',
+                'Configurações'          => array(
+                    'Configurações' => 'site/configuracao/index',
+                    '__icon'     => 'fa fa-cog'
+                ),
+                'Central de Aplicativos' => array(
+                    'Central de Aplicativos' => 'plugins/plug/index',
+                    '__icon'     => 'fa fa-desktop'
+                ), 
+                'Sair'                   => array(
+                    'Sair' => 'usuario/login/logout/',
+                    '__icon'     => 'fa fa-sign-out'
+                ), 
         ));
     }
     

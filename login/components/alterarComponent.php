@@ -99,7 +99,7 @@ class alterarComponent extends \classes\Classes\Object{
     }
     
     private function reset(){
-        $this->class = 'col-xs-4 col-xs-12 col-sm-6 col-md-6 col-lg-4';
+        $this->class = 'col-xs-12 col-sm-6 col-md-4 col-lg-3';
         $this->id    = 'alterar_widget';
     }
        

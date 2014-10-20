@@ -9,7 +9,13 @@ $gui->opendiv('filt', 'col-xs-12');
     ));
 $gui->closediv();
 
-$gui->opendiv('filt', 'col-xs-7');
+$gui->opendiv('filt', 'col-xs-12 col-sm-6 col-md-5 col-lg-4 pull-right');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/login/widgets/resumoWidget' => array('class' => 'widget col-xs-12'),
+        'usuario/acesso/widgets/lastWidget' => $opt,
+    ));
+$gui->closediv();
+$gui->opendiv('filt', 'col-xs-12 col-sm-6 col-md-7 col-lg-8');
     classes\Component\widget::executeWidgets(array(
         'usuario/login/widgets/conversaoLoginWidget' => $opt,
         'usuario/acesso/widgets/conversaoAcessoWidget' => $opt,
@@ -17,9 +23,3 @@ $gui->opendiv('filt', 'col-xs-7');
     ));
 $gui->closediv();
 
-$gui->opendiv('filt', 'col-xs-5 pull-right widget');
-    classes\Component\widget::executeWidgets(array(
-        'usuario/acesso/widgets/lastWidget' => $opt,
-        'usuario/login/widgets/resumoWidget' => $opt,
-    ));
-$gui->closediv();
