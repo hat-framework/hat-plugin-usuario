@@ -287,6 +287,7 @@ class usuario_loginModel extends \classes\Model\Model{
         if(!parent::inserir($array)) return false;
         $user = $this->getItem($array['email'], 'email');
         $user['senha'] = $senha;
+        $this->rdstation($array);
         
         //responsavel pelas mensagens para o usuario
         $this->LoadModel('usuario/login/loginDialogs', 'udi');
@@ -295,6 +296,12 @@ class usuario_loginModel extends \classes\Model\Model{
         return $bool;
 
     }//c
+    
+            private function rdstation($array){
+                $this->LoadResource('api', 'api');
+                $this->rds = new resource\api\rdstation\rdstationLead();
+                $this->rds->addLead($array);
+            }
     
     public function editarDados($id, $dados){
         $var = $this->selecionar(array('cod_usuario'), "`cod_usuario` = '$id' AND `senha` = PASSWORD('".$dados['senha']."')");
