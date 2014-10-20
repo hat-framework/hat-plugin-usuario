@@ -20,7 +20,7 @@ class actionAcessoWidget extends \classes\Component\widget{
     
     private function chart($title, $itens){
         if(empty($itens)) return;
-        $this->gui->openDiv("", "span12");
+        $this->gui->openDiv("", "col-xs-12");
         $name = GetPlainName($title);
         echo $this->LoadResource('charts', 'ch')
                 ->init('AreaChart')

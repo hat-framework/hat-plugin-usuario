@@ -20,7 +20,7 @@ class dailyWidget extends \classes\Component\widget{
     private function userChart($title, $itens){
         
         if(empty($itens)) return;
-        $this->gui->openDiv("", "span6");
+        $this->gui->openDiv("", "col-xs-6");
         $name = GetPlainName($title);
         echo $this->LoadResource('charts', 'ch')
                 ->init('LineChart')
@@ -33,7 +33,7 @@ class dailyWidget extends \classes\Component\widget{
     
     private function perfilChart($title, $itens){
         if(empty($itens)) return;
-        $this->gui->openDiv("", "span6");
+        $this->gui->openDiv("", "col-xs-6");
         $out = array();
         $perfis = $this->LoadModel('usuario/perfil', 'perf')->getAllAssoc();
         foreach($itens as $it){

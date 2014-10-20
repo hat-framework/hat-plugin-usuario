@@ -3,7 +3,7 @@
 class alterarComponent extends \classes\Classes\Object{
     
     private $dados = array();
-    private $class = "span4";
+    private $class = "col-xs-4";
     private $id    = "alterar_widget";
     public function __construct() {
         $this->gui   = new \classes\Component\GUI();
@@ -99,7 +99,7 @@ class alterarComponent extends \classes\Classes\Object{
     }
     
     private function reset(){
-        $this->class = 'span4 col-xs-12 col-sm-6 col-md-6 col-lg-4';
+        $this->class = 'col-xs-4 col-xs-12 col-sm-6 col-md-6 col-lg-4';
         $this->id    = 'alterar_widget';
     }
        

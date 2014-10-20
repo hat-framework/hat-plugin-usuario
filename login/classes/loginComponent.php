@@ -77,7 +77,7 @@ class loginComponent extends classes\Component\Component{
     protected $listActions = array('Veja Mais' => "show", 'Bloquear' => "block", 'Desbloquear' => 'unblock');
     public function drawTitle(&$item) {
         $scomp = new \classes\Component\showComponent($this->dados, $this->gui);
-        $this->gui->opendiv('item_header', 'widget span12');
+        $this->gui->opendiv('item_header', 'widget col-xs-12');
             $scomp->printHeader($item, $this);
             $this->gadgets($item);
         $this->gui->closediv();

@@ -2,17 +2,17 @@
 
 $gui = new \classes\Component\GUI();
 
-$opt = array('class' => 'span12');
+$opt = array('class' => 'col-xs-12');
 
 
-$gui->opendiv('', 'span7 widget');
+$gui->opendiv('', 'col-xs-7 widget');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/pluginsReportWidget' => $opt
     ));
 $gui->closediv();        
         
         
-$gui->opendiv('', 'span5 pull-right widget');
+$gui->opendiv('', 'col-xs-5 pull-right widget');
     classes\Component\widget::executeWidgets(array(
         'carteira/carteira/widgets/createCarteiraReportWidget' => $opt,
         'carteira/operacao/widgets/operacaoReportWidget' => $opt

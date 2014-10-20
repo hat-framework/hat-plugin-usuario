@@ -2,15 +2,15 @@
 
 $gui = new \classes\Component\GUI();
 
-$opt = array('class' => 'span12');
+$opt = array('class' => 'col-xs-12');
 
-$gui->opendiv('filt', 'span4');
+$gui->opendiv('filt', 'col-xs-4');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/pagesWidget' => $opt,
     ));
 $gui->closediv();
 
-$gui->opendiv('filt', 'span4 pull-right');
+$gui->opendiv('filt', 'col-xs-4 pull-right');
     classes\Component\widget::executeWidgets(array(
         
     ));
@@ -18,7 +18,7 @@ $gui->closediv();
 
 
 
-$gui->opendiv('filt', 'span4 pull-right');
+$gui->opendiv('filt', 'col-xs-4 pull-right');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/errosWidget' => $opt,
     ));
