@@ -10,7 +10,7 @@ class subscribeComponent extends classes\Classes\Object{
         $this->gui = new \classes\Component\GUI();
     }
     
-    public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-8'){
+    public function screen($class = ''){
         if(\usuario_loginModel::CodUsuario() !== 0) {return;}
         if(!defined('USUARIO_CREATE_ACCOUNT') || USUARIO_CREATE_ACCOUNT === false) {return;}
         $data = classes\Classes\Template::getClass('subscribe');

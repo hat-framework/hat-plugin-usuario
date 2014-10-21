@@ -28,7 +28,7 @@ class telaLoginComponent extends classes\Classes\Object{
         $this->gui = new \classes\Component\GUI();
     }
 
-    public function screen($class = 'col-xs-12 col-sm-6 col-md-6 col-lg-4'){
+    public function screen($class = ''){
         $data = classes\Classes\Template::getClass('tela_login');
         if(isset($data['tela_loginClass']))$class = $data['tela_loginClass'];
         $this->gui->opendiv('tela_login', $class);
