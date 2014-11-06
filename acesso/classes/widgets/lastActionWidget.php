@@ -19,7 +19,7 @@ class lastActionWidget extends \classes\Component\widget{
         $in.= ")";
         $date = date('Y-m-d');
         $date = \classes\Classes\timeResource::subDateTime($date, 7);
-        $arr = $this->model->getLastActionAccess("$in and data >= '$date' group by group1,group2,group3 ORDER BY group1 ASC");
+        $arr = $this->model->getLastActionAccess("$in and data >= '$date' group by group1,group2,group3 ORDER BY count DESC");
         return $arr;
     }
     

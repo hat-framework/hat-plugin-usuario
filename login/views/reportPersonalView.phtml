@@ -3,9 +3,20 @@
 $gui = new \classes\Component\GUI();
 $gui->opendiv('filt', 'col-xs-12');
     classes\Component\widget::executeWidgets(array(
-        'usuario/login/widgets/searchUserWidget' => array('class' => 'col-xs-12'),
-        //'usuario/login/widgets/listUserWidget'   => $opt,
-        'usuario/login/widgets/cadastrosWidget'  => array('class' => 'col-xs-12 pull-left'),
-        'usuario/login/widgets/acessosWidget'    => array('class' => 'col-xs-12 pull-right'),
+        'usuario/login/widgets/searchUserWidget' => array(),
+    ));
+$gui->closediv();
+
+
+$gui->opendiv('filt', 'col-xs-12 col-sm-12 col-md-6 col-md-6');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/login/widgets/cadastrosWidget'  => array(),
+    ));
+$gui->closediv();
+
+
+$gui->opendiv('filt', 'col-xs-12 col-sm-12 col-md-6 col-md-6');
+    classes\Component\widget::executeWidgets(array(
+        'usuario/login/widgets/acessosWidget'    => array(),
     ));
 $gui->closediv();

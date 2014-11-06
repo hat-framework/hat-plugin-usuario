@@ -5,7 +5,9 @@ class conversaoAcessoWidget extends \classes\Component\widget{
     protected $link       = '';
     protected $order      = "";
     protected $title      = "Eficiência em conversão novos visitantes em logs/cadastros";
-    
+    protected $description = 'Verifica se as pessoas estão logando no site, quanto mais melhor';
+
+
     public function getItens() {
         $arr['acesso'] = $this->model->getUserAccess();
         $arr['login'] = $this->model->getLoginAccess();

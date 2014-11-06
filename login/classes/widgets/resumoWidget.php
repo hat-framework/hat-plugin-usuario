@@ -4,12 +4,14 @@ class resumoWidget extends \classes\Component\widget{
     public function widget(){
         $this->LoadModel('usuario/login', 'uobj');
         $id = ($this->id == "")?"widget_".  str_replace("/", "_", $this->modelname):$this->id;
-        $this->gui->opendiv($id, $this->class);
-            $this->gui->subtitle("Resumo dos usuários");
+        $this->gui->opendiv($id, "$this->class panel $this->panel");
+            $this->gui->panelSubtitle("Resumo dos usuários");
+            $this->gui->opendiv('', 'panel-body');
             $this->total();
             $this->cadastroGraf();
             $this->perfilGraf();
-            $this->origemGraf();            
+            $this->origemGraf();  
+            $this->gui->closediv();
         $this->gui->closediv();
     }
     

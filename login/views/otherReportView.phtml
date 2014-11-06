@@ -2,19 +2,19 @@
 
 $gui = new \classes\Component\GUI();
 
-$opt = array('class' => 'col-xs-12');
+$opt = array();
 
 
-$gui->opendiv('', 'col-xs-7 widget');
+$gui->opendiv('', 'col-xs-12 panel panel-default');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/pluginsReportWidget' => $opt
     ));
 $gui->closediv();        
         
         
-$gui->opendiv('', 'col-xs-5 pull-right widget');
-    classes\Component\widget::executeWidgets(array(
-        'carteira/carteira/widgets/createCarteiraReportWidget' => $opt,
-        'carteira/operacao/widgets/operacaoReportWidget' => $opt
-    ));
-$gui->closediv();
+//$gui->opendiv('', 'col-xs-5');
+//    classes\Component\widget::executeWidgets(array(
+//        'carteira/carteira/widgets/createCarteiraReportWidget' => $opt,
+//        'carteira/operacao/widgets/operacaoReportWidget' => $opt
+//    ));
+//$gui->closediv();

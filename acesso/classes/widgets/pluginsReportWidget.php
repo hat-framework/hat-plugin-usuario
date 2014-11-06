@@ -4,7 +4,7 @@ class pluginsReportWidget extends plugins\site\Config\reportWidget{
      protected $modelname  = "usuario/acesso";
      protected $typegrafic = "LineChart";
      protected $title      = "Estatística de plugins";
-     protected $subtitle   = "Total de clicks nos plugins:";
+     protected $description = "Total de clicks nos plugins:";
      protected $date       = "data"; //coluna que possui as datas do gráfico (geralmente Timestamp)
      protected $titlegrafic   = "Plugins por data (Exceção do Plugin Empresa)";
      
@@ -12,10 +12,13 @@ class pluginsReportWidget extends plugins\site\Config\reportWidget{
         $this->LoadModel($this->modelname, 'model');
         $id = ($this->id == "")?"widget_".  str_replace("/", "_", $this->modelname):$this->id;
         $this->gui->opendiv($id, $this->class);
-            $this->gui->subtitle($this->title);
+            $this->gui->setDescription($this->description);
+            $this->gui->panelSubtitle($this->title);
+            $this->gui->opendiv('', 'panel-body');
             $this->total();
             $this->graf();
             $this->grafSubEmpresa();
+            $this->gui->closediv();
         $this->gui->closediv();
     }
      

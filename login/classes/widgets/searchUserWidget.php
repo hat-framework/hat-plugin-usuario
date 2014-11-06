@@ -3,7 +3,7 @@
 class searchUserWidget extends \classes\Component\widget{   
     protected $title = "Pesquisar Usuários";
     public function widget() {
-        $this->openWidget();
+        $this->openPanel();
             $url = $this->Html->getLink(CURRENT_PAGE, true,true);
             echo "<form method='get' action='$url'>";
             echo    "<input type='hidden' value='".CURRENT_PAGE."' name='url'/>";

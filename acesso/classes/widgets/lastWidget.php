@@ -5,14 +5,16 @@ class lastWidget extends \classes\Component\widget{
     protected $link       = '';
     protected $order      = "";
     protected $title      = "Últimos acessos/cadastros na semana";
-    protected $arr        = array("count(*) as qnt");
+    protected $description        = 'Número de usuários que acessaram e cadastraram na última semana';
     
     
     public function getItens(){
         $date = date('Y-m-d');
         $date = \classes\Classes\timeResource::subDateTime($date, 7);
-        $arr[0] = $this->model->getLastAccess("data >= '$date' group by cod_perfil");
-        $arr[1]   = $this->LoadModel('usuario/login','lg')->getLastAccess("data >= $date");
+        $arr[0] = $this->model->getLastAccess
+                ("data >= '$date' AND cod_perfil !='". Webmaster ."' AND cod_perfil !='". Admin ."'"
+                . "group by cod_usuario");
+        $arr[1] = $this->LoadModel('usuario/login','lg')->getLastAccess("user_criadoem >= $date");
         return $arr;
     }
     

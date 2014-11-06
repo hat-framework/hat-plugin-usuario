@@ -85,7 +85,7 @@ class alterarComponent extends \classes\Classes\Object{
         $link = (isset($_GET['redirect']))?$this->LoadResource('html', 'html')->getLink("$action&redirect=".$_GET['redirect'], true,true):$action;
         $this->reset();
         $this->gui->opendiv($this->id, $this->class);
-            $this->gui->widgetOpen('change_widget', "panel panel-default");
+            $this->gui->opendiv('change_widget', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
                     echo "<h3 class='title panel-title'>$title</h3>";
                 $this->gui->closediv();

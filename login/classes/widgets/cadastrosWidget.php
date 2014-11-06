@@ -9,7 +9,7 @@ class cadastrosWidget extends \classes\Component\widget{
     protected $where     = "";
     protected $qtd       = "4";
     protected $order     = "user_criadoem DESC";
-    protected $title     = "Na última semana";
+    protected $title     = "Cadastros na última semana";
     //protected $actionPaginator = 'usuario/login/widgets/cadastros';
     
     public function __construct() {

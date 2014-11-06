@@ -5,7 +5,9 @@ class conversaoLoginWidget extends \classes\Component\widget{
     protected $link       = '';
     protected $order      = "";
     protected $title      = "Eficiência em conversão de cadastros em retorno e assinatura";
-    
+    protected $description = 'Verifica se as pessoas estão retonando ao site ou pagando';
+
+
     public function getItens() {
         $arr['cadastro'] = $this->model->getDailyCadastro();
         $arr['retorno'] = $this->model->getDailyReturn();
