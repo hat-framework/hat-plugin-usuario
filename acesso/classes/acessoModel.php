@@ -5,6 +5,7 @@ class usuario_acessoModel extends \classes\Model\Model{
     public  $pkey   = 'cod';
     public function saveLog($logname,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg,$loggroup){
         //if($msg == '' && $cod_perfil == Webmaster) {return true;}
+        if($action == 'notificacao/notifycount/load'){return true;}
         $gr     = array_shift($loggroup);
         $action = substr($action, 1, strlen($action));
         $log = array(
@@ -64,13 +65,13 @@ class usuario_acessoModel extends \classes\Model\Model{
     
     public function getChartData($qtd = 10, $cod_usuario = '') {
         $where = ($cod_usuario == "")?"1":"cod_usuario='$cod_usuario'";
-        return $this->selecionar(array('COUNT(*) as total', 'action'), "$where GROUP BY action", $qtd, 0, 'total DESC');
+        return $this->selecionar(array('cod','COUNT(*) as total', 'action'), "$where GROUP BY action", $qtd, 0, 'total DESC');
     }
     
     public function getChartDataUnique($qtd = 10, $cod_usuario = '') {
         //$where = "logname LIKE '%'";
         $where = ($cod_usuario == "")?"1":"cod_usuario='$cod_usuario'";
-        $arr = array('COUNT(DISTINCT cod_usuario) as total', 'action');
+        $arr = array('cod','COUNT(DISTINCT cod_usuario) as total', 'action');
         return $this->selecionar($arr, "$where GROUP BY action", $qtd, 0, 'COUNT(*) DESC');
     }
     
@@ -79,8 +80,8 @@ class usuario_acessoModel extends \classes\Model\Model{
         if($cod_usuario != ""){
             $where.= " AND cod_usuario='$cod_usuario'";
         }
-        $arr = array('cod', 'COUNT(*) as total', 'COUNT(*) as totall', 'action');
-        return $this->selecionar($arr, "$where GROUP BY action", $qtd, 0, 'totall DESC');
+        $arr = array('cod', 'COUNT(*) as total', 'action');
+        return $this->selecionar($arr, "$where GROUP BY action", $qtd, 0, 'total DESC');
     }
     
     public function getChartGroupData($grupos, $qtd = 10, $cod_usuario = ''){
@@ -90,9 +91,9 @@ class usuario_acessoModel extends \classes\Model\Model{
         }
         
         if($cod_usuario != ""){$where[] = "cod_usuario='$cod_usuario'";}
-        $arr = array('COUNT(*) as total', 'COUNT(*) as totall', 'action');
+        $arr = array('cod','COUNT(*) as total', 'action');
         $where = implode(" AND ", $where);
-        return $this->selecionar($arr, "$where GROUP BY group", $qtd, 0, 'totall DESC');
+        return $this->selecionar($arr, "$where GROUP BY group", $qtd, 0, 'total DESC');
     }
     
     public function getUserAccess(){
@@ -127,8 +128,9 @@ class usuario_acessoModel extends \classes\Model\Model{
         foreach($res as $for){
            $action = $for['group1'].'/'.$for['group2'].'/'.$for['group3'];
            $action = "<a href='".URL.$action."'>$action</a>";
-           $out[] = array('Descrição'=>$action,'Quantidade'=>$for['count']);
+           $out[]  = array('cod'=>$for['cod'], 'Descrição'=>$action,'Quantidade'=>$for['count']);
         }
+        usort($out, function($a, $b){return $a["Quantidade"] <= $b["Quantidade"];});
         return $out;
     }
     
@@ -169,4 +171,8 @@ class usuario_acessoModel extends \classes\Model\Model{
         return $this->importDataFromArray($out);
     }
     
+    public function dropitem($action) {
+        $cod_usuario = usuario_loginModel::CodUsuario();
+        return $this->db->Delete($this->tabela, "action='$action' AND cod_usuario='$cod_usuario'");
+    }
 }

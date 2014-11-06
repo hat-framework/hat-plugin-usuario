@@ -21,7 +21,7 @@ class subscribeComponent extends classes\Classes\Object{
                     echo "<h3 class='title panel-title'>Cadastre-se Gratuitamente</h3>";
                 $this->gui->closediv();
 
-                $this->gui->opendiv('', 'panel-body pull-left');
+                $this->gui->opendiv('', 'panel-body');
                     $form = $this->getArr();
                     $this->LoadResource("formulario", "form");
                     $this->form->NewForm($form, array(), array(), false, "usuario/login/inserir");

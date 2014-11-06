@@ -21,4 +21,13 @@ class acessoController extends CController{
         $this->display(LINK."/report");
     }
     
+    public function dropitem() {
+        $this->model->dropItem($this->item['action']);
+        Redirect('usuario/login/seelog/'.$this->item['cod_usuario']);
+    }
+    
+    public function ladetail(){
+        print_in_table($this->model->selecionar(array('action', "COUNT(cod_usuario) as total", "cod_usuario"), "action='{$this->item['action']}'"));
+    }
+    
 }

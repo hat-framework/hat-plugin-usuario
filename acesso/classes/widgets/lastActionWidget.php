@@ -25,6 +25,7 @@ class lastActionWidget extends \classes\Component\widget{
     
     public function listMethod($itens) {
         $this->component->removeListAction('Veja mais');
+        $this->component->addListAction('Detalhar', "ladetail");
         parent::listMethod($itens);
     }
 }

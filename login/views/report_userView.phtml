@@ -3,13 +3,13 @@
 $gui = new \classes\Component\GUI();
 
 $opt = array('class' => 'col-xs-12');
-$gui->opendiv('filt', 'col-xs-7');
+$gui->opendiv('filt', 'col-xs-12 col-md-6');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/log_usuarioWidget' => array('user' => $cod, 'title' => 'Ações do usuário')
     ));
 $gui->closediv();
 
-$gui->opendiv('filt', 'col-xs-5 pull-right widget');
+$gui->opendiv('filt', 'col-xs-12 col-md-6 pull-right');
     classes\Component\widget::executeWidgets(array(
         'usuario/acesso/widgets/errosWidget' => array('user' => $cod, 'title' => 'Mais acessadas pelo usuário contendo erros'),
         'usuario/acesso/widgets/pagesWidget' => array('user' => $cod, 'title' => 'Mais acessadas pelo usuário'),
