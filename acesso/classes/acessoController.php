@@ -30,4 +30,9 @@ class acessoController extends CController{
         print_in_table($this->model->selecionar(array('action', "COUNT(cod_usuario) as total", "cod_usuario"), "action='{$this->item['action']}'"));
     }
     
+    public function hasOwn(){
+        if(usuario_loginModel::IsWebmaster()){return true;}
+        parent::hasOwn();
+    }
+    
 }
