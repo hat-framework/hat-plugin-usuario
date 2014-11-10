@@ -1,8 +1,9 @@
 <?php 
-$this->gui->opendiv('subscribe_container','col-xs-12 col-sm-6 col-md-6 col-lg-5');
-    $this->LoadComponent('usuario/login', 'lcomp');
-    $this->lcomp->tela_login();
-    $this->lcomp->Subscribe();
-$this->gui->closediv();
 
-$this->Html->getImageIfExists('descanso.jpg','none-767 col-xs-12 col-sm-6 col-md-6 col-lg-7');
+$img = $this->Html->getImageIfExists('descanso.jpg','none-767 col-xs-12 col-sm-6 col-md-6 col-lg-7', false);
+$this->gui->opendiv('subscribe_container', ($img !== "")?'col-xs-12 col-sm-6 col-md-6 col-lg-5':"col-xs-12");
+    $this->LoadComponent('usuario/login', 'lcomp');
+    $this->lcomp->tela_login(($img !== "")?"":'col-xs-12 col-sm-12 col-md-6 col-lg-5');
+    $this->lcomp->Subscribe(($img !== "")?"":'col-xs-12 col-sm-12 col-md-6 col-lg-7');
+$this->gui->closediv();
+echo "$img";

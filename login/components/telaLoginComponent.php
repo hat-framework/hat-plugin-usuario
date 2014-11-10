@@ -25,19 +25,20 @@ class telaLoginComponent extends classes\Classes\Object{
     
     public function __construct() {
         $this->LoadResource('html', 'Html');
-        $this->gui = new \classes\Component\GUI();
+        $this->gui   = new \classes\Component\GUI();
+        $this->class = classes\Classes\Template::getClass('telalogin');
     }
 
     public function screen($class = ''){
-        $data = classes\Classes\Template::getClass('tela_login');
-        if(isset($data['tela_loginClass']))$class = $data['tela_loginClass'];
-        $this->gui->opendiv('tela_login', $class);
+        $cls   = (isset($this->class['tela_loginClass']))?$this->class['tela_loginClass']:"";
+        $title = (isset($this->class['tela_loginTitle']))?$this->class['tela_loginTitle']:"Já Sou Registrado";
+        $this->gui->opendiv('tela_login', "$cls $class");
             $this->gui->widgetOpen('', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
-                    echo "<h3 class='title panel-title'>Já Sou Registrado</h3>";
+                    echo "<h3 class='title panel-title'>$title</h3>";
                 $this->gui->closediv();
 
-                $this->gui->opendiv('tela_login', 'panel-body');
+                $this->gui->opendiv('tela_login_container', 'panel-body');
                     $this->formLogin();
                     $this->bottom();
                 $this->gui->closediv();
@@ -59,16 +60,16 @@ class telaLoginComponent extends classes\Classes\Object{
     
     private function bottom(){
         $link1 = $this->Html->getLink("usuario/login/recuperar");
-        $link2 = $this->Html->getLink("usuario/login/inserir");
         if(defined('USUARIO_FB_ACCESS') && USUARIO_FB_ACCESS === true){
-            $class = classes\Classes\Template::getClass('facebook');
-            echo "<div class='$class'>";
-            //echo "<h3>Para Criar uma nova conta <a href='$link2'><b>clique aqui</b></a></h3>";
-            $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
-            echo $this->fb->getFBLink('', 'btn btn-primary');
+            $fbtext = (isset($this->class['fbtext']))?$this->class['fbtext']:"";
+            $clsfb  = (isset($this->class['facebook_login']))?$this->class['facebook_login']:"btn btn-primary";
+            
+            echo "<div class=''>";
+            echo $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb')->getFBLink($fbtext, "$clsfb");
             echo "</div>";
         }
-        $classEsqueci = classes\Classes\Template::getClass('esqueci_senha');
-        echo "<div class='$classEsqueci esqueci_senha'><a href='$link1' class=''>Esqueci minha senha</a></div>";
+        $txt = (isset($this->class['forgetpasswd_txt']))?$this->class['forgetpasswd_txt']:"Esqueci minha senha";
+        $cls = (isset($this->class['esqueci_senha']))?$this->class['esqueci_senha']:"";
+        echo "<div class='esqueci_senha'><a href='$link1' class='$cls'>$txt</a></div>";
     }
 }

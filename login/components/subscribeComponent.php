@@ -8,17 +8,18 @@ class subscribeComponent extends classes\Classes\Object{
         $this->LoadResource('html', 'Html');
         $this->Html->LoadCss('tela_login');
         $this->gui = new \classes\Component\GUI();
+        $this->class = classes\Classes\Template::getClass('subscribe');
     }
     
     public function screen($class = ''){
         if(\usuario_loginModel::CodUsuario() !== 0) {return;}
         if(!defined('USUARIO_CREATE_ACCOUNT') || USUARIO_CREATE_ACCOUNT === false) {return;}
-        $data = classes\Classes\Template::getClass('subscribe');
-        if(isset($data['subscribeClass']))$class = $data['subscribeClass'];
-        $this->gui->opendiv('tela_cadastro', $class);
+        $cls   = (isset($this->class['subscribeClass']))?$this->class['subscribeClass']:"";
+        $title = (isset($this->class['subscribeTitle']))?$this->class['subscribeTitle']:"Cadastre-se Gratuitamente";
+        $this->gui->opendiv('tela_cadastro', "$class $cls");
             $this->gui->widgetOpen('', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
-                    echo "<h3 class='title panel-title'>Cadastre-se Gratuitamente</h3>";
+                    echo "<h3 class='title panel-title'>$title</h3>";
                 $this->gui->closediv();
 
                 $this->gui->opendiv('', 'panel-body');
@@ -59,11 +60,13 @@ class subscribeComponent extends classes\Classes\Object{
     
     private function facebook(){
         if(!defined('USUARIO_FB_ACCESS')      || USUARIO_FB_ACCESS === false) {return;}
+        $txt   = (isset($this->class['fbtext'])) ?$this->class['fbtext'] :'Cadastre-se com Facebook';
+        $cls   = (isset($this->class['fbclass']))?$this->class['fbclass']:'btn btn-primary';
         $class = classes\Classes\Template::getClass('facebook');
         echo "<div class='$class'>";
         //echo "<h3>Para Criar uma nova conta <a href='$link2'><b>clique aqui</b></a></h3>";
         $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
-        echo $this->fb->getFBLink('Cadastre-se com Facebook', 'btn btn-primary');
+        echo $this->fb->getFBLink($txt, $cls);
         echo "</div>";
         
     }

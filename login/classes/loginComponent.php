@@ -3,24 +3,24 @@
 use classes\Classes\EventTube;
 class loginComponent extends classes\Component\Component{
     
-    public function Subscribe(){
-        $this->callUserComponent("subscribe");
+    public function Subscribe($options=''){
+        $this->callUserComponent("subscribe", $options);
     }
     
-    public function tela_login(){
-        $this->callUserComponent("telaLogin");
+    public function tela_login($options=''){
+        $this->callUserComponent("telaLogin", $options);
     }
     
-     public function superior_login(){
-        $this->callUserComponent("superiorLogin");
+     public function superior_login($options=''){
+        $this->callUserComponent("superiorLogin", $options);
     }
     
-    public function recuperar(){
-        $this->callUserComponent("recuperar");
+    public function recuperar($options=''){
+        $this->callUserComponent("recuperar", $options);
     }
     
-    public function LoggedMenu(){
-        return $this->callUserComponent("usermenu", 'getLoggedMenu');
+    public function LoggedMenu($options=''){
+        return $this->callUserComponent("usermenu", $options,'getLoggedMenu');
     }
     
     public function menu(){
@@ -124,9 +124,9 @@ class loginComponent extends classes\Component\Component{
         return $var;
     }
     
-    private function callUserComponent($component, $method = 'screen'){
+    private function callUserComponent($component, $options = "", $method = 'screen'){
         $this->LoadComponent("usuario/login/$component", 'comp');
-        return $this->comp->$method();
+        return $this->comp->$method($options);
     }
     
     public function format_user_criadoem($data){
