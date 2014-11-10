@@ -12,10 +12,7 @@ else{
     $temp['cod_usuario'] = $user['cod_usuario'];
 }
 
-$this->LoadComponent('usuario/login', 'logcomp');
-//$this->logcomp->show('usuario/login',$temp);
-
-$this->LoadComponent('usuario/login/alterar', 'comp'); 
+//$this->LoadComponent('usuario/login', 'logcomp')->show('usuario/login',$temp);
 if($type == "" || empty($type)){
    if(false === getBoleanConstant('USUARIO_CORRETORA')) {
     $type = array('email', 'pessoal', 'senha', 'telefone', 'endereco');
@@ -24,7 +21,11 @@ if($type == "" || empty($type)){
        $type = array('email', 'pessoal', 'senha', 'corretora', 'endereco');
    }
 }
+
+$this->LoadComponent('usuario/login/alterar', 'comp'); 
+$class = (count($type) === 1)?'col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-5 col-ld-offset-5':"";
 foreach($type as $t){
     if(!method_exists($this->comp, $t)){continue;}
+    if($class !== ""){$this->comp->setClass($class);}
     call_user_func(array($this->comp, $t), $item);
 }

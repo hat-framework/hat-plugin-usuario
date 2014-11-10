@@ -8,6 +8,7 @@ class alterarComponent extends \classes\Classes\Object{
     public function __construct() {
         $this->gui   = new \classes\Component\GUI();
         $this->dados = $this->LoadModel('usuario/login', 'uobj')->getDados();
+        $this->reset();
     }
     
     public function senha($item){
@@ -32,6 +33,7 @@ class alterarComponent extends \classes\Classes\Object{
         $out   = array();
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
         if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
+        $this->id = 'alterar_telefone';
         $this->makeWidget("Telefone", $out, $item, 'usuario/login/alterar/telefone');
     }
     
@@ -45,12 +47,14 @@ class alterarComponent extends \classes\Classes\Object{
         if($this->uobj->getCodUsuario() !== $item['cod_usuario'] && isset($this->dados['cod_perfil'])){
             $out['cod_perfil']= $this->dados['cod_perfil'];
         }        
+        $this->id = 'alterar_email';
         $this->makeWidget("Dados da conta", $out, $item, 'usuario/login/alterar/email', "Alterar dados da conta");
     }
     
     public function pessoal($item){
         $out = $this->assocDados(array('nascimento', 'cpf', 'rg'));
         if(empty($out)){return;}
+        $this->id = 'alterar_pessoal';
         $this->makeWidget("Dados pessoais", $out, $item, 'usuario/login/editar');
     }
     
@@ -60,6 +64,7 @@ class alterarComponent extends \classes\Classes\Object{
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
         if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
         if(isset($this->dados['codcorretora'])) {$out['codcorretora'] = $this->dados['codcorretora'];}
+        $this->id = 'alterar_corretora';
         $this->makeWidget("Telefone & Corretora", $out, $item, 'usuario/login/alterar/telefone');
     }
     
@@ -70,6 +75,7 @@ class alterarComponent extends \classes\Classes\Object{
         $item  = $this->end->getUserAddress($cod_usuario); 
         $view  = (empty($item)?"usuario/endereco/formulario":"usuario/endereco/edit/$cod_usuario");
         if(isset($dados['button'])){unset($dados['button']);}
+        $this->id = 'alterar_endereco';
         $this->makeWidget("Meu endereço", $dados, $item, $view, "Alterar Endereço");
     }
     
@@ -83,7 +89,6 @@ class alterarComponent extends \classes\Classes\Object{
         $dados['button'] = array('button' => $button_name);
         
         $link = (isset($_GET['redirect']))?$this->LoadResource('html', 'html')->getLink("$action&redirect=".$_GET['redirect'], true,true):$action;
-        $this->reset();
         $this->gui->opendiv($this->id, $this->class);
             $this->gui->opendiv('change_widget', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
@@ -96,6 +101,10 @@ class alterarComponent extends \classes\Classes\Object{
             $this->gui->widgetClose();
         $this->gui->closediv();
         $this->reset();
+    }
+    
+    public function setClass($class){
+        $this->class = $class;
     }
     
     private function reset(){
