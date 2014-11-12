@@ -1,6 +1,6 @@
 <?php
 class acessoComponent extends classes\Component\Component{
-    protected $listActions = array('Detalhes' => "show",'Apagar' => "dropitem");
+    protected $listActions = array('Detalhes' => "show",'Apagar' => "dropitem", /*'Apagar' => "dropitem"*/);
     public function format_action($action){
         //$action = (in_array($action[0], array('/')))? substr($action, 1, strlen($action)):$action;
         $link = URL."$action";

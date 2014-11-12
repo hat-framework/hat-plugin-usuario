@@ -5,9 +5,9 @@ class usuario_acessoModel extends \classes\Model\Model{
     public  $pkey   = 'cod';
     public function saveLog($logname,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg,$loggroup){
         //if($msg == '' && $cod_perfil == Webmaster) {return true;}
-        if($action == 'notificacao/notifycount/load'){return true;}
         $gr     = array_shift($loggroup);
         $action = substr($action, 1, strlen($action));
+        if($action == 'notificacao/notifycount/load'){return true;}
         $log = array(
             'logname'     => $logname,
             'cod_usuario' => $cod_usuario,
@@ -174,5 +174,9 @@ class usuario_acessoModel extends \classes\Model\Model{
     public function dropitem($action) {
         $cod_usuario = usuario_loginModel::CodUsuario();
         return $this->db->Delete($this->tabela, "action='$action' AND cod_usuario='$cod_usuario'");
+    }
+    
+    public function globaldrop($action){
+        return $this->db->Delete($this->tabela, "action='$action'");
     }
 }

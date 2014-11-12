@@ -4,7 +4,7 @@ class acessoController extends CController{
     public $model_name = "usuario/acesso";
     
     public function __construct($vars) {
-        $this->addToFreeCod('migrate');
+        $this->addToFreeCod(array('migrate'));
         parent::__construct($vars);
     }
     
@@ -23,6 +23,11 @@ class acessoController extends CController{
     
     public function dropitem() {
         $this->model->dropItem($this->item['action']);
+        Redirect('usuario/login/seelog/'.$this->item['cod_usuario']);
+    }
+    
+    public function globaldrop() {
+        $this->model->globaldrop($this->item['action']);
         Redirect('usuario/login/seelog/'.$this->item['cod_usuario']);
     }
     
