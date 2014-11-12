@@ -64,6 +64,11 @@ class alterarComponent extends \classes\Classes\Object{
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
         if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
         if(isset($this->dados['codcorretora'])) {$out['codcorretora'] = $this->dados['codcorretora'];}
+        $out['codcorretora']['fkey'] = array(
+            'model'         => 'carteira/corretora',
+            'cardinalidade' => '1n',
+            'keys'          => array('cod', 'dsnomecomercial'),
+        );
         $this->id = 'alterar_corretora';
         $this->makeWidget("Telefone & Corretora", $out, $item, 'usuario/login/alterar/telefone');
     }
