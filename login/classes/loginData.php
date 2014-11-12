@@ -241,10 +241,7 @@ class usuario_loginData extends \classes\Model\DataModel{
 	    'size'     => '11',
 	    'grid'    => true,
 	    'display' => true,
-            'default' => 0,
             'feature'  => 'USUARIO_CORRETORA',
-	    'especial' => 'session',
-	    'session'  => 'carteira/corretora',
 	    /*'fkey' => array(
 	        'model' => 'carteira/corretora',
 	        'cardinalidade' => '1n',
