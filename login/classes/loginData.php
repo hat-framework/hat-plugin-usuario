@@ -59,7 +59,7 @@ class usuario_loginData extends \classes\Model\DataModel{
 	    'name'     => 'Telefone Fixo',
 	    'type'     => 'varchar',
             'feature'  => 'USUARIO_TELEFONE',
-	    'size'     => '10',
+	    'size'     => '11',
             'especial' => 'telefone',
 	    'grid'    => true,
 	    'display' => true,

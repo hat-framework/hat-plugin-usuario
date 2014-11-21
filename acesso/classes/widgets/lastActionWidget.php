@@ -17,7 +17,7 @@ class lastActionWidget extends \classes\Component\widget{
             $v = ',';
         }
         $in.= ")";
-        $date = date('Y-m-d');
+        $date = date('Y-m-d H:i:s');
         $date = \classes\Classes\timeResource::subDateTime($date, 7);
         $arr = $this->model->getLastActionAccess("$in and data >= '$date' group by group1,group2,group3 ORDER BY count DESC");
         return $arr;
@@ -25,7 +25,6 @@ class lastActionWidget extends \classes\Component\widget{
     
     public function listMethod($itens) {
         $this->component->removeListAction('Veja mais');
-        $this->component->addListAction('Detalhar', "ladetail");
         parent::listMethod($itens);
     }
 }

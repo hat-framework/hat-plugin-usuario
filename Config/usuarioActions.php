@@ -184,7 +184,7 @@ class usuarioActions extends Actions{
         'usuario/login/logado' => array(
             'label' => 'Minha Conta', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_AC', 
-            'menu' => array('Preferência de Notificação' => 'usuario/notify/index'),
+            'menu' => array('Preferência de Notificação' => 'usuario/notify/index','Recuperar Senha' => 'usuario/login/recuperar'),
             'breadscrumb' => array('usuario/login/logado')
         ),
         
