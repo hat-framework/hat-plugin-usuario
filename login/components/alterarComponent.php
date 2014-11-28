@@ -11,7 +11,7 @@ class alterarComponent extends \classes\Classes\Object{
         $this->reset();
     }
     
-    public function senha($item){
+    public function senha($item = array()){
         $dados['senha_nova'] = array(
             'name'     => 'Senha Nova',
             'especial' => 'senha',
@@ -25,20 +25,28 @@ class alterarComponent extends \classes\Classes\Object{
             'notnull'  => true,
         );
         
-        $this->makeWidget("Alterar Senha", $dados, $item, 'usuario/login/alterar/senha', "Alterar Senha");
+        $this->makeWidget("Alterar Senha", $dados, array(), 'usuario/login/alterar/senha', "Alterar Senha");
     }
     
-    public function telefone($item){
+    public function telefone($item = array()){
         if(false === getBoleanConstant('USUARIO_TELEFONE')) {return;}
         $out   = array();
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
         if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
         $this->id = 'alterar_telefone';
+        
+        $cod_usuario = usuario_loginModel::CodUsuario();
+        $item        = (empty($item))?$this->LoadModel('usuario/login', 'uobj')->getItem($cod_usuario, '', false, array('fixo', 'celular')):$item;
         $this->makeWidget("Telefone", $out, $item, 'usuario/login/alterar/telefone');
     }
     
-    public function email($item){
-        $out   = array();
+    public function email($item = array()){
+        $out         = array();
+        $cod_usuario = usuario_loginModel::CodUsuario();
+        $item        = (empty($item))?
+            $this->LoadModel('usuario/login', 'uobj')->getItem($cod_usuario, '', false, 
+                    array('user_cargo', 'cod_perfil', 'user_name', 'email','cod_usuario')):
+                    $item;
         if(isset($this->dados['user_name']))  {$out['user_name']  = $this->dados['user_name'];}
         if(isset($this->dados['email']))      {$out['email'] = $this->dados['email'];}
         if($this->uobj->UserIsAdmin() && isset($this->dados['user_cargo'])){
@@ -58,9 +66,11 @@ class alterarComponent extends \classes\Classes\Object{
         $this->makeWidget("Dados pessoais", $out, $item, 'usuario/login/editar');
     }
     
-    public function corretora($item){
+    public function corretora($item = array()){
         if(false === getBoleanConstant('USUARIO_CORRETORA')) {return;}
-        $out   = array();
+        $cod_usuario = usuario_loginModel::CodUsuario();
+        $item        = (empty($item))?$this->LoadModel('usuario/login', 'uobj')->getItem($cod_usuario, '', false, array('codcorretora')):$item;
+        $out         = array();
         if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
         if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
         if(isset($this->dados['codcorretora'])) {$out['codcorretora'] = $this->dados['codcorretora'];}
@@ -73,7 +83,7 @@ class alterarComponent extends \classes\Classes\Object{
         $this->makeWidget("Telefone & Corretora", $out, $item, 'usuario/login/alterar/telefone');
     }
     
-    public function endereco($item){
+    public function endereco($item = array()){
         if(false === getBoleanConstant('USUARIO_ENDERECO')) {return;}
         $cod_usuario = usuario_loginModel::CodUsuario();
         $dados = $this->LoadModel('usuario/endereco', 'end')->getDados();
@@ -93,8 +103,9 @@ class alterarComponent extends \classes\Classes\Object{
         );
         $dados['button'] = array('button' => $button_name);
         
+        $class = (CURRENT_ACTION === 'logado')?$this->class:'';
         $link = (isset($_GET['redirect']))?$this->LoadResource('html', 'html')->getLink("$action&redirect=".$_GET['redirect'], true,true):$action;
-        $this->gui->opendiv($this->id, $this->class);
+        $this->gui->opendiv($this->id, $class);
             $this->gui->opendiv('change_widget', "panel panel-default");
                 $this->gui->opendiv('', 'panel-heading');
                     echo "<h3 class='title panel-title'>$title</h3>";

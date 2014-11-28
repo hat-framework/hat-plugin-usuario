@@ -13,12 +13,12 @@ class usuarioInstall extends classes\Classes\InstallPlugin{
         /*'usuario/userconfig' => array(
             array('cod'=>'1', 'name'=>'pessoal', 'title'=>'Dados Pessoais', 'icon'=>'icon-user', 'view'=>'usuario/login/pessoal')
         ),*/
-        'usuario/notify_tipo' => array(
+        /*'usuario/notify_tipo' => array(
             array('cod'=>'1', 'name'=>'pessoal'),
             array('cod'=>'2', 'name'=>'pessoal'),
             array('cod'=>'3', 'name'=>'pessoal'),
             array('cod'=>'4', 'name'=>'pessoal'),
-        ),
+        ),*/
         'usuario/perfil' => array(
             array('usuario_perfil_cod'=>'3', 'usuario_perfil_nome'=>'Webmaster'                 , 'usuario_perfil_pai'=>'' ,'usuario_perfil_default'=>'0', 'usuario_perfil_tipo'=>'sistema', 'path'=>'/3'    , 'usuario_perfil_descricao'=>'Perfil destinado aos Webmasters. Eles terão acesso à todos os dados do site'),
             array('usuario_perfil_cod'=>'2', 'usuario_perfil_nome'=>'Administrador'             , 'usuario_perfil_pai'=>'3','usuario_perfil_default'=>'0', 'usuario_perfil_tipo'=>'sistema', 'path'=>'/3/2'  , 'usuario_perfil_descricao'=>'Usuários com previlégios administrativos, podem alterar configurações do site'),
