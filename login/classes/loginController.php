@@ -150,15 +150,22 @@ class loginController extends CController{
     public function recuperar(){
 
         //verifica se usuário está online
-        if($this->model->IsLoged()){$this->logado();}
+        if($this->model->IsLoged()){
+            $item = $this->model->getItem(usuario_loginModel::CodUsuario());
+            $this->model->RecoverPassword($item['email']);
+            $arr = $this->model->getMessages();
+            $link = "";
+        }else{
+            //solicita a recuperacao da conta
+            if(!empty($_POST)) $this->model->RecoverPassword($_POST['email']);
+            $arr = $this->model->getMessages();
+            $link = 'usuario/login/recuperar';
+            
+        }
 
-        //solicita a recuperacao da conta
-        if(!empty($_POST)) $this->model->RecoverPassword($_POST['email']);
-        $arr = $this->model->getMessages();
-        
         //exibe o formulário
         $this->genTags("Recuperar Acesso");
-        $this->display('usuario/login/recuperar', $arr);
+        $this->display($link, $arr);
     }
 
     public function confirmrec(){

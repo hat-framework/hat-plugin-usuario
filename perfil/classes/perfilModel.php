@@ -79,10 +79,20 @@ class usuario_perfilModel extends \classes\Model\Model{
         return array($var['usuario_perfil_cod'] => $var["usuario_perfil_nome"]);
     }
     
+    private $ignorepath = false;
+    public function ignorePath(){
+        $this->ignorepath = true;
+        return $this;
+    }
+    
     public function selecionar($campos = array(), $where = "", $limit = "", $offset = "", $orderby = "") {
-        $where   = ($where == "")?
-            $this->pathWhere:
-            (($this->pathWhere == "")?$where:"$where AND $this->pathWhere");
+        if(!$this->ignorepath){
+            $where   = ($where == "")?
+                $this->pathWhere:
+                (($this->pathWhere == "")?$where:"$this->pathWhere AND ($where)");
+        }
+        $this->ignorepath = false;
+        
         $orderby = ($orderby == "")?"usuario_perfil.path ASC, usuario_perfil_nome ASC":$orderby;
         $var = parent::selecionar($campos, $where, $limit, $offset, $orderby);
         //echo $this->db->getSentenca() . "<br/><br/>";

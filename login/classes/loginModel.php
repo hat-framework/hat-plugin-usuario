@@ -763,12 +763,17 @@ class usuario_loginModel extends \classes\Model\Model{
         static $cache = array();
         if(!$this->IsLoged()){return "";}
         $cod_user = ($cod_usuario == "") ?$this->getCodUsuario():$cod_usuario;
-        if(array_key_exists($cod_user, $cache)) return $cache[$cod_user];
+        if(array_key_exists($cod_user, $cache)) {
+            return (isset($_GET['_perfil']) && usuario_loginModel::CodPerfil() == Webmaster)?
+                $_GET['_perfil']:$cache[$cod_user];
+        }
         
         $user = $this->selecionar(array('cod_perfil'), "cod_usuario='$cod_user'");
         $us = (!empty($user))?array_shift($user):array('cod_perfil' => '');
         $cache[$cod_user] = $us['cod_perfil'];
-        return $us['cod_perfil'];
+        //die(usuario_loginModel::CodPerfil() . " - ".Webmaster);
+        return (isset($_GET['_perfil']) && usuario_loginModel::CodPerfil() == Webmaster)?
+                $_GET['_perfil']:$us['cod_perfil'];
     }
     
     public function getUsuariosPorPerfil($cod_perfil, $campos = array()){
