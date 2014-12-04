@@ -796,7 +796,8 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public static function CodPerfil(){
         $var = cookie::getVar(self::$__cookie);
-        return isset($var['cod_perfil'])?$var['cod_perfil']:0;
+        if(!isset($var['cod_perfil'])){return 0;}
+        return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
     
     
