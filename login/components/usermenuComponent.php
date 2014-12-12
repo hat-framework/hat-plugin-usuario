@@ -38,7 +38,7 @@ class usermenuComponent extends classes\Classes\Object{
                 '__id'                   => "user",
                 '__icon'                 => 'glyphicon glyphicon-user icon-user',
                 'Meus dados'             => array(
-                    'Meus dados' => 'usuario/login/',
+                    'Meus dados' => 'config',
                     '__icon'     => 'fa fa-user'
                 ),
                 /*'Tutorial'             => array(
