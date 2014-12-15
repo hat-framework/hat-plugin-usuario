@@ -248,31 +248,6 @@ class usuario_loginData extends \classes\Model\DataModel{
 	        'keys' => array('cod', 'dsnomecomercial'),
 	    ),*/
         ),
-        
-        'cpf' => array(
-	    'name'     => 'Cpf',
-	    'type'     => 'varchar',
-            'feature'  => 'USUARIO_CPF',
-	    'size'     => '16',
-            'especial' => 'cpf',
-	    'grid'    => true,
-	    'display' => true,
-        ),
-         'rg' => array(
-	    'name'     => 'Rg',
-	    'type'     => 'varchar',
-	    'size'     => '32',
-            'feature'  => 'USUARIO_RG',
-	    'grid'    => true,
-	    'display' => true,
-        ),
-         'nascimento' => array(
-	    'name'     => 'Nascimento',
-	    'type'     => 'date',
-            'feature'  => 'USUARIO_NASCIMENTO',
-	    'grid'    => true,
-	    'display' => true,
-        ),
  
         'button' => array(
             'button' => "Salvar Usuário"

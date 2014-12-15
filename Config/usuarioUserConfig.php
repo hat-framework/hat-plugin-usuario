@@ -167,6 +167,39 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
                 'button' => array('button' => "Salvar Email")
             ),
         ),
+        
+        /*'pessoal_dados' =>array(
+            'cod'       => 'pessoal_dados', 
+            'group'     => 'notify', 
+            'title'     => 'Informações Pessoais',
+            'ordem'     => '5',
+            'icon'      => 'fa fa-user',
+            'type'      => 'directdata', 
+            'form_data' => array(
+                'cpf' => array(
+                    'name'     => 'Cpf',
+                    'type'     => 'varchar',
+                    'size'     => '16',
+                    'especial' => 'cpf',
+                    'display' => true,
+                ),
+                 'rg' => array(
+                    'name'     => 'Rg',
+                    'type'     => 'varchar',
+                    'size'     => '32',
+                    'grid'    => true,
+                    'display' => true,
+                ),
+                 'nascimento' => array(
+                    'name'     => 'Nascimento',
+                    'type'     => 'date',
+                    'grid'    => true,
+                    'display' => true,
+                ),
+
+                'button' => array('button' => "Salvar Informações pessoais")
+            ),
+        ),*/
         'notify_conta' =>array(
             'cod'       => 'notify_conta', 
             'group'     => 'notify', 
@@ -176,18 +209,26 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             'type'      => 'directdata', 
             'form_data' => array(
                 'modificacao' => array(
-                    'name'        => 'Receber notificação de alteração de Email e Senha',
-                    'description' => 'Receber notificação por email se o meu email for alterado no site (Aumenta a segurança)',
-                    'type'        => 'bit',
-                    'default'     => '1',
+                    'name'        => 'Alteração de Email e Senha (recomendado)',
+                    'description' => 'Receber notificação por email se o meu email de acesso for alterado no site (Aumenta a segurança)',
+                    'type'        => 'enum',
+                    'default'     => 's',
+                    'options'     => array(
+                        's' => 'Receber',
+                        'n' => 'Não'
+                    ),
                     'notnull'     => true
                 ),
-
-                'dados' => array(
-                    'name'        => 'Receber notificação de alteração Alteração de dados',
-                    'description' => 'Receber notificações por email se meus dados (exceto email e senha) forem alterados no site',
-                    'type'        => 'bit',
-                    'default'     => '1',
+                
+                'novidades' => array(
+                    'name'        => 'Mudanças no site',
+                    'description' => 'Receber um email quando ocorrerem mudanças significativas no site (novas funcionalidades, remoção ou descontinuidade de produtos, novo design, etc)',
+                    'type'        => 'enum',
+                    'default'     => 's',
+                    'options'     => array(
+                        's' => 'Receber',
+                        'n' => 'Não'
+                    ),
                     'notnull'     => true
                 ),
 
