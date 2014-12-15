@@ -31,7 +31,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             'icon'      =>'fa fa-map-marker',
             'ordem'     =>'4',
             'type'      => 'directdata',
-            'multiple'  =>1,
+            'multiple'  => '1',
             'form_data' => array(
                 'cep' => array(
                     'name'     => 'Cep',
@@ -101,7 +101,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             'icon'      => 'fa fa-phone',
             'ordem'     => '3',
             'type'      => 'directdata',
-            'multiple'  => 1,
+            'multiple'  => '1',
             'form_data' => array(
                 'type' => array(
                     'name'     => 'Tipo',
@@ -140,7 +140,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             'icon'      =>'fa fa-map-marker',
             'ordem'     =>'5',
             'type'      => 'directdata',
-            'multiple'  =>1, 
+            'multiple'  => '1', 
             'form_data' => array(
                 'type' => array(
                     'name'     => 'Tipo',

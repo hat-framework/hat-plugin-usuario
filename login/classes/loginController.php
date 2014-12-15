@@ -297,7 +297,7 @@ class loginController extends CController{
     }
     
     public function seedata(){
-        Redirect("config/user&_user=$this->cod&_click=login");
+        Redirect("config&_user=$this->cod&_click=login");
     }
     
     private function detectRedirect(){
