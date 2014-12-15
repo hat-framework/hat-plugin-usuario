@@ -296,6 +296,10 @@ class loginController extends CController{
         $this->display(LINK.'/report_user');
     }
     
+    public function seedata(){
+        Redirect("config/user&_user=$this->cod&_click=login");
+    }
+    
     private function detectRedirect(){
         if(isset($_GET['redirect'])){
             Redirect($_GET['redirect']);

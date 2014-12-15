@@ -20,7 +20,15 @@ class usuarioConfigurations extends \classes\Classes\Options{
         ),
         
         array(
-            'menuid' => 'pessoas',
+            'menuid' => 'todos_usuarios',
+            'menu'   => 'Listar Usuários',
+            'pai'    => 'usuarios',
+            'icon'   => 'glyphicon glyphicon-user',
+            'url'    => 'usuario/login/todos',
+        ),
+        
+        array(
+            'menuid' => 'report',
             'menu'   => 'Relatórios',
             'pai'    => 'usuarios',
             'icon'   => 'glyphicon glyphicon-tasks',

@@ -140,20 +140,17 @@ class perfilPermissions extends classes\Classes\Object{
     }
     
     public function hasPermissionByName($permname){
-        if(usuario_loginModel::IsWebmaster() && !array_key_exists('_perfil', $_GET)){return true;}
-        $cod_perfil = $this->perfilVisualization();
-        $true_perf  = usuario_loginModel::CodPerfil();
-        $perm       = array();
-        if($cod_perfil === $true_perf){$perm = cookie::getVar($this->cookie);}
-        
-        if(empty($perm)){
-            $cod_perfil = $this->perfilVisualization();
-            if($cod_perfil != ""){
-                $perm = $this->getPerfilPermissionsName($cod_perfil);
-                if($cod_perfil === $true_perf){cookie::setVar($this->cookie, $perm);}
-            }else{die("foo");}
+        $iswebmaster = usuario_loginModel::IsWebmaster();
+        if($iswebmaster && !array_key_exists('_perfil', $_GET)){return true;}
+        $cod_perfil = usuario_loginModel::CodPerfil();
+        $key        = ($iswebmaster)?"$this->cookie/$cod_perfil":"$this->cookie";
+        $perm       = cookie::getVar($key);
+        if(empty($perm) && $cod_perfil != ""){
+            $perm = $this->getPerfilPermissionsName($cod_perfil);
+            cookie::setVar($key, $perm);
         }
-        if(!is_array($perm))$perm = array();
+        if(!is_array($perm)){$perm = array();}
+        //print_rh($perm); echoBr($permname);
         return(in_array($permname, $perm));
     }
     

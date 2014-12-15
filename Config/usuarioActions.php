@@ -281,6 +281,7 @@ class usuarioActions extends Actions{
             'permission' => 'analisar_usuarios', 'needcod' => true,
             'menu' => array(
                 'Visualizar Log' => "usuario/login/seelog",
+                'Dados Extras'   => "usuario/login/seedata",
                 'Opções' => array('usuario/login/edit', 'usuario/login/apagar')
              ),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show')
@@ -292,6 +293,15 @@ class usuarioActions extends Actions{
             'menu' => array(),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
+        
+        
+         'usuario/login/seedata' => array(
+            'label' => 'Visualizar Dados Extras', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'analisar_usuarios', 'needcod' => true,
+            'menu' => array(),
+            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
+        ),
+        
         
         'usuario/login/gadget' => array(
             'label' => 'Gadgets do Usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',

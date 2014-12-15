@@ -724,8 +724,10 @@ class usuario_loginModel extends \classes\Model\Model{
 
     public static function IsWebmaster(){
         //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
-        if(!cookie::cookieExists(self::$__cookie)) return false;
-        return (self::CodPerfil() == Webmaster);
+        if(!cookie::cookieExists(self::$__cookie)) {return false;}
+        $var = cookie::getVar(self::$__cookie);
+        if(!isset($var['cod_perfil'])){return false;}
+        return ($var['cod_perfil'] == Webmaster);
     }
 
 
@@ -800,8 +802,6 @@ class usuario_loginModel extends \classes\Model\Model{
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
     
-    
-    
     public function blockUser($cod_usuario){
         if($this->getCodPerfil($cod_usuario) == Webmaster){
             $this->setErrorMessage("Não é possível bloquear um usuário com permissão de Webmaster");
@@ -851,8 +851,7 @@ class usuario_loginModel extends \classes\Model\Model{
         if($cod_autor == $cod_usuario) {return true;}
         
         //se usuário é webmaster
-        if($this->IsWebmaster()) return true;
-        
+        if($this->IsWebmaster() && !isset($_GET['_perfil'])) {return true;}
         
         //Somente um webmaster pode editar o próprio perfil
         $cod_perfil = $this->getCodPerfil($cod_usuario);
