@@ -29,6 +29,7 @@ class superiorLoginComponent extends classes\Classes\Object{
     }
 
     public function screen($class = 'pull-right col-md-3'){
+        if(usuario_loginModel::isLogged()){return;}
         $this->data = classes\Classes\Template::getClass('superior_login');
         if(isset($this->data['superior_loginClass']))$class = $this->data['superior_loginClass'];
         $this->gui->opendiv('superior_login', $class);
