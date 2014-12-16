@@ -7,6 +7,12 @@ class usuario_loginModel extends \classes\Model\Model{
     protected $pkey   = "cod_usuario";
     private   $cookie = "usuario";
     private static $__cookie = "usuario";
+    private $cookieuid = "user";
+    
+     public function setModelName($model){
+        parent::setModelName($model);
+        $this->restoreCookieUid();
+    }
     
     public function atualizaStatus($cod = ""){
         $wh = ($cod != "")? "AND cod_usuario = '$cod'":"";
@@ -73,7 +79,8 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //ao deslogar apaga todos os cookies
         session::destroyAll();
-        
+        \classes\Classes\cookie::destroy($this->cookieuid);
+                
         return parent::editar($cod, $v);
     }//c
     
@@ -233,11 +240,23 @@ class usuario_loginModel extends \classes\Model\Model{
         }
 
         //verifica se o usuário está bloqueado
-        $user = array_shift($value);
+        $refer = (isset($_GET['refer']))?$_GET['refer']:session::getVar('refer');
+        $user  = array_shift($value);
+        if($refer == "") {$refer = URL;}
+        $this->makeLogin($user, $refer);
+        
+        //redireciona, caso necessário
+        $this->Redirect(true,$login_first);
+        
+        return true;
+    }
+    
+    private function makeLogin($user, $refer = ''){
         if($user['status'] == 'bloqueado'){
             throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");
             return false;
         }
+        if(empty($user)){return false;}
         
         //seta os dados a serem salvos na sessão
         $var['cod_usuario']            = $user['cod_usuario'];
@@ -248,28 +267,22 @@ class usuario_loginModel extends \classes\Model\Model{
         $var['cod_perfil']             = $user['cod_perfil'];
         $var['confirmed']              = @$user['confirmed'];
         
-        //cria a sessão do usuario 
-        if(isset($_GET['refer']))$refer = $_GET['refer'];
-        else                     $refer = session::getVar('refer');
         session::destroyAll();
         session::setVar($this->cookie, $var);
-        if($refer == "") {$refer = URL;}
-        session::setVar('refer', $refer);
+        if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
+            \classes\Classes\cookie::setVar($this->cookieuid, $var['cod_usuario']);
+        }
+        if($refer != ""){session::setVar('refer', $refer);}
+        
+        
         //seta os dados a serem editados
         $v['status']     = 'online';
         if($user['confirmkey'] != ""){
             $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
             if($recsenha != $user['confirmkey']) $v['confirmkey'] = "FUNC_NULL";
         }
-        
-        //edita os dados
         parent::editar($user['cod_usuario'], $v);
-        
-        //redireciona, caso necessário
-        $this->Redirect(true,$login_first);
-        
-        return true;
-    }//c
+    }
     
     //insere um novo usuario
     public function inserir($array){
@@ -904,6 +917,16 @@ class usuario_loginModel extends \classes\Model\Model{
         if(!parent::validate()) return false;
      //   die("done");
         return true;
+    }
+    
+    private function restoreCookieUid(){
+        if(self::CodUsuario() !== 0){return;}
+        $cod_usuario = $this->antinjection(\classes\Classes\cookie::getVar($this->cookieuid));
+        if($cod_usuario === ""){return;}
+        $res  = $this->selecionar(array(), "cod_usuario='$cod_usuario'");
+        if(empty($res)){return;}
+        $user = array_shift($res);
+        $this->makeLogin($user);
     }
     
     public static function user_action_log($loguser = 'acesso', $msg = '', $loggroup = array()){
