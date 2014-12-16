@@ -1,6 +1,6 @@
 <?php
 use classes\Controller\CController;
-use classes\Classes\cookie;
+use classes\Classes\session;
 class loginController extends CController{
 
     public $model_name = "usuario/login";
@@ -187,7 +187,7 @@ class loginController extends CController{
             $this->display('');
             return;
         }
-        cookie::setVar($this->sess_cont_alerts, $this->model->getMessages());
+        session::setVar($this->sess_cont_alerts, $this->model->getMessages());
         Redirect(LINK);
     }
 
@@ -210,7 +210,7 @@ class loginController extends CController{
     public function confirm_resend(){
         $this->genTags("Confirmar Reenvio");
         $this->model->resend_confirmation();
-        cookie::setVar($this->sess_cont_alerts, $this->model->getMessages());
+        session::setVar($this->sess_cont_alerts, $this->model->getMessages());
         $this->index();
     }
     

@@ -1,7 +1,7 @@
 <?php
 
 use classes\Classes\Object;
-use classes\Classes\cookie;
+use classes\Classes\session;
 class perfilPermissions extends classes\Classes\Object{
     
     private   $action_name         = "";
@@ -144,10 +144,10 @@ class perfilPermissions extends classes\Classes\Object{
         if($iswebmaster && !array_key_exists('_perfil', $_GET)){return true;}
         $cod_perfil = usuario_loginModel::CodPerfil();
         $key        = ($iswebmaster)?"$this->cookie/$cod_perfil":"$this->cookie";
-        $perm       = cookie::getVar($key);
+        $perm       = session::getVar($key);
         if(empty($perm) && $cod_perfil != ""){
             $perm = $this->getPerfilPermissionsName($cod_perfil);
-            cookie::setVar($key, $perm);
+            session::setVar($key, $perm);
         }
         if(!is_array($perm)){$perm = array();}
         //print_rh($perm); echoBr($permname);
@@ -156,7 +156,7 @@ class perfilPermissions extends classes\Classes\Object{
     
     public function isPublic($action_name){
         $this->act->prepare_action($action_name);
-        $var = cookie::getVar($this->cookie_public);
+        $var = session::getVar($this->cookie_public);
         if(!is_array($var)) {return true;}
         //print_r($var); echo "$action_name";
         return(array_key_exists($action_name, $var));

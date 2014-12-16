@@ -1,6 +1,6 @@
 <?php
 //print_r($_SERVER['HTTP_REFERER']);
-use classes\Classes\cookie;
+use classes\Classes\session;
 use classes\Classes\EventTube;
 class usuario_loginModel extends \classes\Model\Model{
     protected $tabela = "usuario";
@@ -51,7 +51,7 @@ class usuario_loginModel extends \classes\Model\Model{
 
     //verifica se o usuario está logado
     public function IsLoged(){
-        return (cookie::cookieExists($this->cookie));
+        return (session::exists($this->cookie));
     }//c
     
     
@@ -72,26 +72,26 @@ class usuario_loginModel extends \classes\Model\Model{
         $v['status'] = ($total != 0)?'bloqueado':'offline';
         
         //ao deslogar apaga todos os cookies
-        cookie::destroyAll();
+        session::destroyAll();
         
         return parent::editar($cod, $v);
     }//c
     
     public function IsEnabledTutorial(){
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         //print_r($var);//die();
         if($var != "") return($var['usuario_login_tutorial'] == 'ativo');
         else           return false;
     }
     
     public function disableTutorial(){
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         if($var == "") {
             $this->setErrorMessage('Usuário não está logado');
             return false;
         }
         $var['usuario_login_tutorial'] = "inativo";
-        cookie::setVar($this->cookie, $var);
+        session::setVar($this->cookie, $var);
         
         $cod = $this->getCodUsuario();
         if($cod == 0) return;
@@ -106,13 +106,13 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function enableTutorial(){
         
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         if($var == "") {
             $this->setErrorMessage('Usuário não está logado');
             return false;
         }
         $var['usuario_login_tutorial'] = 'ativo';
-        cookie::setVar($this->cookie, $var);
+        session::setVar($this->cookie, $var);
         
         $cod = $this->getCodUsuario();
         if($cod == 0) return;
@@ -125,7 +125,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function userIsConfirmed($addevent = true){
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         if($var == "") return false;
         if($var['confirmed'] == '0'){
             if($addevent){
@@ -162,7 +162,7 @@ class usuario_loginModel extends \classes\Model\Model{
 
     public function getCodUsuario($user = array()){
         if(empty($user)){
-            $var = cookie::getVar($this->cookie);
+            $var = session::getVar($this->cookie);
             if($var != "") return(!isset($var['cod_usuario']))?0:$var['cod_usuario'];
             else return 0;
         }
@@ -182,7 +182,7 @@ class usuario_loginModel extends \classes\Model\Model{
     public function getUserNick($user = array(), $show_in_array = false){
         if(!is_array($user) || empty($user)){
             if(!is_numeric($user)){
-                $var = cookie::getVar($this->cookie);
+                $var = session::getVar($this->cookie);
                 if(empty($var)){
                     if($show_in_array) return array();
                     else return '';
@@ -212,7 +212,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }//c
     
     public function getUserData(){
-        return cookie::getVar($this->cookie);
+        return session::getVar($this->cookie);
         
     }//c
 
@@ -250,11 +250,11 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //cria a sessão do usuario 
         if(isset($_GET['refer']))$refer = $_GET['refer'];
-        else                     $refer = cookie::getVar('refer');
-        cookie::destroyAll();
-        cookie::setVar($this->cookie, $var);
+        else                     $refer = session::getVar('refer');
+        session::destroyAll();
+        session::setVar($this->cookie, $var);
         if($refer == "") {$refer = URL;}
-        cookie::setVar('refer', $refer);
+        session::setVar('refer', $refer);
         //seta os dados a serem editados
         $v['status']     = 'online';
         if($user['confirmkey'] != ""){
@@ -450,7 +450,7 @@ class usuario_loginModel extends \classes\Model\Model{
         $online          = $this->IsLoged();
         $codUserOnline   = $this->getCodUsuario();
         $codUserConfirm  = $this->getCodUsuario($user);
-        $atualizaSession = ($online === true && $codUserOnline == $codUserConfirm && cookie::cookieExists($this->cookie))?true:false;
+        $atualizaSession = ($online === true && $codUserOnline == $codUserConfirm && session::exists($this->cookie))?true:false;
         
         //recupera o nome do usuário que está sendo recuperada a session
         $name            = $this->getUserNick($user);
@@ -458,9 +458,9 @@ class usuario_loginModel extends \classes\Model\Model{
         //se a chave de confirmacao esta vazia
         if($user['confirmkey'] == ""){
             if($atualizaSession){
-                $co = cookie::getVar($this->cookie);
+                $co = session::getVar($this->cookie);
                 $co['confirmed'] = '1';
-                cookie::setVar($this->cookie, $co);
+                session::setVar($this->cookie, $co);
             }
             $this->setErrorMessage("O usuário $name foi confirmado no site anteriormente!");
             return false;
@@ -482,14 +482,14 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //atualiza a session se necessário
         if($atualizaSession){
-            $co = cookie::getVar($this->cookie);
+            $co = session::getVar($this->cookie);
             $co['confirmed'] = '1';
-            cookie::setVar($this->cookie, $co);
+            session::setVar($this->cookie, $co);
         }
         
         //atualiza as mensagens
         $this->setSuccessMessage("Usuário $name confirmado com sucesso!");
-        cookie::setVar('controller_alerts', $this->getMessages());
+        session::setVar('controller_alerts', $this->getMessages());
         
         //se usuário não está online e não existe outra sessão de usuário online, faz o login do usuário
         if(!$online) $this->Login(@$user['email'], @$user['senha'], false);
@@ -649,7 +649,7 @@ class usuario_loginModel extends \classes\Model\Model{
         if(!$this->IsLoged()){
             $this->LoadResource('html', 'html');
             $url = base64_encode($this->html->getLink($url, false, true));
-            if(!cookie::cookieExists('refer'))cookie::setVar('refer', $url);
+            if(!session::exists('refer'))session::setVar('refer', $url);
             Redirect('usuario/login', 0, "refer=$url");
         }
         else $this->Redirect();
@@ -660,9 +660,9 @@ class usuario_loginModel extends \classes\Model\Model{
         $refer = "";
         if(isset($_GET['refer'])) $refer = $_GET['refer'];
 
-        if(cookie::cookieExists('refer')){
-            if($refer == "") $refer = cookie::getVar('refer');
-            cookie::destroy('refer');
+        if(session::exists('refer')){
+            if($refer == "") $refer = session::getVar('refer');
+            session::destroy('refer');
         }
         
         if($refer != "" && $login_first == true){
@@ -698,7 +698,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function getUserId(){
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         if($var == "") return "";
         
         $cod_usuario = $var['cod_usuario'];
@@ -724,8 +724,8 @@ class usuario_loginModel extends \classes\Model\Model{
 
     public static function IsWebmaster(){
         //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
-        if(!cookie::cookieExists(self::$__cookie)) {return false;}
-        $var = cookie::getVar(self::$__cookie);
+        if(!session::exists(self::$__cookie)) {return false;}
+        $var = session::getVar(self::$__cookie);
         if(!isset($var['cod_perfil'])){return false;}
         return ($var['cod_perfil'] == Webmaster);
     }
@@ -736,7 +736,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function UserIsAdmin($codusuario = "", $perm = ""){
-        $var = cookie::getVar($this->cookie);
+        $var = session::getVar($this->cookie);
         $cod_usuario = ($codusuario === "" && isset($var['cod_usuario']))?$var['cod_usuario']:$codusuario;
         if($cod_usuario == "") {return false;}
         $item = ($this->getItem($cod_usuario, '', false, array('cod_usuario', 'permissao')));
@@ -787,17 +787,17 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public static function isLogged(){
-        $var = cookie::getVar(self::$__cookie);
+        $var = session::getVar(self::$__cookie);
         return isset($var['cod_usuario']);
     }
     
     public static function CodUsuario(){
-        $var = cookie::getVar(self::$__cookie);
+        $var = session::getVar(self::$__cookie);
         return isset($var['cod_usuario'])?$var['cod_usuario']:0;
     }
     
     public static function CodPerfil(){
-        $var = cookie::getVar(self::$__cookie);
+        $var = session::getVar(self::$__cookie);
         if(!isset($var['cod_perfil'])){return 0;}
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
