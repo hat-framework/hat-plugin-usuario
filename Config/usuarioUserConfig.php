@@ -65,6 +65,12 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
                     'grid'    => true,
                     'display' => true,
                 ),
+                 'referencia' => array(
+                    'name'     => 'Referência',
+                    'type'     => 'text',
+                    'grid'    => true,
+                    'display' => true,
+                ),
                  'bairro' => array(
                     'name'     => 'Bairro',
                     'type'     => 'varchar',
