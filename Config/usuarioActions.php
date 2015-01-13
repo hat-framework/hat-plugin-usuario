@@ -31,14 +31,14 @@ class usuarioActions extends Actions{
         ),
         
         'GerenciarGadgets' => array(
-            'nome'      => "usuario/gadget",
+            'nome'      => "usuario_gadget",
             'label'     => "Gerenciar Gadgets",
             'descricao' => "Permite adicionar novos gadgets para a página do usuário",
             'default'   => 'n',
         ),
         
         'AnalisarUsuários' => array(
-            'nome'      => "analisar_usuarios",
+            'nome'      => "usuario_analisar",
             'label'     => "Analisar Usuários",
             'descricao' => "Permite visualizar informações de usuários",
             'default'   => 'n',
@@ -202,7 +202,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/report'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(
                 'Todos os usuários'      => 'usuario/login/todos', 
                 'Perfis de usuário'      => 'usuario/perfil/index',
@@ -215,7 +215,7 @@ class usuarioActions extends Actions{
         
          'usuario/login/otherreport'=> array(
             'label' => 'Mais Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(
                 'Todos os usuários'      => 'usuario/login/todos', 
                 'Perfis de usuário'      => 'usuario/perfil/index',
@@ -228,7 +228,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/personalreport'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(
                 'Todos os usuários'      => 'usuario/login/todos', 
                 'Perfis de usuário'      => 'usuario/perfil/index',
@@ -241,7 +241,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/actionreport'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(
                 'Todos os usuários'      => 'usuario/login/todos', 
                 'Perfis de usuário'      => 'usuario/perfil/index',
@@ -254,7 +254,7 @@ class usuarioActions extends Actions{
         
          'usuario/login/todos' => array(
             'label' => 'Gerenciar ', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(
                 'usuario/login/formulario',
                 'Todos os usuários'      => 'usuario/login/todos', 
@@ -270,7 +270,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/widgets'=> array(
             'label' => 'Visualizar Widget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 
+            'permission' => 'usuario_analisar', 
             'menu' => array(),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/widgets')
         ),
@@ -278,7 +278,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/show' => array(
             'label' => 'Visualizar usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 'needcod' => true,
+            'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(
                 'Visualizar Log' => "usuario/login/seelog",
                 'Dados Extras'   => "usuario/login/seedata",
@@ -289,7 +289,7 @@ class usuarioActions extends Actions{
         
          'usuario/login/seelog' => array(
             'label' => 'Visualizar log', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 'needcod' => true,
+            'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
@@ -297,7 +297,7 @@ class usuarioActions extends Actions{
         
          'usuario/login/seedata' => array(
             'label' => 'Visualizar Dados Extras', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 'needcod' => true,
+            'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
@@ -305,7 +305,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/gadget' => array(
             'label' => 'Gadgets do Usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'analisar_usuarios', 'needcod' => true,
+            'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(
                 'usuario/login/logado', 
                 'usuario/login/todos',
@@ -355,7 +355,7 @@ class usuarioActions extends Actions{
         
         'usuario/gadget/index' => array(
             'label' => 'Todos os Gadgets', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario/gadget', 
+            'permission' => 'usuario_gadget', 
             'menu' => array(
                 'Minha Conta'        => 'usuario/login/logado', 
                 'usuario/gadget/formulario',
@@ -364,13 +364,13 @@ class usuarioActions extends Actions{
         
         'usuario/gadget/formulario' => array(
             'label' => 'Criar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario/gadget', 
+            'permission' => 'usuario_gadget', 
             'menu' => array("usuario/gadget/index")
         ),
         
         'usuario/gadget/show' => array(
             'label' => 'Visualizar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario/gadget', 'needcod' => true,
+            'permission' => 'usuario_gadget', 'needcod' => true,
             'menu' => array(
                 'Todos os Gadgets' => "usuario/gadget/index",
                 'Ações' => array(
@@ -382,14 +382,14 @@ class usuarioActions extends Actions{
         
         'usuario/gadget/edit' => array(
             'label' => 'Editar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario/gadget', 'needcod' => true,
+            'permission' => 'usuario_gadget', 'needcod' => true,
             'menu' => array(
                 'Voltar' => 'usuario/gadget/show')
         ),
 
         'usuario/gadget/apagar' => array(
             'label' => 'Apagar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario/gadget', 'needcod' => true,
+            'permission' => 'usuario_gadget', 'needcod' => true,
             'menu' => array()
         ),
         
@@ -465,7 +465,7 @@ class usuarioActions extends Actions{
             'default'   => '0',
             'tipo'      => 'usuario',
             'descricao' => 'Perfil destinado para analistas que terão acesso as métricas e aos acessos premium',
-            'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','analisar_usuarios' => 's', 'Plugins_ANA'=> 's')
+            'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','usuario_analisar' => 's', 'Plugins_ANA'=> 's')
         ),
     );
 }

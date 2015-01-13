@@ -815,6 +815,12 @@ class usuario_loginModel extends \classes\Model\Model{
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
     
+    public function changeUserPerfil($cod_usuario, $cod_perfil){
+        if($this->getCodPerfil($cod_usuario) === Webmaster){return true;}
+        if (false === parent::editar($cod_usuario, array("cod_perfil"=>$cod_perfil, 'update_permission' => 's'))){return false;}
+        return true;
+    }
+    
     public function blockUser($cod_usuario){
         if($this->getCodPerfil($cod_usuario) == Webmaster){
             $this->setErrorMessage("Não é possível bloquear um usuário com permissão de Webmaster");
