@@ -219,16 +219,6 @@ class usuarioConfigurations extends \classes\Classes\Options{
                     'value_default' => 'false'
                 ),
                 
-                'USUARIO_CORRETORA' => array(
-                    'name'          => 'USUARIO_CORRETORA',
-                    'label'         => 'Registrar qual a corretora do usuário',
-                    'type'          => 'enum',//varchar, text, enum
-                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'default'       => 'false',
-                    'value'         => 'false',
-                    'value_default' => 'false'
-                ),
-                
             ),
         )
     );

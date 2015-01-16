@@ -65,33 +65,9 @@ class alterarComponent extends \classes\Classes\Object{
         $this->id = 'alterar_pessoal';
         $this->makeWidget("Dados pessoais", $out, $item, 'usuario/login/editar');
     }
-    
-    public function corretora($item = array()){
-        if(false === getBoleanConstant('USUARIO_CORRETORA')) {return;}
-        $cod_usuario = usuario_loginModel::CodUsuario();
-        $item        = (empty($item))?$this->LoadModel('usuario/login', 'uobj')->getItem($cod_usuario, '', false, array('codcorretora')):$item;
-        $out         = array();
-        if(isset($this->dados['fixo'])) {$out['fixo'] = $this->dados['fixo'];}
-        if(isset($this->dados['celular'])) {$out['celular'] = $this->dados['celular'];}
-        if(isset($this->dados['codcorretora'])) {$out['codcorretora'] = $this->dados['codcorretora'];}
-        $out['codcorretora']['fkey'] = array(
-            'model'         => 'carteira/corretora',
-            'cardinalidade' => '1n',
-            'keys'          => array('cod', 'dsnomecomercial'),
-        );
-        $this->id = 'alterar_corretora';
-        $this->makeWidget("Telefone & Corretora", $out, $item, 'usuario/login/alterar/telefone');
-    }
-    
+      
     public function endereco($item = array()){
-        if(false === getBoleanConstant('USUARIO_ENDERECO')) {return;}
-        $cod_usuario = usuario_loginModel::CodUsuario();
-        $dados = $this->LoadModel('usuario/endereco', 'end')->getDados();
-        $item  = $this->end->getUserAddress($cod_usuario); 
-        $view  = (empty($item)?"usuario/endereco/formulario":"usuario/endereco/edit/$cod_usuario");
-        if(isset($dados['button'])){unset($dados['button']);}
-        $this->id = 'alterar_endereco';
-        $this->makeWidget("Meu endereço", $dados, $item, $view, "Alterar Endereço");
+        return;
     }
     
     private function makeWidget($title, $dados, $item, $action, $button_name = "Alterar Dados"){

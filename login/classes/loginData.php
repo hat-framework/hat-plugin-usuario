@@ -234,20 +234,6 @@ class usuario_loginData extends \classes\Model\DataModel{
                 'twitter'=> "Twitter",
             )
        	 ),
-        
-         'codcorretora' => array(
-	    'name'     => 'Sua corretora',
-	    'type'     => 'int',
-	    'size'     => '11',
-	    'grid'    => true,
-	    'display' => true,
-            'feature'  => 'USUARIO_CORRETORA',
-	    /*'fkey' => array(
-	        'model' => 'carteira/corretora',
-	        'cardinalidade' => '1n',
-	        'keys' => array('cod', 'dsnomecomercial'),
-	    ),*/
-        ),
  
         'button' => array(
             'button' => "Salvar Usuário"
