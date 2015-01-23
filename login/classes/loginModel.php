@@ -753,12 +753,13 @@ class usuario_loginModel extends \classes\Model\Model{
         $cod_usuario = ($codusuario === "" && isset($var['cod_usuario']))?$var['cod_usuario']:$codusuario;
         if($cod_usuario == "") {return false;}
         $item = ($this->getItem($cod_usuario, '', false, array('cod_usuario', 'permissao')));
-        //print_r($item); die();
         if(empty($item)) return false;
         
         if(!array_key_exists("cod_usuario", $item) || $cod_usuario != $item['cod_usuario'])return false;
-        if(!isset($item['__permissao'] )) return false;
-        if($perm == "") return ($item['__permissao'] == "Webmaster" || $item['__permissao'] == "Admin");
+        if(!isset($item['__permissao'] )) {return false;}
+        if($perm == "") {
+            return ($item['__permissao'] == "Webmaster" || $item['__permissao'] == "Admin" || usuario_loginModel::CodPerfil() === Admin);
+        }
         return ($item['__permissao'] == "$perm");
     }
     
