@@ -43,7 +43,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
                     'display' => true,
                 ),
                  'rua' => array(
-                    'name'     => 'Rua',
+                    'name'     => 'Logradouro',
                     'type'     => 'varchar',
                     'size'     => '190',
                     'notnull' => true,
