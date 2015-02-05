@@ -45,4 +45,20 @@ class perfilController extends classes\Controller\CController{
         $this->setVars ($this->model->getMessages ());
         $this->index();
     }
+    
+    public function userpermissions(){
+        $post = isset($_POST['permissions'])?$_POST['permissions']:'';
+        if($post === "" || empty($post)){
+            $this->registerVar('erro', 'Parâmetro permissions não informado ou vazio!');
+            return $this->display('');
+        }
+        
+        $this->LoadClassFromPlugin('usuario/perfil/perfilPermissions', 'perm');
+        foreach($post as $cod => $p){
+            if($this->perm->hasPermission($p, false)){
+                unset($post[$cod]);
+            }
+        }
+        die(json_encode($post));
+    }
 }

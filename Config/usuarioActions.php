@@ -53,6 +53,12 @@ class usuarioActions extends Actions{
             'menu' => array('usuario/perfil/formulario'),
             'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index'),
         ),
+        'usuario/perfil/userpermissions' => array(
+            'label' => 'Permissões do perfil', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
+            'permission' => 'usuario_AC', 
+            'menu' => array(),
+            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
+        ),
         
         'usuario/perfil/formulario' => array(
             'label' => 'Criar perfil', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
