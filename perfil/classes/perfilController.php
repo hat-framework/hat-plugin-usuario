@@ -1,12 +1,7 @@
 <?php 
 class perfilController extends classes\Controller\CController{
+    
     public $model_name = "usuario/perfil";
-    
-    public function __construct($var) {
-        $this->addToFreeCod("tests");
-        parent::__construct($var);
-    }
-    
     public function index($display = true, $link = "") {
         $this->genTags("Perfis do Sistema");
         $this->prevent_redirect();
@@ -41,9 +36,11 @@ class perfilController extends classes\Controller\CController{
     }
     
     public function padrao(){
-        $this->model->setDefaultPerfil($this->cod);
-        $this->setVars ($this->model->getMessages ());
-        $this->index();
+        if($this->cod !== ""){
+            $this->model->setDefaultPerfil($this->cod);
+            $this->setVars ($this->model->getMessages ());
+        }
+        Redirect(LINK ."/index");
     }
     
     public function userpermissions(){

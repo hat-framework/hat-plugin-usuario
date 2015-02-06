@@ -73,6 +73,10 @@ class usuarioActions extends Actions{
             'menu' => array(),
             'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/show', 'usuario/perfil/permissoes' ),
         ),
+        'usuario/perfil/padrao' => array(
+            'label' => 'Setar Perfil Padrão', 'publico' => 'n', 'default_no' => 'n',
+            'permission' => 'usuario_GP', 'needcod' => true
+        ),
         
         
         
