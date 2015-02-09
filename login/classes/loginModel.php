@@ -793,7 +793,9 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function getUsuariosPorPerfil($cod_perfil, $campos = array()){
-        return $this->selecionar($campos, "cod_perfil = '$cod_perfil'");
+        if(!is_array($cod_perfil)){$cod_perfil = array($cod_perfil);}
+        $in = implode("','", $cod_perfil);
+        return $this->selecionar($campos, "cod_perfil IN('$in')");
     }
     
     public function getTotalUsuariosPorPerfil($cod_perfil){
