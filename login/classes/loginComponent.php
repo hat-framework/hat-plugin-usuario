@@ -84,19 +84,13 @@ class loginComponent extends classes\Component\Component{
     }
     
     private function gadgets($item){
-        if(!isset($item['cod_usuario'])) return;
-        $this->LoadModel('usuario/gadget', 'uga');
-        $gadgets = $this->uga->selecionar();
+        if(!isset($item['cod_usuario'])) {return;}
         $cod_usuario = $item['cod_usuario'];
         echo "<div id='usertabs'><ul>";
         if($cod_usuario == \usuario_loginModel::CodUsuario()){
             $this->makeGadgetLink("usuario/login/logado", 'Alterar Dados');
         }
         $this->makeGadgetLink("usuario/login/show/$cod_usuario", 'Dados Pessoais');
-        foreach($gadgets as $ga){
-            $link = "usuario/login/gadget/$cod_usuario/".$ga['cod']."/". GetPlainName($ga['titulo']);
-            $this->makeGadgetLink($link, $ga['titulo']);
-        }
         echo "<ul></div>";
     }
     

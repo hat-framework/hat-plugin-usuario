@@ -30,13 +30,6 @@ class usuarioActions extends Actions{
             'default'   => 's',
         ),
         
-        'GerenciarGadgets' => array(
-            'nome'      => "usuario_gadget",
-            'label'     => "Gerenciar Gadgets",
-            'descricao' => "Permite adicionar novos gadgets para a página do usuário",
-            'default'   => 'n',
-        ),
-        
         'AnalisarUsuários' => array(
             'nome'      => "usuario_analisar",
             'label'     => "Analisar Usuários",
@@ -312,17 +305,6 @@ class usuarioActions extends Actions{
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
         
-        
-        'usuario/login/gadget' => array(
-            'label' => 'Gadgets do Usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_analisar', 'needcod' => true,
-            'menu' => array(
-                'usuario/login/logado', 
-                'usuario/login/todos',
-                'Opções' => array('usuario/login/edit', 'usuario/login/apagar')
-             )
-        ),
-        
         'usuario/login/apagar' => array(
             'label' => 'Excluir Usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GU', 'needcod' => true,
@@ -359,49 +341,6 @@ class usuarioActions extends Actions{
         ),
         
        
-        
-        
-        
-        
-        'usuario/gadget/index' => array(
-            'label' => 'Todos os Gadgets', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_gadget', 
-            'menu' => array(
-                'Minha Conta'        => 'usuario/login/logado', 
-                'usuario/gadget/formulario',
-             )
-        ),
-        
-        'usuario/gadget/formulario' => array(
-            'label' => 'Criar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_gadget', 
-            'menu' => array("usuario/gadget/index")
-        ),
-        
-        'usuario/gadget/show' => array(
-            'label' => 'Visualizar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_gadget', 'needcod' => true,
-            'menu' => array(
-                'Todos os Gadgets' => "usuario/gadget/index",
-                'Ações' => array(
-                    'Editar'     => 'usuario/gadget/edit', 
-                    'Excluir'    => 'usuario/gadget/apagar',
-                )
-            )
-        ),
-        
-        'usuario/gadget/edit' => array(
-            'label' => 'Editar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_gadget', 'needcod' => true,
-            'menu' => array(
-                'Voltar' => 'usuario/gadget/show')
-        ),
-
-        'usuario/gadget/apagar' => array(
-            'label' => 'Apagar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_gadget', 'needcod' => true,
-            'menu' => array()
-        ),
         
          'usuario/notify/index' => array(
             'label' => 'Preferência de Notificação', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',

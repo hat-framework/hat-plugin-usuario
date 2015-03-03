@@ -229,15 +229,6 @@ class loginController extends CController{
         $this->redirect('usuario/login/todos');
     }
     
-    public function gadget(){
-        if(!isset($this->vars[1])) $this->redirect('usuario/login/logado');
-        $page = (isset($this->vars[3]))?$this->vars[3]:1;
-        $this->LoadModel('usuario/gadget', 'uga');
-        $this->registerVar('gadget', $this->uga->getItem($this->vars[1]));
-        $this->registerVar('gadgetData', $this->uga->getGadgetData($this->vars[1], $this->cod, $page, 10));
-        $this->display('usuario/login/gadget');
-    }
-    
     public function mktests(){
         $this->LoadClassFromPlugin('usuario/login/loginSTestes', 'model');
         

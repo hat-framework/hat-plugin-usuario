@@ -55,26 +55,6 @@ class usuario_loginData extends \classes\Model\DataModel{
             'description' => "O email será utilizado para fazer login e se comunicar com o site.",
          ),
         
-        'fixo' => array(
-	    'name'     => 'Telefone Fixo',
-	    'type'     => 'varchar',
-            'feature'  => 'USUARIO_TELEFONE',
-	    'size'     => '11',
-            'especial' => 'telefone',
-	    'grid'    => true,
-	    'display' => true,
-        ),
-        
-        'celular' => array(
-	    'name'     => 'Celular',
-	    'type'     => 'varchar',
-            'feature'  => 'USUARIO_TELEFONE',
-	    'size'     => '11',
-            'especial' => 'telefone',
-	    'grid'    => true,
-	    'display' => true,
-        ),
-        
         'senha' => array(
             'name'      => 'Senha',
             'type'      => 'varchar',
@@ -186,18 +166,6 @@ class usuario_loginData extends \classes\Model\DataModel{
 	    ),
             'private' => true
         ),
-        
-/*
-        'foto' => array(
-            'especial' => 'foto',
-            'fkey' => array(
-	        'model' => 'galeria/foto',
-	        'cardinalidade' => '11',
-	        'keys' => array('cod_foto', 'cod_foto'),
-                'onupdate' => 'CASCADE',
-                'ondelete' => 'RESTRICT',
-	    ),
-       	 ),*/
         
         'confirmkey' => array(
             'type'     => 'varchar',
