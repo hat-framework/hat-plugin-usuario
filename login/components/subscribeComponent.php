@@ -26,6 +26,7 @@ class subscribeComponent extends classes\Classes\Object{
                     $form = $this->getArr();
                     $this->LoadResource("formulario", "form");
                     $this->form->NewForm($form, array(), array(), true, "usuario/login/inserir");
+                    echo "<center>ou</center>";
                     $this->facebook();
                 $this->gui->closediv();
             $this->gui->widgetClose();
