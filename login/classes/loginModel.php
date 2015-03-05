@@ -234,20 +234,21 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //se login não existe ou senha está incorreta
         if(empty ($value)){
+            die($this->db->getSentenca());
             //$this->setErrorMessage($this->db->getSentenca());
             $this->setErrorMessage("Usuário ou senha incorretos");
             return false;
         }
-
         //verifica se o usuário está bloqueado
         $refer = (isset($_GET['refer']))?$_GET['refer']:session::getVar('refer');
         $user  = array_shift($value);
         if($refer == "") {$refer = URL;}
         $this->makeLogin($user, $refer);
         
+        //if(!parent::apagar($user['cod_usuario'])){die("NAO APAGOU!");}
         //redireciona, caso necessário
         $this->Redirect(true,$login_first);
-        
+        //$this->apagar();
         return true;
     }
     
@@ -279,41 +280,53 @@ class usuario_loginModel extends \classes\Model\Model{
         $v['status']     = 'online';
         if($user['confirmkey'] != ""){
             $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
-            if($recsenha != $user['confirmkey']) $v['confirmkey'] = "FUNC_NULL";
+            if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
         }
         parent::editar($user['cod_usuario'], $v);
     }
     
     //insere um novo usuario
     public function inserir($array){
-
         $this->user_permission($array);
-
-        //dados extras(do sistema)
-        if(!isset($array['senha'])){
-            $array['senha'] = genKey(12);
-        }
-        $senha = $array['senha'];
-        $array['cod_perfil'] = isset($array['cod_perfil'])?$array['cod_perfil']:'4';
-        $array['senha']      = "FUNC_PASSWORD('{$array['senha']}')";
-        if($array['cod_perfil'] != Webmaster) $array['confirmkey'] = genKey(16);	
-        if(!parent::inserir($array)) return false;
-        $user = $this->getItem($array['email'], 'email');
-        $user['senha'] = $senha;
+        $senha = $this->prepareInsertion($array);
+        $refer = isset($array['referrer'])?$array['referrer']:"";
+        if(!parent::inserir($array)) {return false;}
+        $this->setReferrer($refer);
         $this->rdstation($array);
-        
-        //responsavel pelas mensagens para o usuario
-        $this->LoadModel('usuario/login/loginDialogs', 'udi');
-        $bool = $this->udi->inserir($user);
-        $this->setMessages($this->udi->getMessages());
-        return $bool;
+        return $this->sendSubscribeMessage($array, $senha);
 
     }//c
+    
+            //dados extras(do sistema)
+            private function prepareInsertion(&$array){
+                if(!isset($array['senha'])){$array['senha'] = genKey(12);}
+                $senha               = $array['senha'];
+                $array['cod_perfil'] = isset($array['cod_perfil'])?$array['cod_perfil']:'4';
+                $array['senha']      = "FUNC_PASSWORD('{$array['senha']}')";
+                if($array['cod_perfil'] != Webmaster) {$array['confirmkey'] = genKey(16);}
+                return $senha;
+            }
+    
+            private function setReferrer($refer){
+                if($refer === ""){return;}
+                $id = $this->getLastId();
+                return $this->LoadModel('usuario/referencia', 'ref')->associate($refer, $id);
+            }
     
             private function rdstation($array){
                 $this->LoadResource('api', 'api');
                 $this->rds = new resource\api\rdstation\rdstationLead();
                 $this->rds->addLead($array);
+            }
+            
+            //responsavel pelas mensagens para o usuario
+            private function sendSubscribeMessage($array, $senha){
+                $this->LoadModel('usuario/login/loginDialogs', 'udi');
+                $user = $this->getItem($array['email'], 'email');
+                $user['senha'] = $senha;
+                $bool = $this->udi->inserir($user);
+                $this->setMessages($this->udi->getMessages());
+                return $bool;
             }
     
     public function editarDados($id, $dados){
@@ -670,44 +683,10 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function Redirect($first_login = false,$login_first = false){
-        $refer = "";
-        if(isset($_GET['refer'])) $refer = $_GET['refer'];
-
-        if(session::exists('refer')){
-            if($refer == "") $refer = session::getVar('refer');
-            session::destroy('refer');
-        }
-        
-        if($refer != "" && $login_first == true){
-            $refer = $refer.'index/index/aviso';
-            $ref = base64_decode($refer);
-            $r   = ( base64_encode($ref) !== $refer)?$refer:$ref;
-            $arr['status']  = "1";
-            $arr['success'] = "Login efetuado com sucesso! Autenticando... ";
-            SRedirect($r, 0, $arr);
-        }
-        
-        if($refer == "" && $first_login){
-            $this->LoadModel("plugins/plug", "plug");
-            $default = $this->plug->getDefault();
-            try{
-                $this->plug->IsAvaible($default); 
-                $refer = base64_encode(URL.$default);
-            }
-            catch (\classes\Exceptions\PageNotFoundException $pne){
-                if($this->UserIsAdmin()) $refer = base64_encode(URL.'admin/index.php?url='.$default);
-                else $refer = base64_encode(URL.'usuario/index.php?url=usuario/home');
-            }
-        }
-        
-        if($refer != ""){
-            $ref = base64_decode($refer);
-            $r   = ( base64_encode($ref) !== $refer)?$refer:$ref;
-            $arr['status']  = "1";
-            $arr['success'] = "Login efetuado com sucesso! Autenticando... ";
-            SRedirect($r, 0, $arr);
-        }
-        return false;
+        //echoBr("$first_login - $login_first");
+        //$this->Logout();
+        $class = 'usuario/login/helpers/loginRedirection';
+        return $this->LoadClassFromPlugin($class, 'ulr')->TryRedirection($first_login,$login_first);
     }
     
     public function getUserId(){

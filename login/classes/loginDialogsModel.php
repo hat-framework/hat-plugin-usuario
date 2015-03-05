@@ -14,52 +14,52 @@ class usuario_loginDialogsModel extends classes\Classes\Object {
     public function inserir($user){
 
         //prepara o email
-        $ur      = $user['cod_usuario']."-".$user['confirmkey'];
-        $link    = $this->html->getLink("usuario/login/confirmar/$ur");
-        $assunto = "Ativação da conta";
-        
         $this->LoadModel('usuario/login', 'uobj');
+        $isLogged = $this->uobj->IsLoged();
+        $msg      = "";
         $nomeuser = $this->uobj->getUserNick($user);
-        $corpo = "<h2>Olá $nomeuser</h2>
-                  <p>Seja bem vindo ao site ".SITE_NOME."</p>";
-        if($this->uobj->IsLoged()){
-            $usertry  = $this->uobj->getItem($this->uobj->getCodUsuario());
-            $nome     = $this->uobj->getUserNick($usertry);
-            $mail     = $usertry['email']; 
-            $corpo   .= "
-                    <p>
-                        Inscrição realizada no site pelo usuário </b> $nome ($mail) <br/> 
-                    </p><hr/>";
-            $msg = "Usuário cadastrado com sucesso";
-        }else{
-            $msg = "Um email de confirmação foi enviado para .".$user['email']."
-                    Acesse o email e clique no link enviado para ter acesso ao site";
+        $assunto  = "Ativação da conta";
+        $corpo    = $this->messageBody($user, $isLogged, $nomeuser, $msg);
+        
+        //se não conseguiu enviar o alerta
+        if(!$this->alertar($assunto, $corpo, $user['email'])){
+            $msg = (!$isLogged)?
+                "Olá $nomeuser, seu cadastro foi realizado com sucesso! Seja bem vindo ao site ".SITE_NOME."!":
+                "Usuário $nomeuser cadastrado com sucesso! Porém ocorreu alguma falha ao notificá-lo por email.";
         }
         
-        
-        $corpo .= "<p>Confira seus dados de acesso e <b><a href='$link'>clique aqui</a></b> para concluir o cadastro no site</p>
+        $this->autoLogin($user, $isLogged);
+        $this->setSuccessMessage($msg);
+        return true;
+    }
+            private function messageBody($user, $isLogged, $nomeuser, &$msg){
+                $msg = "Um email de confirmação foi enviado para o email: '".$user['email']."'
+                    Acesse o email e clique no link enviado para ter acesso ao site";
+                $corpo    = "<h2>Olá $nomeuser</h2><p>Seja bem vindo ao site ".SITE_NOME."</p>";
+                $link     = $this->html->getLink("usuario/login/confirmar/{$user['cod_usuario']}-{$user['confirmkey']}");
+                
+                if($isLogged){
+                    $usertry  = $this->uobj->getItem($this->uobj->getCodUsuario());
+                    $nome     = $this->uobj->getUserNick($usertry);
+                    $mail     = $usertry['email']; 
+                    $corpo   .= "<p>Você foi inscrito no site pelo usuário </b> $nome ($mail)</p><hr/>";
+                    $msg      = "Usuário cadastrado com sucesso";
+                }
+                $corpo .= "<p>Confira seus dados de acesso e <b><a href='$link'>clique aqui</a></b> para concluir o cadastro no site</p>
                    <p><b>dados de acesso:</b></p>
                    <p>Login: ".$user['email']." </p>
                    <p>Senha: ".$user['senha']." </p>
                    <hr/><p>Caso não consiga visualizar o link acima: $link</p>
                 ";
-
-        //se não conseguiu enviar o alerta
-        if(!$this->alertar($assunto, $corpo, $user['email'])){
-            if(!$this->uobj->IsLoged() && CURRENT_MODULE == "usuario"){
-                $this->uobj->Login($user['email'], $user['senha'],true,true);
+                return $corpo;
             }
-            $msg = (!$this->uobj->IsLoged())?"Olá $nomeuser, seu cadastro foi realizado com sucesso! 
-                Seja bem vindo ao site ".SITE_NOME."!":
-                "Usuário $nomeuser cadastrado com sucesso! Porém ocorreu alguma falha ao notificá-lo por email.";
-        }elseif(!defined ('USUARIO_LOGIN_AUTOLOGIN_CADASTRO') || USUARIO_LOGIN_AUTOLOGIN_CADASTRO === true){
-            if(!$this->uobj->IsLoged() && CURRENT_MODULE == "usuario"){
-                $this->uobj->Login($user['email'], $user['senha'],true,true);
+    
+            private function autoLogin($user, $isLogged){
+                if($isLogged){return;}
+                if(!defined ('USUARIO_LOGIN_AUTOLOGIN_CADASTRO') || USUARIO_LOGIN_AUTOLOGIN_CADASTRO !== true){return;}
+                $bool = $this->uobj->Login($user['email'], $user['senha'],true,true);
+                return $bool;
             }
-        }
-        $this->setSuccessMessage($msg);
-        return true;
-    }
     
     public function resend_confirmation($user){
         

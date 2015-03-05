@@ -348,6 +348,13 @@ class usuarioActions extends Actions{
              'breadscrumb' => array('usuario/login/logado','usuario/notify/index')
         ),
         
+        
+        'usuario/referencia/cadastro' => array(
+            'label' => 'Cadastro Afiliado', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_FL'
+        ),
+        
+        
         'usuario/endereco/getcep' => array(
             'label' => 'Getcep', 'publico' => 's', 'default_yes' => 's','default_no' => 'n', 
             'permission' => 'usuario_AC', 'needcod' => false,

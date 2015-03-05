@@ -3,8 +3,9 @@
 class usuario_referenciaData extends \classes\Model\DataModel{
     
     public $dados  = array(
-        'cod_usuario' => array(
-	    'name'     => 'Usuário',
+        
+        'cod_referencia' => array(
+	    'name'     => 'Referência',
 	    'type'     => 'int',
 	    'size'     => '11',
 	    'pkey'    => true,
@@ -18,8 +19,8 @@ class usuario_referenciaData extends \classes\Model\DataModel{
                 'ondelete' => 'RESTRICT',
 	    ),
         ),
-        'cod_referencia' => array(
-	    'name'     => 'Referência',
+        'cod_usuario' => array(
+	    'name'     => 'Usuário',
 	    'type'     => 'int',
 	    'size'     => '11',
 	    'pkey'    => true,

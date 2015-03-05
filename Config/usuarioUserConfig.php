@@ -174,6 +174,16 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             ),
         ),
         
+        'pessoal_referrer' => array(
+            'cod'   =>'pessoal_referrer',
+            'group' =>'pessoal',
+            'title' =>'Referências',
+            'icon'  =>'fa fa-exchange',
+            'ordem' =>'6',
+            'type'  => 'component', 
+            'ref'   => 'usuario/referencia/codigo', 
+            'method'=> 'show'
+         ),
         /*'pessoal_dados' =>array(
             'cod'       => 'pessoal_dados', 
             'group'     => 'notify', 

@@ -11,6 +11,12 @@ class subscribeComponent extends classes\Classes\Object{
         $this->class = classes\Classes\Template::getClass('subscribe');
     }
     
+    private $referrer = "";
+    public function setReferrer($ref){
+        $this->referrer = $ref;
+        return $this;
+    }
+    
     public function screen($class = ''){
         if(\usuario_loginModel::CodUsuario() !== 0) {return;}
         if(!defined('USUARIO_CREATE_ACCOUNT') || USUARIO_CREATE_ACCOUNT === false) {return;}
@@ -43,6 +49,14 @@ class subscribeComponent extends classes\Classes\Object{
             'notnull'  => true,
             'tela'     => true,
         );
+        if($this->referrer !== ""){
+            $dados['referrer'] = array(
+                'name'     => 'Referência',
+                'especial' => 'hidden',
+                'default'  => "$this->referrer",
+                'tela'     => true
+            );
+        }
         
         $out = array();
         foreach($dados as $name => $arr){
