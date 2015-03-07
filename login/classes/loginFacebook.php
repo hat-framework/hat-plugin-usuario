@@ -6,12 +6,12 @@ class loginFacebook extends classes\Classes\Object{
     /**
      * variável APP Id do aplicativo do facebook
      */
-    private $appId       = '243156629188469';
+    private $appId       = '';
     
     /**
      * Variável app secret do aplicativo do facebook
      */
-    private $appSecret   = '1e7f0f59a4e7a376bfc50e0d56f914bb';
+    private $appSecret   = '';
     
     /**
      * Url para a autenticação no facebook
@@ -25,6 +25,8 @@ class loginFacebook extends classes\Classes\Object{
     public function __construct() {
         $this->LoadResource('html', 'html');
         $this->redirectUri = $this->html->getLink('usuario/login/facebook', false, true);
+        $this->appId       = USUARIO_FB_APPID;
+        $this->appSecret   = USUARIO_FB_APP_SECRET;
     }
     
     private $md_user = '';
@@ -114,6 +116,7 @@ class loginFacebook extends classes\Classes\Object{
     }
     
     public function getFBLink($text = "", $class = ""){
+        if($this->appId === ""){return;}
         $link = "https://www.facebook.com/dialog/oauth?client_id={$this->appId}&redirect_uri=$this->redirectUri&scope=email";
         $text = ($text == "")?"Entrar com Facebook":$text;
         return $this->html->MakeLink($link, $text, "$class fb_login_icon");
