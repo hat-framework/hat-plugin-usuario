@@ -7,7 +7,8 @@ class loginRedirection extends classes\Classes\Object{
     private $login_default_page = "usuario/login/logado";
     public function __construct() {
         $this->LoadModel('usuario/perfil', 'perf');
-        $this->LoadModel("plugins/plug", "plug");
+        $this->LoadModel("plugins/plug"  , "plug");
+        $this->LoadResource('html', 'html');
     }
     
     public function TryRedirection($first_login = false,$login_first = false){
@@ -62,8 +63,9 @@ class loginRedirection extends classes\Classes\Object{
 
             private function doRedirection($page){
                 if($page == ""){return;}
+                $link           = $this->html->getLink($page);
                 $arr['status']  = "1";
                 $arr['success'] = "Login efetuado com sucesso! Autenticando... ";
-                SRedirect($page, 0, $arr);
+                SRedirect($link, 0, $arr);
             }
 }
