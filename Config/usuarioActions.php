@@ -326,6 +326,14 @@ class usuarioActions extends Actions{
         ),
         
         
+        'usuario/referencia/index' => array(
+            'label' => 'Todos os Afiliados', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_analisar'
+        ),
+        'usuario/referencia/dataList' => array(
+            'label' => 'Detalhes da lista', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_analisar'
+        ),
         'usuario/referencia/cadastro' => array(
             'label' => 'Cadastro Afiliado', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_FL'
@@ -414,11 +422,12 @@ class usuarioActions extends Actions{
             ),
 
             'Relatórios'             => array(
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Relatórios de acesso'   => 'usuario/acesso/index',
-                'Mais relatórios'        => 'usuario/login/otherreport',
+                'Visão Geral'            => 'usuario/login/report',
+                'Afiliados'              => 'usuario/login/widgets/afiliados',
+                'Acessos'                => 'usuario/acesso/index',
+                'Estatística de plugins' => 'usuario/login/otherreport',
+                'Por action'             => 'usuario/login/actionreport',
+                'Por usuário'            => 'usuario/login/personalreport',
             )
 
         );
@@ -427,7 +436,7 @@ class usuarioActions extends Actions{
             'usuario/login/personalreport', 'usuario/login/actionreport',
             'usuario/login/formulario'    , 'usuario/perfil/index',
             'usuario/perfil/formulario'   , 'usuario/acesso/index',
-            'usuario/login/report'
+            'usuario/login/report'        , 'usuario/login/widgets'
         );
         foreach($equals as $eq){
             if(!isset($this->actions[$eq])){continue;}

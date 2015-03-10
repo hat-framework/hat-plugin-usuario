@@ -29,7 +29,7 @@ class usuario_referenciaData extends \classes\Model\DataModel{
             'fkey' => array(
 	        'model' => 'usuario/login',
 	        'cardinalidade' => '1n',
-	        'keys' => array('cod_usuario', 'user_name'),
+	        'keys' => array('cod_usuario', 'user_name', 'cod_perfil'),
                 'onupdate' => 'CASCADE',
                 'ondelete' => 'RESTRICT',
 	    ),
@@ -38,7 +38,7 @@ class usuario_referenciaData extends \classes\Model\DataModel{
 	    'name'        => 'Data de Indicação',
 	    'type'        => 'timestamp',
 	    'notnull'     => true,
-            'mobile_hide' => true,
+	    'display'     => true,
             'default'     => "CURRENT_TIMESTAMP",
             'especial'    => 'hide'
         )
