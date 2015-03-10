@@ -108,7 +108,6 @@ class usuario_loginData extends \classes\Model\DataModel{
 	    'name'     => 'Data de Criação',
 	    'type'     => 'timestamp',
 	    'notnull' => true,
-            'mobile_hide' => true,
             'default' => "CURRENT_TIMESTAMP",
             'especial' => 'hide'
         ),
@@ -201,6 +200,20 @@ class usuario_loginData extends \classes\Model\DataModel{
                 'google' => "Google",
                 'twitter'=> "Twitter",
             )
+       	 ),
+        
+        'indicado' => array(
+            'name'     => 'Quem Indicou',
+            'especial' => 'hide',
+            'type'     => 'int',
+            'size'     => '11',
+            'fkey' => array(
+	        'model' => 'usuario/login',
+	        'cardinalidade' => '1n',
+	        'keys' => array('cod_usuario', 'user_name'),
+                'onupdate' => 'CASCADE',
+                'ondelete' => 'SET NULL',
+	    ),
        	 ),
  
         'button' => array(

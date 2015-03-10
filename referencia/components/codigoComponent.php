@@ -39,20 +39,30 @@ class codigoComponent extends \classes\Classes\Object{
         $data = $this->ref->getReferrers($this->cod);
         if(empty($data)){return;}
         $this->gui->openPanel('', "{$this->id}_code")
-                  ->panelHeader("Convidado Por", 'fa fa-users')
+                  ->panelHeader("Convidado Por", 'fa fa-user')
                   ->panelBody($this->comp->listInTable($this->modelname,$data))
                   ->closePanel();
     }
     
     private function myInvitations(){
-        $data = $this->ref->getMyInvitations($this->cod);
+        $page = $this->getPage();
+        $data = $this->ref->getMyInvitations($this->cod, $page);
+        $this->ref->getMyInvitationsPages($this->cod, $page);
         $this->gui->openPanel('', "{$this->id}_code")
-                  ->panelHeader("Meus Convites", 'fa fa-envelope')
-                  ->panelBody(!empty($data)?
-                        $this->comp->listInTable($this->modelname,$data):
-                        "Nenhum usuário se cadastrou ainda no sistema com um convite seu! "
-                   )
-                  ->closePanel();
+            ->panelHeader("Meus Convites", 'fa fa-envelope')
+            ->panelBody(!empty($data)?
+                  $this->comp->listInTable($this->modelname,$data):
+                  "Nenhum usuário se cadastrou ainda no sistema com um convite seu! "
+             )
+            ->closePanel();
         
+    }
+    
+    private function getPage(){
+        $widget = filter_input(INPUT_GET, 'widget');
+        if($widget === "" || $widget !== 'referencias'){return 0;}
+        
+        $page = filter_input(INPUT_GET, 'widget_page');
+        return ($page === "")?0:$page;
     }
 }

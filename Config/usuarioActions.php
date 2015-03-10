@@ -3,6 +3,10 @@
 use classes\Classes\Actions;
 class usuarioActions extends Actions{
         
+    public function __construct() {
+        $this->setMenu();
+    }
+    
     protected $permissions = array(
         'GerenciarPerfis' => array(
             'nome'      => "usuario_GP",
@@ -203,69 +207,42 @@ class usuarioActions extends Actions{
             'menu' => array('usuario/login/logado')
         ),
         
+        
+        
+        
         'usuario/login/report'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
-            'menu' => array(
-                'Todos os usuários'      => 'usuario/login/todos', 
-                'Perfis de usuário'      => 'usuario/perfil/index',
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Mais relatórios'        => 'usuario/login/otherreport'),
             'breadscrumb' => array('usuario/login/todos','usuario/login/report')
         ),
         
-         'usuario/login/otherreport'=> array(
+        'usuario/acesso/index'=> array(
+            'label' => 'Relatório Geral', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_analisar', 
+            'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/acesso/index')
+        ),
+        
+        'usuario/login/otherreport'=> array(
             'label' => 'Mais Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
-            'menu' => array(
-                'Todos os usuários'      => 'usuario/login/todos', 
-                'Perfis de usuário'      => 'usuario/perfil/index',
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Mais relatórios'        => 'usuario/login/otherreport'),
             'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/login/otherreport')
         ),
         
         'usuario/login/personalreport'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
-            'menu' => array(
-                'Todos os usuários'      => 'usuario/login/todos', 
-                'Perfis de usuário'      => 'usuario/perfil/index',
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Mais relatórios'        => 'usuario/login/otherreport'),
             'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/login/personalreport')
         ),
         
         'usuario/login/actionreport'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
-            'menu' => array(
-                'Todos os usuários'      => 'usuario/login/todos', 
-                'Perfis de usuário'      => 'usuario/perfil/index',
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Mais relatórios'        => 'usuario/login/otherreport'),
             'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/login/personalreport')
         ),
         
-         'usuario/login/todos' => array(
+        'usuario/login/todos' => array(
             'label' => 'Gerenciar ', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
-            'menu' => array(
-                'usuario/login/formulario',
-                'Todos os usuários'      => 'usuario/login/todos', 
-                'Perfis de usuário'      => 'usuario/perfil/index',
-                'Relatórios Visão Geral' => 'usuario/login/report',
-                'Relatórios por action'  => 'usuario/login/actionreport',
-                'Relatório por usuário'  => 'usuario/login/personalreport',
-                'Mais relatórios'        => 'usuario/login/otherreport'),
             'breadscrumb' => array('usuario/login/report', 'usuario/login/todos'),
         ),
         
@@ -424,4 +401,37 @@ class usuarioActions extends Actions{
             'permissions' => array('usuario_AC'=> 's','usuario_FL'=> 's','usuario_analisar' => 's', 'Plugins_ANA'=> 's')
         ),
     );
+    
+    private function setMenu(){
+         $menu = array(
+            "Usuários" => array(
+                'usuario/login/formulario',
+                'Todos os usuários'      => 'usuario/login/todos', 
+            ),
+            "Perfis de usuário" => array(
+                'usuario/perfil/formulario',
+                'Listar Perfis'      => 'usuario/perfil/index',
+            ),
+
+            'Relatórios'             => array(
+                'Relatórios Visão Geral' => 'usuario/login/report',
+                'Relatórios por action'  => 'usuario/login/actionreport',
+                'Relatório por usuário'  => 'usuario/login/personalreport',
+                'Relatórios de acesso'   => 'usuario/acesso/index',
+                'Mais relatórios'        => 'usuario/login/otherreport',
+            )
+
+        );
+        $equals = array(
+            'usuario/login/todos'         , 'usuario/login/otherreport',
+            'usuario/login/personalreport', 'usuario/login/actionreport',
+            'usuario/login/formulario'    , 'usuario/perfil/index',
+            'usuario/perfil/formulario'   , 'usuario/acesso/index',
+            'usuario/login/report'
+        );
+        foreach($equals as $eq){
+            if(!isset($this->actions[$eq])){continue;}
+            $this->actions[$eq]['menu'] = $menu;
+        }
+    }
 }

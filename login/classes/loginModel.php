@@ -303,6 +303,9 @@ class usuario_loginModel extends \classes\Model\Model{
                 $senha               = $array['senha'];
                 $array['cod_perfil'] = isset($array['cod_perfil'])?$array['cod_perfil']:'4';
                 $array['senha']      = "FUNC_PASSWORD('{$array['senha']}')";
+                if(isset($array['referrer'])){
+                    $array['indicado'] = $array['referrer'];
+                }
                 if($array['cod_perfil'] != Webmaster) {$array['confirmkey'] = genKey(16);}
                 return $senha;
             }
@@ -877,10 +880,10 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function paginate($page, $link = "", $cod_item = "", $campo = "", $qtd = 20, $campos = array(), $adwhere = "", $order = "") {
         if(CURRENT_CONTROLLER == 'login' && CURRENT_ACTION == 'todos'){
-            $this->LoadModel('usuario/perfil', 'perfil');
-            $tb = $this->perfil->getTable();
-            $wh      = "$tb.display_list = 's'";
-            $adwhere = ($adwhere == "")?$wh:"$wh AND ($adwhere)";
+            //$this->LoadModel('usuario/perfil', 'perfil');
+            //$tb = $this->perfil->getTable();
+            //$wh      = "$tb.display_list = 's'";
+            //$adwhere = ($adwhere == "")?$wh:"$wh AND ($adwhere)";
         }
         $order = ($order == "")?"status ASC, user_name ASC":$order;
         return parent::paginate($page, $link, $cod_item, $campo, $qtd, $campos, $adwhere, $order);
