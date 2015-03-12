@@ -105,6 +105,16 @@ class usuarioConfigurations extends \classes\Classes\Options{
                     'value_default' => 'true'
                 ),
                 
+                'USUARIO_REFERRER_VIEW' => array(
+                    'name'          => 'USUARIO_REFERRER_VIEW',
+                    'label'         => 'View padrão para o cadastro via referrer',
+                    'type'          => 'varchar',//varchar, text, enum
+                    'default'       => 'usuario/referencia/cadastro',
+                    'description'   => 'mude esta opção se você criou uma página de captura para o seu site',
+                    'value'         => 'usuario/referencia/cadastro',
+                    'value_default' => 'usuario/referencia/cadastro'
+                ),
+                
             ),
         ),
         

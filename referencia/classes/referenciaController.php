@@ -8,7 +8,11 @@ class referenciaController extends classes\Controller\TController{
         $codref  = $this->getVarsParam(0, "Você deve informar o código de referência");
         $this->registerVar('codref', $codref);
         
-        if($coduser == 0){return $this->display(LINK ."/cadastro");}
+        if($coduser == 0){
+            $view = (defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== "")?USUARIO_REFERRER_VIEW:LINK."/cadastro";
+            return $this->display($view);
+        }
+        
         if($this->model->associate($codref, $coduser)){Redirect("");}
         $this->setVars($this->model->getMessages());
         $this->display("");        
