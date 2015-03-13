@@ -103,6 +103,17 @@ class usuarioConfigurations extends \classes\Classes\Options{
                                         o usuário não confirme o próprio email',
                     'value'         => 'true',
                     'value_default' => 'true'
+                ), 
+                
+                'USUARIO_ENABLE_MSG' => array(
+                    'name'          => 'USUARIO_ENABLE_MSG',
+                    'label'         => 'Ícone de mensagem',
+                    'type'          => 'enum',//varchar, text, enum
+                    'default'       => 'false',
+                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
+                    'description'   => 'Se esta opção estiver marcada, mostrará um ícone de mensagens no menu superior',
+                    'value'         => 'false',
+                    'value_default' => 'false'
                 ),
                 
                 'USUARIO_REFERRER_VIEW' => array(

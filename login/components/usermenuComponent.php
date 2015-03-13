@@ -27,7 +27,7 @@ class usermenuComponent extends classes\Classes\Object{
     private function LoggedMenu(){
         $var  = $this->LoadModel('usuario/login', 'uobj')->getUserNick();
         $msg  = '';
-        return array(
+        $out  =  array(
              $msg => array(
                  $msg      => 'mensagem/mensagem/index',
                  '__id'    => 'messages',
@@ -59,6 +59,10 @@ class usermenuComponent extends classes\Classes\Object{
                     '__icon'     => 'fa fa-sign-out'
                 ), 
         ));
+        if(!defined("USUARIO_ENABLE_MSG") || USUARIO_ENABLE_MSG === false){
+            unset($out[$msg]);
+        }
+        return $out;
     }
     
 }
