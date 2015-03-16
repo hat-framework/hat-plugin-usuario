@@ -340,31 +340,18 @@ class usuarioActions extends Actions{
         ),
         
         
-        'usuario/endereco/getcep' => array(
-            'label' => 'Getcep', 'publico' => 's', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-        ),
         
-        
-        'usuario/endereco/edit' => array(
-            'label' => 'Editar Endereço', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => true,
-            'menu' => array('Voltar' => 'usuario/endereco/show')
+        'usuario/tag/index' => array(
+            'label' => 'Todas as tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_GU',
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index'),
+            'menu' => array('usuario/login/logado', 'usuario/login/todos', 'usuario/login/show'),
         ),
-        'usuario/endereco/show' => array(
-            'label' => 'Visualizar Endereço', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => true,
-            'menu' => array('Voltar' => 'usuario/endereco/show')
-        ),
-        'usuario/endereco/formulario' => array(
-            'label' => 'Inserir Endereço', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => false,
-            'menu' => array('Voltar' => 'usuario/login/logado')
-        ),
-        'usuario/endereco/show' => array(
-            'label' => 'Visualizar Endereço', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
-            'permission' => 'usuario_AC', 'needcod' => true,
-            'menu' => array('Voltar' => 'usuario/endereco/show')
+        'usuario/tag/formulario' => array(
+            'label'       => 'Adicionar tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU',
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/formulario'),
+            'menu'        => array('usuario/login/logado', 'usuario/login/todos', 'usuario/login/show'),
         ),
 
     );
@@ -412,16 +399,43 @@ class usuarioActions extends Actions{
     
     private function setMenu(){
          $menu = array(
-            "Usuários" => array(
-                'usuario/login/formulario',
-                'Todos os usuários'      => 'usuario/login/todos', 
-            ),
-            "Perfis de usuário" => array(
-                'usuario/perfil/formulario',
-                'Listar Perfis'      => 'usuario/perfil/index',
+            "Administrar" => array(
+                "__icon" => 'fa fa-gear',
+                'Novo Usuário' => array(
+                    'Novo Usuário' => 'usuario/login/formulario',
+                    "__icon"       => 'fa fa-user-plus',
+                ),
+                'Lista de Usuários' => array(
+                    'Lista de Usuários' => 'usuario/login/todos', 
+                    "__icon"        => 'fa fa-user',
+                ),
+                "divider"                => '__divider',
+                
+                
+                'Novo Perfil' => array(
+                    "__icon"        => 'fa fa-plus',
+                    'Novo Perfil'   => 'usuario/perfil/formulario'
+                ),
+                'Listar Perfis' => array(
+                    "__icon"        => 'fa fa-users',
+                    'Listar Perfis' => 'usuario/perfil/index',
+                ),
+                "divider2"               => '__divider',
+                
+                
+                'Nova Tag'               => array(
+                    "__icon"     => 'fa fa-plus',
+                    'Nova Tag'   => 'usuario/tag/formulario', 
+                ),
+                'Lista de Tags'          => array(
+                    "__icon"        => 'fa fa-tags',
+                    'Lista de Tags' => 'usuario/tag/index',
+                ), 
+                
             ),
 
             'Relatórios'             => array(
+                "__icon"                 => 'fa fa-pie-chart',
                 'Visão Geral'            => 'usuario/login/report',
                 'Afiliados'              => 'usuario/login/widgets/afiliados',
                 'Acessos'                => 'usuario/acesso/index',
@@ -436,7 +450,9 @@ class usuarioActions extends Actions{
             'usuario/login/personalreport', 'usuario/login/actionreport',
             'usuario/login/formulario'    , 'usuario/perfil/index',
             'usuario/perfil/formulario'   , 'usuario/acesso/index',
-            'usuario/login/report'        , 'usuario/login/widgets'
+            'usuario/login/report'        , 'usuario/login/widgets',
+            'usuario/tag/index'           , 'usuario/tag/formulario' ,           
+            'usuario/tag/edit'            ,           
         );
         foreach($equals as $eq){
             if(!isset($this->actions[$eq])){continue;}
