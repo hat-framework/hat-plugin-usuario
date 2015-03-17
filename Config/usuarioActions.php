@@ -4,7 +4,9 @@ use classes\Classes\Actions;
 class usuarioActions extends Actions{
         
     public function __construct() {
-        $this->LoadClassFromPlugin('usuario/Config/usuarioInstall', 'uinst')->createRoutine();
+        if(defined('CURRENT_ACTION') && (CURRENT_ACTION === 'update' || CURRENT_ACTION === 'updateall')){
+            $this->LoadClassFromPlugin('usuario/Config/usuarioInstall', 'uinst')->createRoutine();
+        }
         $this->setMenu();
     }
     
@@ -24,8 +26,7 @@ class usuarioActions extends Actions{
         'AcessarConta' => array(
             'nome'      => "usuario_AC",
             'label'     => "Gerenciar Própria Conta",
-            'descricao' => "Permite que o acesse página inicial e 
-                altere os próprios dados de email e senha.",
+            'descricao' => "Permite que o acesse página inicial e altere os próprios dados de email e senha.",
             'default'   => 's',
         ),
         'FazerLogin' => array(
