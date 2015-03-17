@@ -4,6 +4,7 @@ use classes\Classes\Actions;
 class usuarioActions extends Actions{
         
     public function __construct() {
+        $this->LoadClassFromPlugin('usuario/Config/usuarioInstall', 'uinst')->createRoutine();
         $this->setMenu();
     }
     
@@ -342,16 +343,35 @@ class usuarioActions extends Actions{
         
         
         'usuario/tag/index' => array(
-            'label' => 'Todas as tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'label' => 'Todas as tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GU',
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index'),
-            'menu' => array('usuario/login/logado', 'usuario/login/todos', 'usuario/login/show'),
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index')
         ),
         'usuario/tag/formulario' => array(
-            'label'       => 'Adicionar tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'label'       => 'Adicionar tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU',
             'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/formulario'),
-            'menu'        => array('usuario/login/logado', 'usuario/login/todos', 'usuario/login/show'),
+        ),
+        'usuario/tag/show' => array(
+            'label'       => 'Visualizar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+            'menu' => array(
+                'Opções' => array(
+                    '__icon'=>'fa fa-gear',
+                    'Editar' => array('Editar'=>'usuario/tag/edit'  , '__icon'=>'fa fa-pencil'),
+                    'Apagar' => array('Apagar'=>'usuario/tag/apagar', '__icon'=>'fa fa-times'),
+                )
+            ),
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/show')
+        ),
+        'usuario/tag/edit' => array(
+            'label'       => 'Editar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/show', 'usuario/tag/edit')
+        ),
+        'usuario/tag/apagar' => array(
+            'label'       => 'Apagar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
         ),
 
     );
@@ -451,8 +471,7 @@ class usuarioActions extends Actions{
             'usuario/login/formulario'    , 'usuario/perfil/index',
             'usuario/perfil/formulario'   , 'usuario/acesso/index',
             'usuario/login/report'        , 'usuario/login/widgets',
-            'usuario/tag/index'           , 'usuario/tag/formulario' ,           
-            'usuario/tag/edit'            ,           
+            'usuario/tag/index'           , 'usuario/tag/formulario' ,     
         );
         foreach($equals as $eq){
             if(!isset($this->actions[$eq])){continue;}

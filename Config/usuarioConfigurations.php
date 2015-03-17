@@ -11,37 +11,45 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'ordem'  => '10',
         ),
         
-        array(
-            'menuid' => 'novo_usuario',
-            'menu'   => 'Criar Usuário',
-            'pai'    => 'usuarios',
-            'icon'   => 'glyphicon glyphicon-plus',
-            'url'    => 'usuario/login/formulario',
-        ),
+            array(
+                'menuid' => 'novo_usuario',
+                'menu'   => 'Novo Usuário',
+                'pai'    => 'usuarios',
+                'icon'   => 'fa fa-user-plus',
+                'url'    => 'usuario/login/formulario',
+            ),
+
+            array(
+                'menuid' => 'todos_usuarios',
+                'menu'   => 'Listar Usuários',
+                'pai'    => 'usuarios',
+                'icon'   => 'fa fa-user',
+                'url'    => 'usuario/login/todos',
+            ),
+
+            array(
+                'menuid' => 'perfil',
+                'menu'   => 'Perfils de Usuário',
+                'pai'    => 'usuarios',
+                'icon'   => 'fa fa-user',
+                'url'    => 'usuario/perfil/index',
+            ),
+
+            array(
+                'menuid' => 'tags',
+                'menu'   => 'Todas as Tags',
+                'pai'    => 'usuarios',
+                'icon'   => 'fa fa-tags',
+                'url'    => 'usuario/tag/index',
+            ),
         
-        array(
-            'menuid' => 'todos_usuarios',
-            'menu'   => 'Listar Usuários',
-            'pai'    => 'usuarios',
-            'icon'   => 'glyphicon glyphicon-user',
-            'url'    => 'usuario/login/todos',
-        ),
-        
-        array(
-            'menuid' => 'report',
-            'menu'   => 'Relatórios',
-            'pai'    => 'usuarios',
-            'icon'   => 'glyphicon glyphicon-tasks',
-            'url'    => 'usuario/login/report',
-        ),
-        
-        array(
-            'menuid' => 'perfil',
-            'menu'   => 'Perfil de Usuário',
-            'pai'    => 'usuarios',
-            'icon'   => '',
-            'url'    => 'usuario/perfil/index',
-        )
+            array(
+                'menuid' => 'report',
+                'menu'   => 'Relatórios',
+                'pai'    => 'usuarios',
+                'icon'   => 'glyphicon glyphicon-tasks',
+                'url'    => 'usuario/login/report',
+            ),
         
     );
     
