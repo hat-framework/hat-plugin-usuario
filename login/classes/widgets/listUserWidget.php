@@ -29,6 +29,7 @@ class listUserWidget extends \classes\Component\widget{
         $this->filter_camp("user_criadoem_ate"  , array("user_uacesso"), " <= ");
         $this->filter_camp("user_uacesso"       , array("user_uacesso"), " >= ");
         $this->filter_camp("user_uacesso_ate"   , array("user_uacesso"), " <= ");
+        $this->tags();
         $this->indicado();
         if(empty($this->wh)){return;}
         $this->where = "(".implode(") AND (", $this->wh).")";
@@ -72,6 +73,16 @@ class listUserWidget extends \classes\Component\widget{
         if(!isset($_GET['indicado'])){return;}
         $val = $_GET['indicado'];
         $_GET['indicado'] = "NULL";
-        $this->filter_camp('indicado'  , array('indicado'), ($val === 'n')?" IS ":" IS NOT ");
+        $this->filter_camp('indicado', array('indicado'), ($val === 'n')?" IS ":" IS NOT ");
+    }
+    
+    private function tags(){
+        if(!isset($_GET['tags'])){return;}
+        $tags = $_GET['tags'];
+        if(trim($tags) === ""){return;}
+        $tagmodel = 'usuario/tag/usertag';
+        $tb = $this->LoadModel($tagmodel, 'ut')->getTable();
+        $this->wh[] = "$tb.cod_tag IN('$tags')";
+        $this->uobj->Join($tagmodel,array('cod_usuario'),array('cod_usuario'),'LEFT');
     }
 }

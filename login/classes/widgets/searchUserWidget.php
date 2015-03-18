@@ -33,6 +33,18 @@ class searchUserWidget extends \classes\Component\widget{
 	    ),
         ),
         
+        'tags' => array(
+	    'name'        => 'Tags de usuário',
+	    'type'        => 'int',
+	    'size'        => '11',
+            'select_type' => 'multiple',
+	    'fkey'        => array(
+	        'model'         => 'usuario/tag',
+	        'cardinalidade' => '1n',
+	        'keys'          => array('cod_tag', 'tag'),
+	    ),
+        ),
+        
         'status' => array(
             'name'     => 'Status',
             'type'     => 'enum',
