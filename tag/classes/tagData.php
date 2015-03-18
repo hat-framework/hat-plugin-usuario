@@ -28,6 +28,22 @@ class usuario_tagData extends \classes\Model\DataModel{
             'description' => "Digite a Tag a ser aplicada",
          ),
         
+        'taggroup' => array(
+	    'name'    => 'Grupo',
+	    'type'    => 'int',
+	    'size'    => '11',
+	    'pkey'    => true,
+	    'grid'    => true,
+	    'display' => true,
+            'fkey'    => array(
+	        'model'         => 'usuario/tag/taggroup',
+	        'cardinalidade' => '1n',
+	        'keys'          => array('cod_taggroup', 'name'),
+                'onupdate'      => 'CASCADE',
+                'ondelete'      => 'CASCADE',
+	    ),
+        ),
+        
         'tag_expires_time' => array(
 	    'name'        => 'Expiração',
 	    'type'        => 'int',

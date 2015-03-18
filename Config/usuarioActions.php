@@ -374,6 +374,12 @@ class usuarioActions extends Actions{
             'label'       => 'Apagar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => true,
         ),
+        
+        'usuario/tag/taggroup' => array(
+            'label'       => 'Grupos de tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => false,
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/taggroup')
+        ),
 
     );
     
@@ -444,13 +450,21 @@ class usuarioActions extends Actions{
                 "divider2"               => '__divider',
                 
                 
-                'Nova Tag'               => array(
+                'Nova Tag' => array(
                     "__icon"     => 'fa fa-plus',
                     'Nova Tag'   => 'usuario/tag/formulario', 
                 ),
-                'Lista de Tags'          => array(
-                    "__icon"        => 'fa fa-tags',
+                'Novo Grupo de Tags' => array(
+                    "__icon"     => 'fa fa-plus',
+                    'Novo Grupo de Tags' => 'usuario/tag/taggroup/formulario', 
+                ),
+                'Lista de Tags' => array(
+                    "__icon"        => 'fa fa-tag',
                     'Lista de Tags' => 'usuario/tag/index',
+                ), 
+                'Grupos de Tags' => array(
+                    "__icon"        => 'fa fa-tags',
+                    'Grupos de Tags' => 'usuario/tag/taggroup/index',
                 ), 
                 
             ),
@@ -472,7 +486,8 @@ class usuarioActions extends Actions{
             'usuario/login/formulario'    , 'usuario/perfil/index',
             'usuario/perfil/formulario'   , 'usuario/acesso/index',
             'usuario/login/report'        , 'usuario/login/widgets',
-            'usuario/tag/index'           , 'usuario/tag/formulario' ,     
+            'usuario/tag/index'           , 'usuario/tag/formulario' ,
+            'usuario/tag/taggroup'
         );
         foreach($equals as $eq){
             if(!isset($this->actions[$eq])){continue;}
