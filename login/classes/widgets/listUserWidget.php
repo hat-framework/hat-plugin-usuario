@@ -7,7 +7,7 @@ class listUserWidget extends \classes\Component\widget{
     protected $tb        = "";
     protected $arr       = array(
         'cod_usuario','user_name', 'email', 'cod_perfil', 'tipo_cadastro', 'status','user_criadoem', 'user_uacesso','indicado'
-     );
+    );
     protected $link      = '';
     protected $where     = "";
     protected $qtd       = "10";
@@ -33,13 +33,12 @@ class listUserWidget extends \classes\Component\widget{
         $this->indicado();
         if(empty($this->wh)){return;}
         $this->where = "(".implode(") AND (", $this->wh).")";
-        //echoBr($this->where );
         $this->title = "Usuários filtrados";
     }
     
 //    public function getItens(){
 //        $out = parent::getItens();
-//        echo $this->model->db->getSentenca();
+//        $this->model->db->printSentenca();
 //        return $out;
 //    }
     
@@ -80,9 +79,16 @@ class listUserWidget extends \classes\Component\widget{
         if(!isset($_GET['tags'])){return;}
         $tags = $_GET['tags'];
         if(trim($tags) === ""){return;}
+        $arr      = array();
+        $ee       = explode(",", $tags);
         $tagmodel = 'usuario/tag/usertag';
-        $tb = $this->LoadModel($tagmodel, 'ut')->getTable();
-        $this->wh[] = "$tb.cod_tag IN('$tags')";
-        $this->uobj->Join($tagmodel,array('cod_usuario'),array('cod_usuario'),'LEFT');
+        foreach($ee as $i => $e){
+            $e = trim($e);
+            if($e === ""){continue;}
+            $tbn   = "ut$i";
+            $this->uobj->Join(array('model'=>$tagmodel, 'alias'=>$tbn),array('cod_usuario'),array('cod_usuario'),'LEFT');
+            $arr[] = "$tbn.cod_tag = '$e'";
+        }
+        $this->wh[] = implode(" AND ", $arr);
     }
 }
