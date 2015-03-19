@@ -34,7 +34,7 @@ class usuario_acessoModel extends \classes\Model\Model{
         $act = $action;
         $e = explode("url=", $action);
         $a = isset($e[1])?explode("&", $e[1]):array($action);
-        $action = $a[0];
+        $action = urldecode($a[0]);
 
         $e2 = explode("&", $act);
         foreach($e2 as $nm){

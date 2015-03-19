@@ -47,6 +47,15 @@ class usuario_usertagModel extends \classes\Model\Model{
         return $this->apagar(array($cod_usuario, $tagid));
     }
     
+    public function importTagsFromAcesso(){
+        $bool = $this->LoadClassFromPlugin('usuario/tag/support/importTags', 'itag')->importTags();
+        if($bool === false){
+            $this->setMessages($this->itag->getMessages());
+            return false;
+        }
+        return $this->setSuccessMessage("Tags Importadas com sucesso!");
+    }
+    
     public $dados  = array(
         'cod_tag' => array(
 	    'name'    => 'Tag',
