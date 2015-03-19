@@ -16,36 +16,32 @@ class importTags extends classes\Classes\Object{
         $dados = $this->consultAcesso();
         foreach($dados as $dado){
             $group = $this->filtrarGrupo($dado);
-            if($group === false){continue;}
-
             $tagid = $this->prepareTagId($group);
             if($tagid === false){continue;}
-            
-            $this->addToArray($tagid, $dado['cod_usuario'], $dado['data']);
             $this->addUserAtivo($dado);
+            if($group === ""){continue;}
+            $this->addToArray($tagid, $dado['cod_usuario'], $dado['data']);
         }
         return $this->importarTags();
     }
-            private function addUserAtivo($dado){
-                if(isset($this->userarray[$dado['cod_usuario']])){return;}
-                $this->userarray[$dado['cod_usuario']] = true;
-                $codtag = $this->prepareTagId("");
-                if($codtag === false){return;}
-                $this->addToArray($codtag, $dado['cod_usuario'], $dado['data']);
-            }
     
             private function consultAcesso(){
-                return $this->ua->selecionar(
-                    array("group1", "cod_usuario",'data'), 
-                    "NOW() - 30*86400 < data GROUP BY cod_usuario,group1"
+                $data = $this->ua->selecionar(
+                    array("cod_usuario", 'group1','data'), 
+                    "DATEDIFF(NOW(),data) < 30 AND cod_usuario != '0' ".
+                    "GROUP BY cod_usuario, group1"
                 );
+//                print_in_table($data);
+//                $this->ua->db->printSentenca();
+//                die("----");
+                return $data;
             }
 
             private function filtrarGrupo($dado){
                 $temp           = urldecode($dado['group1']);
                 $e              = explode("/", $temp);
                 $group          = array_shift($e);
-                return (trim($group) === "")?false:$group;
+                return (trim($group) === "")?"":$group;
             }
 
             private function prepareTagId($group){
@@ -65,6 +61,14 @@ class importTags extends classes\Classes\Object{
                 $this->array[]                 = array('cod_tag' => $cod_tag, 'cod_usuario' => $cod_usuario,'dt_tag' => $dt_tag);
                 if(count($this->array) < 1000){return;}
                 $this->importarTags();
+            }
+            
+            private function addUserAtivo($dado){
+                if(isset($this->userarray[$dado['cod_usuario']])){return;}
+                $this->userarray[$dado['cod_usuario']] = true;
+                $codtag = $this->prepareTagId("");
+                if($codtag === false){return;}
+                $this->addToArray($codtag, $dado['cod_usuario'], $dado['data']);
             }
             
             private function importarTags(){

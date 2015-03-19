@@ -1,8 +1,0 @@
-<?php 
-
-$this->gui->opendiv('subscribe_container', "col-xs-12");
-    $this->LoadComponent('usuario/login', 'lcomp')->tela_login('col-xs-12 col-sm-12 col-md-6 col-lg-5');
-    $this->LoadComponent("usuario/login/subscribe", 'comp')
-            ->setReferrer($codref)
-            ->screen('col-xs-12 col-sm-12 col-md-6 col-lg-7');
-$this->gui->closediv();
