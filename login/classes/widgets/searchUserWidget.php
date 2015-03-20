@@ -123,7 +123,7 @@ class searchUserWidget extends \classes\Component\widget{
         'widget' => array(
             'type'        => 'varchar',
             'size'        => '64',
-            'default'     => 'listUser',
+            'default'     => 'listUserWidget',
             'especial'    => 'hidden'
         ),
     );

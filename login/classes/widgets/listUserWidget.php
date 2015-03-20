@@ -19,7 +19,7 @@ class listUserWidget extends \classes\Component\widget{
         parent::__construct();
         $this->tb = $this->LoadModel('usuario/login', 'uobj')->getTable();
         $search   = filter_input(INPUT_GET, 'widget');
-        if($search !== "listUser"){return;}
+        if($search !== "listUserWidget"){return;}
         $this->filter_camp("user_string"        , array("cod_usuario","user_name", "user_cargo", "email"), "LIKE");
         $this->filter_camp("cod_perfil"         , array("cod_perfil"));
         $this->filter_camp("confirmed"          , array("confirmed"));
