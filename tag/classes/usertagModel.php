@@ -7,7 +7,7 @@ class usuario_usertagModel extends \classes\Model\Model{
     public function addTag($tag, $cod_usuario = ''){
         $coduser = $this->getCodUsuario($cod_usuario);
         if($coduser == 0){return false;}
-        //if($this->cookieExistsTest($coduser, $tag)){return true;}
+        if($this->cookieExistsTest($coduser, $tag)){return true;}
         $tagid = $this->LoadModel('usuario/tag', 'tag')->getTagId($tag);
         if(trim($tagid) === ""){return false;}
         return $this->updateTag($tagid, $coduser);
@@ -41,6 +41,12 @@ class usuario_usertagModel extends \classes\Model\Model{
                 ));
             }
     
+    public function getUserTags($cod_usuario = ""){
+        if($cod_usuario === ""){$cod_usuario = usuario_loginModel::CodUsuario();}
+        $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
+        return $this->selecionar(array('tag',"$this->tabela.cod_tag",'dt_tag'), "$this->tabela.cod_usuario='$cod_usuario'");
+    }
+            
     public function removeTag($tag, $cod_usuario = ''){
         $tagid = $this->LoadModel('usuario/tag', 'tag')->getTagId($tag);
         if(trim($tagid) === ""){return false;}

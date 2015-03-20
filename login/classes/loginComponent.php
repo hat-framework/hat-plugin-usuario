@@ -76,28 +76,201 @@ class loginComponent extends classes\Component\Component{
     
     protected $listActions = array('Veja Mais' => "show", 'Bloquear' => "block", 'Desbloquear' => 'unblock');
     public function drawTitle(&$item) {
-        $scomp = new \classes\Component\showComponent($this->dados, $this->gui);
-        $this->gui->opendiv('item_header', 'widget col-xs-12');
-            $scomp->printHeader($item, $this);
-            $this->gadgets($item);
+        echo "<style>
+            #item_header{
+                background:#fff;
+                text-align:center;
+            }
+            #gadget_header{
+              height:44px; 
+              display: block;
+              text-align:center;
+              background:#E5E5E5;
+          }
+          </style>";
+        //$scomp = new \classes\Component\showComponent($this->dados, $this->gui);
+        //$scomp->printHeader($item, $this);
+        $this->gui->opendiv('item_header', 'col-xs-12');
+            if(isset($item['user_name']) && trim($item['user_name']) !== ''){
+                $this->gui->title($item['user_name']);
+            }
+            if(isset($item['user_cargo']) && trim($item['user_cargo']) !== ''){
+                $this->gui->infotitle($item['user_cargo']);
+            }
+            if(isset($item['cod_perfil']) && isset($item['__cod_perfil']) && isset($item['cod_perfil'][$item['__cod_perfil']])){
+                $this->gui->infotitle($item['cod_perfil'][$item['__cod_perfil']]);
+            }
+            $this->tags($item);
+            
         $this->gui->closediv();
+        $this->gadgets($item);
     }
     
+            private function tags(&$item){
+                if(isset($item['status']) && trim($item['status']) !== ''){
+                    $this->gui->label($item['status'], "label_{$item['__status']}", $item['__status'] );
+                    unset($item['status']);unset($item['__status']);
+                }
+                if(isset($item['confirmed']) && trim($item['confirmed']) !== ''){
+                    $this->gui->label($item['confirmed'], "label_{$item['__confirmed']}", $item['__confirmed']);
+                    unset($item['confirmed']);unset($item['__confirmed']);
+                }
+            }
+    
+    public function show($model, $item) {
+        $this->drawTitle($item);
+        $this->itemSection($model, $item);
+        $this->tagsSection($item['cod_usuario']);
+        $this->gui->separator();
+        $this->configSection($item['cod_usuario']);
+    }
+    
+            private function itemSection($model, $item){
+                $dados = $this->LoadModel($model, 'uobj')->getDados();
+                $data = array();
+                foreach($item as $name => $it){
+                    if(!isset($dados[$name])){continue;}
+                    if(isset($dados[$name]['private']) && $dados[$name]['private'] === true){continue;}
+                    $title = (isset($dados[$name]['name']))?$dados[$name]['name']:$name;
+                    if(is_array($it)){
+                        if(!isset($item["__$name"]) || !isset($dados[$name]['fkey'])){continue;}
+                        $it = $this->Html->getActionLinkIfHasPermission($dados[$name]['fkey']['model']."/show/{$item["__$name"]}",$item[$name][$item["__$name"]]);
+                    }
+                    $data[] = array($title, $it);
+                }
+                $this->tableData("Dados Pessoais", $data, 'col-xs-12 col-sm-12 col-md-8', 'fa fa-user');
+            }
+    
+            private function tagsSection($cod_usuario){
+                $tags = $this->LoadModel('usuario/tag/usertag', 'utag')->getUserTags($cod_usuario);
+                ob_start();
+                foreach($tags as $tag){
+                    if(trim($tag['tag']) === ""){continue;}
+                    $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag']);
+                    if(trim($link) === ""){continue;}
+                    $this->gui->label($link, '', 'label_tag', array('style'=>'float: left; margin:5px;'));
+                }
+                $content = ob_get_contents();
+                ob_end_clean();
+                
+                $this->tableData("Tags", $content, 'col-xs-12 col-sm-12 col-md-4', 'fa fa-tags');
+            }
+            
+            private function configSection($cod_usuario){
+                $cod    = 'pessoal';
+                $forms  = $this->LoadModel('config/form', 'frm')->selecionar(array('cod','title','description','icon','form_data'),"`group`='$cod'");
+                $forms2 = array();
+                foreach($forms as $data){
+                    $forms2[$data['cod']] = $data;
+                }
+                
+                $out = $this->prepareData($cod_usuario, $forms2);
+                $this->printSide($forms2,$out);
+                
+            }
+            
+                    private function prepareData($cod_usuario, $forms2){
+                        $data   = $this->LoadModel('config/response', 'resp')->selecionar(
+                                array('form_response','form'),
+                                "login='$cod_usuario' AND form LIKE '%pessoal_%'"
+                        );
+                        $out    = array();
+                        foreach($data as $dt){
+                            if(!isset($out[$dt['form']])){$out[$dt['form']] = array();}
+                            if(!array_key_exists($dt['form'], $forms2)){continue;}
+
+                            
+                            $out[$dt['form']][] = $this->formatLine($forms2,$dt);
+                        }
+                        return $out;
+                    }
+                    
+                            private function formatLine($forms2, $dt){
+                                $temp    = array();
+                                $current = $forms2[$dt['form']]['form_data'];
+                                foreach($dt['form_response'] as $name => $val){
+                                    if($current[$name]['type'] === 'enum'){
+                                        $val = $current[$name]['options'][$val];
+                                    }
+                                    $this->fkeyCase($current, $name, &$val);
+                                    $name = isset($current[$name]['name'])?$current[$name]['name']:$name;
+                                    $temp[$name] = $val;
+                                }
+                                return $temp;
+                            }
+                    
+                                private function fkeyCase($current, $name, &$val){
+                                    if(!isset($current[$name]['fkey'])){return;}
+                                    $key = $current[$name]['fkey']['keys'][0];
+                                    $k2  = $current[$name]['fkey']['keys'][1];
+                                    $res = $this->LoadModel($current[$name]['fkey']['model'],'tmp')->selecionar(
+                                            $current[$name]['fkey']['keys'], "$key='$val'"
+                                    );
+                                    $res2  = array_shift($res);
+                                    $val = $this->Html->getActionLinkIfHasPermission($current[$name]['fkey']['model']."/show/{$res2[$key]}",$res2[$k2]);
+                                }
+                    
+                    private function printSide($forms2, $out){
+                        $dir = ceil(count($out)/2);
+                        $this->gui->opendiv('dir', 'pull-left col-xs-12 col-md-6');
+                  
+                        $i = 0;
+                        foreach($forms2 as $current){
+                            $i++;
+                            $values = $out[$current['cod']];
+                            if(false === $this->tableData($current['title'], $values, '', $current['icon'])){
+                                $dir--;
+                            }
+                            if($i == $dir){
+                                $this->gui->closediv();
+                                $this->gui->opendiv('esq', 'pull-right col-xs-12 col-md-6');
+                            }
+                        }
+                        $this->gui->closediv();
+                    }
+    
+    private function tableData($title, $data, $class, $icon = "", $multitable = false){
+        $content = $this->getContent($data, $multitable);
+        if(trim($content) === ''){return false;}
+        $this->gui->opendiv('', $class)
+                  ->openPanel()
+                  ->panelHeader($title, $icon)
+                  ->panelBody($content)
+                  ->closePanel()
+                  ->closediv();
+        return true;
+    }
+    
+            private function getContent($data, $multitable){
+                if(!is_array($data)){return $data;}
+                $this->LoadResource('html/table', 'tb');
+                
+                if(!$multitable){
+                    return $this->tb->printable(false)->draw($data, array());
+                }
+                $content = "";
+                foreach($data as $dt){
+                    $content .= $this->tb->printable(false)
+                                 ->draw($dt, array());
+                }
+                return $content;
+            }
+            
     private function gadgets($item){
         if(!isset($item['cod_usuario'])) {return;}
         $cod_usuario = $item['cod_usuario'];
-        echo "<div id='usertabs'><ul>";
-        if($cod_usuario == \usuario_loginModel::CodUsuario()){
-            $this->makeGadgetLink("usuario/login/logado", 'Alterar Dados');
-        }
-        $this->makeGadgetLink("usuario/login/show/$cod_usuario", 'Dados Pessoais');
-        echo "<ul></div>";
+        $this->gui->opendiv('gadget_header', 'col-xs-12');
+            if($cod_usuario == \usuario_loginModel::CodUsuario()){
+                $this->makeGadgetLink("usuario/login/logado", 'Alterar Dados');
+            }
+            $this->makeGadgetLink("usuario/login/show/$cod_usuario", 'Sobre');
+        $this->gui->closediv();
     }
     
     private function makeGadgetLink($link, $title){
         $url = $this->Html->getLink($link);
-        $class = (strstr(CURRENT_URL, $link))?" active":'';
-        echo "<li><a class='usertabs$class' href='$url'$class>$title</a></li>";
+        echo (strstr(CURRENT_URL, $link))?
+                $title:"<a class='active' style='margin-right:12px; line-height:44px;' href='$url' active>$title</a>";
     }
     
     public function getActionLinks($model, $pkey, $item){
