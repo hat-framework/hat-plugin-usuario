@@ -75,36 +75,6 @@ class loginComponent extends classes\Component\Component{
     }
     
     protected $listActions = array('Veja Mais' => "show", 'Bloquear' => "block", 'Desbloquear' => 'unblock');
-    public function drawTitle(&$item) {
-        echo "<style>
-            #item_header{
-                background:#fff;
-                text-align:center;
-            }
-            #gadget_header{
-              height:44px; 
-              display: block;
-              text-align:center;
-              background:#E5E5E5;
-          }
-          </style>";
-        //$scomp = new \classes\Component\showComponent($this->dados, $this->gui);
-        //$scomp->printHeader($item, $this);
-        $this->gui->opendiv('item_header', 'col-xs-12');
-            if(isset($item['user_name']) && trim($item['user_name']) !== ''){
-                $this->gui->title($item['user_name']);
-            }
-            if(isset($item['user_cargo']) && trim($item['user_cargo']) !== ''){
-                $this->gui->infotitle($item['user_cargo']);
-            }
-            if(isset($item['cod_perfil']) && isset($item['__cod_perfil']) && isset($item['cod_perfil'][$item['__cod_perfil']])){
-                $this->gui->infotitle($item['cod_perfil'][$item['__cod_perfil']]);
-            }
-            $this->tags($item);
-            
-        $this->gui->closediv();
-        $this->gadgets($item);
-    }
     
             private function tags(&$item){
                 if(isset($item['status']) && trim($item['status']) !== ''){
@@ -125,6 +95,25 @@ class loginComponent extends classes\Component\Component{
         $this->configSection($item['cod_usuario']);
     }
     
+            public function drawTitle(&$item) {
+                echo "<style>#item_header{background:#fff;text-align:center;}";
+                echo "#gadget_header{height:44px;display: block;text-align:center; background:#E5E5E5;}</style>";
+                $this->gui->opendiv('item_header', 'col-xs-12');
+                    if(isset($item['user_name']) && trim($item['user_name']) !== ''){
+                        $this->gui->title($item['user_name']);
+                    }
+                    if(isset($item['user_cargo']) && trim($item['user_cargo']) !== ''){
+                        $this->gui->infotitle($item['user_cargo']);
+                    }
+                    if(isset($item['cod_perfil']) && isset($item['__cod_perfil']) && isset($item['cod_perfil'][$item['__cod_perfil']])){
+                        $this->gui->infotitle($item['cod_perfil'][$item['__cod_perfil']]);
+                    }
+                    $this->tags($item);
+
+                $this->gui->closediv();
+                $this->gadgets($item);
+            }
+    
             private function itemSection($model, $item){
                 $dados = $this->LoadModel($model, 'uobj')->getDados();
                 $data = array();
@@ -134,27 +123,54 @@ class loginComponent extends classes\Component\Component{
                     $title = (isset($dados[$name]['name']))?$dados[$name]['name']:$name;
                     if(is_array($it)){
                         if(!isset($item["__$name"]) || !isset($dados[$name]['fkey'])){continue;}
-                        $it = $this->Html->getActionLinkIfHasPermission($dados[$name]['fkey']['model']."/show/{$item["__$name"]}",$item[$name][$item["__$name"]]);
+                        $it = $this->Html->getActionLinkIfHasPermission(
+                                $dados[$name]['fkey']['model']."/show/{$item["__$name"]}",
+                                $item[$name][$item["__$name"]], "", "", "", "", true
+                        );
                     }
                     $data[] = array($title, $it);
                 }
-                $this->tableData("Dados Pessoais", $data, 'col-xs-12 col-sm-12 col-md-8', 'fa fa-user');
+                $this->tableData("Dados Pessoais", $data, 'col-xs-12 col-sm-12 col-md-7', 'fa fa-user');
             }
     
             private function tagsSection($cod_usuario){
-                $tags = $this->LoadModel('usuario/tag/usertag', 'utag')->getUserTags($cod_usuario);
+                $tags  = $this->LoadModel('usuario/tag/usertag', 'utag')->getUserTags($cod_usuario);
                 ob_start();
+                $this->AddTagLink();                
                 foreach($tags as $tag){
-                    if(trim($tag['tag']) === ""){continue;}
-                    $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag']);
-                    if(trim($link) === ""){continue;}
-                    $this->gui->label($link, '', 'label_tag', array('style'=>'float: left; margin:5px;'));
+                    $this->tagLinks($tag, $cod_usuario);
                 }
                 $content = ob_get_contents();
                 ob_end_clean();
-                
-                $this->tableData("Tags", $content, 'col-xs-12 col-sm-12 col-md-4', 'fa fa-tags');
+                $this->tableData("Tags", $content, 'col-xs-12 col-sm-12 col-md-5', 'fa fa-tags');
             }
+            
+                    private function AddTagLink(){
+                        $lk  = $this->Html->getActionLinkIfHasPermission(
+                                "usuario/tag/usertag/formulario",
+                                "Adicionar Tag <span class='badge' style='float:right; top:0;'><i class='fa fa-plus'></i></span>",
+                                "", "", "_BLANK", "",true
+                        );
+                        if(trim($lk) !== ""){
+                            echo "<button class='btn btn-lg btn-success col-xs-12' type='button' style='margin:5px;'>$lk</button>";
+                        }
+                    }
+                    
+                    private function tagLinks($tag, $cod_usuario){
+                        if(trim($tag['tag']) === ""){return;}
+
+                        $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag'], "", "", "", "",true);
+                        if(trim($link) === ""){return;}
+                        echo "<button class='btn btn-primary col-xs-12 col-md-5' type='button' style='margin:5px;'> ";
+
+                        $link2  = $this->Html->getActionLinkIfHasPermission(
+                                "usuario/tag/usertag/apagar/{$cod_usuario}/{$tag["cod_tag"]}",
+                                "<i class='fa fa-remove'></i>", "", "", "", "",true
+                        );
+                        if(trim($link2) !== ""){echo "<span class='badge' style='float:right; top:0;'>$link2</span>";}
+
+                        echo "$link</button>";
+                    }
             
             private function configSection($cod_usuario){
                 $cod    = 'pessoal';
@@ -217,6 +233,7 @@ class loginComponent extends classes\Component\Component{
                         $i = 0;
                         foreach($forms2 as $current){
                             $i++;
+                            if(!isset($current['cod']) || !isset($out[$current['cod']])){continue;}
                             $values = $out[$current['cod']];
                             if(false === $this->tableData($current['title'], $values, '', $current['icon'])){
                                 $dir--;
@@ -233,7 +250,7 @@ class loginComponent extends classes\Component\Component{
         $content = $this->getContent($data, $multitable);
         if(trim($content) === ''){return false;}
         $this->gui->opendiv('', $class)
-                  ->openPanel()
+                  ->openPanel('')
                   ->panelHeader($title, $icon)
                   ->panelBody($content)
                   ->closePanel()

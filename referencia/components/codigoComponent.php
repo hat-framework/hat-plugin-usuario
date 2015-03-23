@@ -9,6 +9,10 @@ class codigoComponent extends \classes\Classes\Object{
     public function __construct() {
         $this->gui = new \classes\Component\GUI();
         $this->cod = usuario_loginModel::CodUsuario();
+        $user      = filter_input(INPUT_GET, '_user');
+        if(usuario_loginModel::IsWebmaster() && trim($user) !== ''){
+            $this->cod = $user;
+        }
         $this->LoadResource('html', 'html');
         $this->LoadModel($this->modelname, 'ref');
         $this->LoadComponent($this->modelname, 'comp');
