@@ -46,7 +46,8 @@ class loginRedirection extends classes\Classes\Object{
             }
             
             private function getRedirectionPage($refer, $first_login){
-                if($refer != "" || !$first_login){return $refer;}
+                //if($refer != "" || !$first_login){return $refer;}
+                if($refer != ""){return $refer;}
 
                 //recupera o plugin padrão
                 $default = $this->plug->getDefault();

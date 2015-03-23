@@ -234,8 +234,6 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //se login não existe ou senha está incorreta
         if(empty ($value)){
-            die($this->db->getSentenca());
-            //$this->setErrorMessage($this->db->getSentenca());
             $this->setErrorMessage("Usuário ou senha incorretos");
             return false;
         }
@@ -245,10 +243,8 @@ class usuario_loginModel extends \classes\Model\Model{
         if($refer == "") {$refer = URL;}
         $this->makeLogin($user, $refer);
         
-        //if(!parent::apagar($user['cod_usuario'])){die("NAO APAGOU!");}
         //redireciona, caso necessário
         $this->Redirect(true,$login_first);
-        //$this->apagar();
         return true;
     }
     
@@ -681,13 +677,11 @@ class usuario_loginModel extends \classes\Model\Model{
             if(!session::exists('refer'))session::setVar('refer', $url);
             Redirect('usuario/login', 0, "refer=$url");
         }
-        else $this->Redirect();
+        else {$this->Redirect();}
         return true;
     }
     
     public function Redirect($first_login = false,$login_first = false){
-        //echoBr("$first_login - $login_first");
-        //$this->Logout();
         $class = 'usuario/login/helpers/loginRedirection';
         return $this->LoadClassFromPlugin($class, 'ulr')->TryRedirection($first_login,$login_first);
     }

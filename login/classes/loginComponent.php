@@ -192,7 +192,7 @@ class loginComponent extends classes\Component\Component{
                                     if($current[$name]['type'] === 'enum'){
                                         $val = $current[$name]['options'][$val];
                                     }
-                                    $this->fkeyCase($current, $name, &$val);
+                                    $this->fkeyCase($current, $name, $val);
                                     $name = isset($current[$name]['name'])?$current[$name]['name']:$name;
                                     $temp[$name] = $val;
                                 }
