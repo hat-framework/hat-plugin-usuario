@@ -24,9 +24,8 @@ class usuario_loginModel extends \classes\Model\Model{
     }
 
     public function setLastAccessOfUser(){
-        if(!$this->IsLoged()) return;
-        $horario = \classes\Classes\timeResource::getFormatedDate();
-        parent::editar($this->getCodUsuario(), array('user_uacesso' => $horario));
+        if(!$this->IsLoged()) {return;}
+        parent::editar($this->getCodUsuario(), array('user_uacesso' => "FUNC_NOW()"));
     }
 
     public function getDados() {
