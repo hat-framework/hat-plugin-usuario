@@ -112,5 +112,3 @@ class usuario_perfilData extends \classes\Model\DataModel{
     );
     
 }
-
-?>
