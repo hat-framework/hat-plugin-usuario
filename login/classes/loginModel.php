@@ -306,9 +306,13 @@ class usuario_loginModel extends \classes\Model\Model{
             }
     
             private function setReferrer($refer){
-                if($refer === ""){return;}
+                $this->LoadModel('usuario/referencia', 'ref');
+                if($refer === ""){
+                    $refer = $this->ref->getCookie();
+                    if($refer === ""){return;}
+                }
                 $id = $this->getLastId();
-                return $this->LoadModel('usuario/referencia', 'ref')->associate($refer, $id);
+                return $this->ref->associate($refer, $id);
             }
     
             private function rdstation($array){

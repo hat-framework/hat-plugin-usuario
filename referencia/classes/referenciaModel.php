@@ -1,9 +1,9 @@
 <?php 
 
 class usuario_referenciaModel extends \classes\Model\Model{
-    public  $tabela = "usuario_referencia";
-    public  $pkey   = array('cod_referencia','cod_usuario');
-    
+    private $cookiename = 'urf';
+    public  $tabela     = "usuario_referencia";
+    public  $pkey       = array('cod_referencia','cod_usuario');
     public function associate($cod_referencia, $cod_usuario){
         if($cod_referencia == $cod_usuario){
             throw new \classes\Exceptions\InvalidArgumentException("O usuário não pode referenciar a ele mesmo!");
@@ -13,12 +13,24 @@ class usuario_referenciaModel extends \classes\Model\Model{
             if($item[0]['cod_referencia'] == $cod_referencia){return true;}
             return $this->setErrorMessage("Este usuário já foi convidado no sistema por outro usuário");
         }
-        //$date = \classes\Classes\timeResource::getDbDate();
-        return $this->inserir(array(
-            'cod_referencia' => $cod_referencia,
-            'cod_usuario'    => $cod_usuario,
-            //'dtindicacao'    => $date
-        ));
+        
+        $bool = $this->inserir(array('cod_referencia' => $cod_referencia,'cod_usuario'    => $cod_usuario));
+        if($bool !== false){
+            classes\Classes\cookie::destroy($this->cookiename);
+            classes\Classes\session::destroy($this->cookiename);
+        }
+        return $bool;
+    }
+    
+    public function createCookie($cod_referrer){
+        classes\Classes\cookie::create($this->cookiename, 3600);
+        classes\Classes\cookie::setVar($this->cookiename, $cod_referrer);
+        classes\Classes\session::setVar($this->cookiename, $cod_referrer);
+    }
+    
+    public function getCookie(){
+        $data = classes\Classes\cookie::getVar($this->cookiename);
+        return (trim($data) !== "")?$data:classes\Classes\session::getVar($this->cookiename);
     }
     
     public function getReferrers ($cod){

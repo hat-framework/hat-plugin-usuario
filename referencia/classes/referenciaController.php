@@ -6,6 +6,7 @@ class referenciaController extends classes\Controller\TController{
     public function cadastro(){
         $coduser = usuario_loginModel::CodUsuario();
         $codref  = $this->getVarsParam(0, "Você deve informar o código de referência");
+        $this->model->createCookie($codref);
         $this->registerVar('codref', $codref);
         
         if($coduser == 0){
