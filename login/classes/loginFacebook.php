@@ -116,10 +116,14 @@ class loginFacebook extends classes\Classes\Object{
     }
     
     public function getFBLink($text = "", $class = ""){
-        if($this->appId === ""){return;}
+        if(!$this->enabledApi()){return;}
         $link = "https://www.facebook.com/dialog/oauth?client_id={$this->appId}&redirect_uri=$this->redirectUri&scope=email";
         $text = ($text == "")?"Entrar com Facebook":$text;
         return $this->html->MakeLink($link, $text, "$class fb_login_icon");
+    }
+    
+    public function enabledApi(){
+        return ($this->appId !== "");
     }
 
 }

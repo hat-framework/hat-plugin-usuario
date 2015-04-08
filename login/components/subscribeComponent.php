@@ -32,14 +32,13 @@ class subscribeComponent extends classes\Classes\Object{
                     $form = $this->getArr();
                     $this->LoadResource("formulario", "form");
                     $this->form->NewForm($form, array(), array(), true, "usuario/login/inserir");
-                    echo "<center>ou</center>";
                     $this->facebook();
                 $this->gui->closediv();
             $this->gui->widgetClose();
         $this->gui->closediv();
     }
     
-    private function getArr(){
+    public function getArr(){
         $dados = $this->uobj->getDados();
         unset($dados['permissao']);
         unset($dados['senha']['private']);
@@ -75,12 +74,14 @@ class subscribeComponent extends classes\Classes\Object{
     
     private function facebook(){
         if(!defined('USUARIO_FB_ACCESS')      || USUARIO_FB_ACCESS === false) {return;}
+        $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
+        if(!$this->fb->enabledApi()){return;}
+        echo "<center>ou</center>";
         $txt   = (isset($this->class['fbtext'])) ?$this->class['fbtext'] :'Cadastre-se com Facebook';
         $cls   = (isset($this->class['fbclass']))?$this->class['fbclass']:'btn btn-primary';
         $class = classes\Classes\Template::getClass('facebook');
         echo "<div class='$class'>";
         //echo "<h3>Para Criar uma nova conta <a href='$link2'><b>clique aqui</b></a></h3>";
-        $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb');
         echo $this->fb->getFBLink($txt, $cls);
         echo "</div>";
         
