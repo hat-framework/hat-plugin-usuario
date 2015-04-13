@@ -15,11 +15,17 @@ class usermenuComponent extends classes\Classes\Object{
     
     private function getUnloggedMenu(){
         $r   = base64_encode(URL.CURRENT_URL);
-        $url = $this->html->getLink("usuario/login/index&refer=$r", true,true);
+        $url1 = $this->html->getLink("usuario/login/index&refer=$r", true,true);
+        $url2 = $this->html->getLink("usuario/login/inserir&refer=$r", true,true);
         return array(
             "Login" => array(
-                'Login' => $url,
+                'Login' => $url1,
                 '__id'  => "Minha Conta",
+            ),
+            
+            "Cadastre-se" => array(
+                'Cadastre-se' => $url2,
+                '__id'  => "subscribe",
             )
         );
     }

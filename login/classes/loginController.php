@@ -12,8 +12,10 @@ class loginController extends CController{
     public function AfterLoad() {    
         $this->free_cod = array('index', 'formulario','inserir', 'logout', 'report', 'identidade',
             'reenviar',  'recuperar', 'confirmar', 'confirmrec', 'logado', 'widgets', 'alterar');
-        if(CURRENT_ACTION == "index") return;
-        if(in_array(CURRENT_ACTION, array('todos'))&& isset($_SESSION[LINK])) unset($_SESSION[LINK]);
+        $current_action = CURRENT_ACTION;
+        $this->getCanonicalCurrentAction($current_action);
+        if($current_action == "index") {return;}
+        if(in_array($current_action, array('todos'))&& isset($_SESSION[LINK])) {unset($_SESSION[LINK]);}
         parent::AfterLoad();
     }
 

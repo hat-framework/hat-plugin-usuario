@@ -64,7 +64,12 @@ class perfilPermissions extends classes\Classes\Object{
         if($this->cod_perfil == Webmaster){return ($getPermissionString)?'s':true;}
         
         //se não possui a permissão
-        if(false === in_array($action_name, $this->permissions)){return ($getPermissionString)?'n':false;}
+        if(false === in_array($action_name, $this->permissions)){
+            $last = $action_name[strlen($action_name)-1];
+            if(!is_numeric($last)){return ($getPermissionString)?'n':false;}
+            $trueaction = substr($action_name, 0, strlen($action_name)-1);
+            return $this->hasPermission($trueaction, $getPermissionString);
+        }
         
         //se possui a permissão
         return ($getPermissionString)?'s':true;

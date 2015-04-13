@@ -152,7 +152,7 @@ class usuarioActions extends Actions{
         'usuario/login/inserir' => array(
             'label' => 'Nova Conta', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
             'permission' => 'usuario_FL', 
-            'menu' => array('Voltar' => 'usuario/login/index')
+            'menu' => array()
         ),
         
         'usuario/login/recuperar' => array(

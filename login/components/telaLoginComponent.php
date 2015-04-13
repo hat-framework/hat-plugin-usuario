@@ -46,8 +46,7 @@ class telaLoginComponent extends classes\Classes\Object{
         $this->gui->closediv();
     }
     
-    private function formLogin(){
-        
+    public function formLogin(){
         $class = classes\Classes\Template::getClass('formbutton');
         if($class === ""){$class = 'btn btn-lg'; }
         $this->dados['senha_login']['button']['attrs']['class'] = $class;
@@ -58,18 +57,20 @@ class telaLoginComponent extends classes\Classes\Object{
         $this->form->NewForm($this->dados, $_POST, array(), true, $link);
     }
     
-    private function bottom(){
-        $link1 = $this->Html->getLink("usuario/login/recuperar");
-        if(defined('USUARIO_FB_ACCESS') && USUARIO_FB_ACCESS === true){
-            $fbtext = (isset($this->class['fbtext']))?$this->class['fbtext']:"";
-            $clsfb  = (isset($this->class['facebook_login']))?$this->class['facebook_login']:"btn btn-primary";
-            
-            echo "<div class=''>";
-            echo $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb')->getFBLink($fbtext, "$clsfb");
-            echo "</div>";
-        }
-        $txt = (isset($this->class['forgetpasswd_txt']))?$this->class['forgetpasswd_txt']:"Esqueci minha senha";
-        $cls = (isset($this->class['esqueci_senha']))?$this->class['esqueci_senha']:"";
-        echo "<div class='esqueci_senha'><a href='$link1' class='$cls'>$txt</a></div>";
+    public function bottom(){
+        echo "<div id='login_bottom'>";
+            $link1 = $this->Html->getLink("usuario/login/recuperar");
+            if(defined('USUARIO_FB_ACCESS') && USUARIO_FB_ACCESS === true){
+                $fbtext = (isset($this->class['fbtext']))?$this->class['fbtext']:"";
+                $clsfb  = (isset($this->class['facebook_login']))?$this->class['facebook_login']:"btn btn-primary";
+                $str    = $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'fb')->getFBLink($fbtext, "$clsfb");
+                if(trim($str) !== ""){
+                    echo "<div class='fb_login'>$str</div>";
+                }
+            }
+            $txt = (isset($this->class['forgetpasswd_txt']))?$this->class['forgetpasswd_txt']:"Esqueci minha senha";
+            $cls = (isset($this->class['esqueci_senha']))?$this->class['esqueci_senha']:"";
+            echo "<div class='esqueci_senha'><a href='$link1' class='$cls' id='lk_esqueci_senha'>$txt</a></div>";
+        echo "</div>";
     }
 }
