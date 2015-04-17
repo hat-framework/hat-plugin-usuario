@@ -45,6 +45,7 @@ class perfilPermissions extends classes\Classes\Object{
         
         //if permission file doesn't exists, throw exception
         if(empty($this->permissions)){
+            sendEmailToWebmasters("Permissão $this->cod_perfil", "Perfil de usuário '$this->cod_perfil' sem permissão");
             throw new classes\Exceptions\AcessBloquedException("Este perfil de usuário não possui permissão de acessar o sistema");
         }
     }
