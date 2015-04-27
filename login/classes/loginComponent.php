@@ -175,6 +175,7 @@ class loginComponent extends classes\Component\Component{
             private function configSection($cod_usuario){
                 $cod    = 'pessoal';
                 $forms  = $this->LoadModel('config/form', 'frm')->selecionar(array('cod','title','description','icon','form_data'),"`group`='$cod'");
+                if(empty($forms)){return array();}
                 $forms2 = array();
                 foreach($forms as $data){
                     $forms2[$data['cod']] = $data;
