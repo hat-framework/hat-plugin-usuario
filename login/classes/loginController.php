@@ -141,7 +141,7 @@ class loginController extends CController{
     
     public function logado(){
         if(!$this->model->IsLoged()) Redirect("usuario/login/");
-        Redirect("config");
+        Redirect("");
         $this->registerVar('type', isset($this->vars[0])?explode("|",$this->vars[0]):'');
         $cod = $this->model->getCodUsuario();
         $this->registerVar('item', $this->model->getItem($cod, "", true));
