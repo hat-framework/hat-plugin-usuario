@@ -187,16 +187,15 @@ class loginComponent extends classes\Component\Component{
             }
             
                     private function prepareData($cod_usuario, $forms2){
-                        $data   = $this->LoadModel('config/response', 'resp')->selecionar(
+                        $this->LoadModel('config/response', 'resp')->Join('config/form', array('form'), array('cod'),"LEFT");
+                        $data   = $this->resp->selecionar(
                                 array('form_response','form'),
-                                "login='$cod_usuario' AND form LIKE '%pessoal_%'"
+                                "login='$cod_usuario' AND (form LIKE '%pessoal_%' OR `group`='pessoal')"
                         );
                         $out    = array();
                         foreach($data as $dt){
                             if(!isset($out[$dt['form']])){$out[$dt['form']] = array();}
                             if(!array_key_exists($dt['form'], $forms2)){continue;}
-
-                            
                             $out[$dt['form']][] = $this->formatLine($forms2,$dt);
                         }
                         return $out;
@@ -236,7 +235,7 @@ class loginComponent extends classes\Component\Component{
                             $i++;
                             if(!isset($current['cod']) || !isset($out[$current['cod']])){continue;}
                             $values = $out[$current['cod']];
-                            if(false === $this->tableData($current['title'], $values, '', $current['icon'])){
+                            if(false === $this->tableData($current['title'], $values, '', $current['icon'], false, "panel_{$current['cod']}")){
                                 $dir--;
                             }
                             if($i == $dir){
@@ -247,10 +246,11 @@ class loginComponent extends classes\Component\Component{
                         $this->gui->closediv();
                     }
     
-    private function tableData($title, $data, $class, $icon = "", $multitable = false){
+    private function tableData($title, $data, $class, $icon = "", $multitable = false, $id = ""){
         $content = $this->getContent($data, $multitable);
         if(trim($content) === ''){return false;}
-        $this->gui->opendiv('', $class)
+        $idd = GetPlainName($id);
+        $this->gui->opendiv($idd, $class)
                   ->openPanel('')
                   ->panelHeader($title, $icon)
                   ->panelBody($content)
