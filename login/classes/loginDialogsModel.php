@@ -28,6 +28,8 @@ class usuario_loginDialogsModel extends classes\Classes\Object {
                 "Usuário $nomeuser cadastrado com sucesso! Porém ocorreu alguma falha ao notificá-lo por email.";
         }
         
+        $this->notifyAdminCadastro($user);
+        
         $this->autoLogin($user, $isLogged);
         $this->setSuccessMessage($msg);
         return true;
@@ -53,6 +55,41 @@ class usuario_loginDialogsModel extends classes\Classes\Object {
                 ";
                 return $corpo;
             }
+            
+            public function notifyAdminCadastro($user){
+                $perfs = $this->LoadModel('plugins/permissao', 'plug')->getPerfisOfPermission('Plugins_ANA');
+                if(!is_array($perfs)){$perfs = array();}
+                array_unshift($perfs, Webmaster);
+                array_unshift($perfs, Admin);
+                
+                $in     = implode("','", $perfs);
+                $mails  = array();
+                $emails = $this->LoadModel('usuario/login', 'user')->selecionar(array('email'), "cod_perfil IN ('$in')");
+                foreach($emails as $mail){
+                    $mails[] = $mail['email'];
+                }
+                
+                $nome = $this->uobj->getUserNick($user['cod_usuario']);
+                $msg  = $this->uobj->LoadPerfil($user['cod_usuario']);
+                return $this->sendADMEmails(SITE_NOME . " [Novo Cadastro] $nome", $msg, $emails);
+            }
+            
+                    private function sendADMEmails($assunto, $msg, $emails){
+                        $obj             = new \classes\Classes\Object();
+                        $mail            = $obj->LoadResource('email', 'mail');
+                        $msg            .= "<hr/>Horário: ". \classes\Classes\timeResource::getDbDate()."<br/>url: (http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']})";
+                        if(empty($emails)){
+                            \classes\Utils\Log::save("system/mail/error", "Nenhum webmaster encontrado no método getWebmastersMail");
+                            return false;
+                        }
+                        if(false == $mail->sendMail($assunto, $msg, $emails)){
+                            \classes\Utils\Log::save("system/mail/error", 
+                                "<div class='email_trouble' style='border:1px solid red;'>"
+                                ."<h2>$assunto</h2><div class='msg'><p>$msg</p></div></div><hr/>");
+                            return false;
+                        }
+                        return true;
+                    }
     
             private function autoLogin($user, $isLogged){
                 if($isLogged){return;}
