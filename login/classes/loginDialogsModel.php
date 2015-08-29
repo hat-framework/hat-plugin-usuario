@@ -57,7 +57,7 @@ class usuario_loginDialogsModel extends classes\Classes\Object {
             }
             
             public function notifyAdminCadastro($user){
-                $perfs = $this->LoadModel('plugins/permissao', 'plug')->getPerfisOfPermission('Plugins_ANA');
+                $perfs = $this->LoadModel('plugins/acesso', 'pacc')->getPerfisOfPermission('Plugins_ANA');
                 if(!is_array($perfs)){$perfs = array();}
                 array_unshift($perfs, Webmaster);
                 array_unshift($perfs, Admin);
