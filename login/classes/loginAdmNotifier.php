@@ -48,6 +48,7 @@ class loginAdmNotifier extends classes\Classes\Object{
                         foreach ($arr as $key => $row) {
                             $c .= $this->getStr($key, $row, $dados, $arr);
                         }
+                        return $c;
                     }
 
                             private function getHeader($dados,&$arr){
