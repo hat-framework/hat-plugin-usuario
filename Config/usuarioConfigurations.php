@@ -134,6 +134,18 @@ class usuarioConfigurations extends \classes\Classes\Options{
                     'value_default' => 'usuario/referencia/cadastro'
                 ),
                 
+                'USUARIO_FRIENDLY_DATE' => array(
+                    'name'          => 'USUARIO_FRIENDLY_DATE',
+                    'label'         => 'Exibir datas amigáveis',
+                    'type'          => 'enum',//varchar, text, enum
+                    'default'       => 'false',
+                    'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
+                    'description'   => 'Se esta opção estiver marcada, as datas listadas aparecerão no formato de redes sociáis: '
+                    . 'há tantos minutos (por exemplo) Ao invés de aparecer a data.',
+                    'value'         => 'false',
+                    'value_default' => 'false'
+                ),
+                
             ),
         ),
         

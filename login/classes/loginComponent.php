@@ -315,10 +315,14 @@ class loginComponent extends classes\Component\Component{
     }
     
     public function format_user_criadoem($data){
-        return \classes\Classes\timeResource::Date2StrBr($data);
+        return (defined('USUARIO_FRIENDLY_DATE') && USUARIO_FRIENDLY_DATE)?
+            \classes\Classes\timeResource::Date2StrBr($data):
+            \classes\Classes\timeResource::getFormatedDate($data);
     }
     public function format_user_uacesso($data){
-        return \classes\Classes\timeResource::Date2StrBr($data);
+        return (defined('USUARIO_FRIENDLY_DATE') && USUARIO_FRIENDLY_DATE)?
+            \classes\Classes\timeResource::Date2StrBr($data):
+            \classes\Classes\timeResource::getFormatedDate($data);
     }
 
 }
