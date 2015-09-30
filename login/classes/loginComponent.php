@@ -205,9 +205,7 @@ class loginComponent extends classes\Component\Component{
                                 $temp    = array();
                                 $current = $forms2[$dt['form']]['form_data'];
                                 foreach($dt['form_response'] as $name => $val){
-                                    if($current[$name]['type'] === 'enum'){
-                                        $val = $current[$name]['options'][$val];
-                                    }
+                                    $this->getEnumVal($current, $name, $val);
                                     $this->fkeyCase($current, $name, $val);
                                     $name = isset($current[$name]['name'])?$current[$name]['name']:$name;
                                     $temp[$name] = $val;
@@ -215,6 +213,22 @@ class loginComponent extends classes\Component\Component{
                                 return $temp;
                             }
                     
+                                private function getEnumVal($current, $name, &$val){
+                                    if(!is_array($current) ||
+                                       !isset($current[$name]) || 
+                                       !isset($current[$name]['type'])
+                                    ){return;}
+                                    if($current[$name]['type'] !== 'enum'){return;}
+                                    if(isset($current[$name]['options'][$val])){
+                                        $val = $current[$name]['options'][$val];
+                                        return;
+                                    }
+                                    $lower = strtolower($val);
+                                    if(isset($current[$name]['options'][$lower])){
+                                        $val = $current[$name]['options'][$lower];
+                                    }
+                                }
+                            
                                 private function fkeyCase($current, $name, &$val){
                                     if(!isset($current[$name]['fkey'])){return;}
                                     $key = $current[$name]['fkey']['keys'][0];
