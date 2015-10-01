@@ -135,6 +135,12 @@ class usuario_acessoData extends \classes\Model\DataModel{
 	    'display'  => true,
         ),
         
+        'key' => array(
+	    'name'     => 'Track Key',
+	    'type'     => 'varchar',
+	    'size'     => '24',
+        ),
+        
         'data' => array(
 	    'name'     => 'Data e hora',
 	    'type'     => 'timestamp',

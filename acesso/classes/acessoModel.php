@@ -3,10 +3,10 @@
 class usuario_acessoModel extends \classes\Model\Model{
     public  $tabela = "usuario_acesso";
     public  $pkey   = 'cod';
-    public function saveLog($logname,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg,$loggroup){
-        //if($msg == '' && $cod_perfil == Webmaster) {return true;}
+    public function saveLog($logname,$cod_usuario,$cod_perfil,$action_str,$ip,$refer,$msg,$loggroup){
+        $key    = $this->getCookieKey($cod_usuario);
         $gr     = array_shift($loggroup);
-        $action = substr($action, 1, strlen($action));
+        $action = substr($action_str, 1, strlen($action_str));
         if($action == 'notificacao/notifycount/load'){return true;}
         $log = array(
             'logname'     => $logname,
@@ -18,6 +18,8 @@ class usuario_acessoModel extends \classes\Model\Model{
             'refer'       => $refer,
             'msg'         => $msg,
         );
+        if($key !== ""){$log['key'] = $key;}
+        
         $this->findGroups($log, $action, $loggroup);
         if(false === $this->db->Insert($this->tabela, $log)){
             $logname = "usuario/usuario/u$cod_usuario/$logname";
@@ -29,39 +31,63 @@ class usuario_acessoModel extends \classes\Model\Model{
         return true;
     }
     
-    private function captureGet(&$action, &$loggroup){
-        if(strstr($action, 'index.php') === false){return;}
-        $act = $action;
-        $e = explode("url=", $action);
-        $a = isset($e[1])?explode("&", $e[1]):array($action);
-        $action = urldecode($a[0]);
+            private function getCookieKey($cod_usuario){
+                $cookiename = "usuario_acesso_uid";
+                $key        = \classes\Classes\cookie::getVar($cookiename);
+                if($cod_usuario == 0){
+                    if($key == ""){$key = genKey(24);}
+                    \classes\Classes\cookie::setVar($cookiename, $key);
+                }else{
+                    if($key != ""){
+                        $this->cookieTrackUser($cod_usuario, $key);
+                        //$this->db->printSentenca();
+                        //die('fooo');
+                        $key = "";
+                    }
+                    \classes\Classes\cookie::destroy($cookiename);
+                }
+                //echoBr($key);
+                return $key;
+            }
 
-        $e2 = explode("&", $act);
-        foreach($e2 as $nm){
-            if(strstr($nm, 'index.php') || strstr($nm, $action)){continue;}
-            $loggroup[] = $nm;
-        }
-        
-    }
+                    private function cookieTrackUser($cod_usuario, $key){
+                        $post = array('cod_usuario' => $cod_usuario, 'key' => "FUNC_NULL");
+                        return parent::editar($key, $post, 'key');
+                    }
     
-    private function findGroups(&$log, $action, $loggroup){
-        $this->captureGet($action, $loggroup);
-        $groups = explode("/", $action);
-        $i = 0;
-        foreach($groups as $gr){
-            if(trim($gr) === ""){continue;}
-            $i++;
-            $log["group$i"] = $gr;
-            if($i == 7){break;}
-        }
-        $i = 7;
-        foreach($loggroup as $gr){
-            if(trim($gr) === ""){continue;}
-            $i++;
-            $log["group$i"] = $gr;
-            if($i == 15)break;
-        }
-    }
+            private function findGroups(&$log, $action, $loggroup){
+                $this->captureGet($action, $loggroup);
+                $groups = explode("/", $action);
+                $i = 0;
+                foreach($groups as $gr){
+                    if(trim($gr) === ""){continue;}
+                    $i++;
+                    $log["group$i"] = $gr;
+                    if($i == 7){break;}
+                }
+                $i = 7;
+                foreach($loggroup as $gr){
+                    if(trim($gr) === ""){continue;}
+                    $i++;
+                    $log["group$i"] = $gr;
+                    if($i == 15)break;
+                }
+            }
+
+                    private function captureGet(&$action, &$loggroup){
+                        if(strstr($action, 'index.php') === false){return;}
+                        $act = $action;
+                        $e = explode("url=", $action);
+                        $a = isset($e[1])?explode("&", $e[1]):array($action);
+                        $action = urldecode($a[0]);
+
+                        $e2 = explode("&", $act);
+                        foreach($e2 as $nm){
+                            if(strstr($nm, 'index.php') || strstr($nm, $action)){continue;}
+                            $loggroup[] = $nm;
+                        }
+
+                    }
     
     public function getChartData($qtd = 10, $cod_usuario = '') {
         $where = ($cod_usuario == "")?"1":"cod_usuario='$cod_usuario'";
