@@ -286,9 +286,10 @@ class usuario_loginModel extends \classes\Model\Model{
         $senha = $this->prepareInsertion($array);
         $refer = isset($array['referrer'])?$array['referrer']:"";
         if(!parent::inserir($array)) {return false;}
-        $this->setReferrer($refer);
-        $this->rdstation($array);
-        return $this->sendSubscribeMessage($array, $senha);
+        $array['referrer'] = $refer;
+        $array['senha']    = $senha;
+        $cod_usuario       = $this->getLastId();
+        return $this->onSubscribe($cod_usuario, $array);
 
     }//c
     
@@ -304,30 +305,28 @@ class usuario_loginModel extends \classes\Model\Model{
                 if($array['cod_perfil'] != Webmaster) {$array['confirmkey'] = genKey(16);}
                 return $senha;
             }
-    
-            private function setReferrer($refer){
-                $this->LoadModel('usuario/referencia', 'ref');
-                if($refer === ""){
-                    $refer = $this->ref->getCookie();
-                    if($refer === ""){return;}
+
+            private function onSubscribe($cod_usuario, $array){
+                $folder = dirname(__FILE__)."/onSubscribe";
+                $files  = $this->LoadResource('files/dir', 'dobj')->getArquivos($folder);
+                $bool   = true;
+                if(empty($files)){return $bool;}
+                foreach($files as $file){
+                    $class = str_replace('.php', '', $file);
+                    $file  = "$folder/$file";
+                    getTrueDir($file);
+                    if(!file_exists($file)){continue;}
+                    require_once $file;
+                    if(!class_exists($class, false)){continue;}
+                    $obj = new $class();
+                    if(!method_exists($obj, 'execute')){continue;}
+                    if(false === $obj->execute($cod_usuario, $array)){
+                        $erro = $obj->getErrorMessage();
+                        if($erro === ""){continue;}
+                        $this->appendErrorMessage($erro);
+                        $bool = false;
+                    }
                 }
-                $id = $this->getLastId();
-                return $this->ref->associate($refer, $id);
-            }
-    
-            private function rdstation($array){
-                $this->LoadResource('api', 'api');
-                $this->rds = new resource\api\rdstation\rdstationLead();
-                $this->rds->addLead($array);
-            }
-            
-            //responsavel pelas mensagens para o usuario
-            private function sendSubscribeMessage($array, $senha){
-                $this->LoadModel('usuario/login/loginDialogs', 'udi');
-                $user = $this->getItem($array['email'], 'email');
-                $user['senha'] = $senha;
-                $bool = $this->udi->inserir($user);
-                $this->setMessages($this->udi->getMessages());
                 return $bool;
             }
     

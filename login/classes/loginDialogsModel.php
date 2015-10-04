@@ -28,7 +28,6 @@ class usuario_loginDialogsModel extends classes\Classes\Object {
                 "Usuário $nomeuser cadastrado com sucesso! Porém ocorreu alguma falha ao notificá-lo por email.";
         }
         
-        $this->LoadClassFromPlugin('usuario/login/loginAdmNotifier','lan')->notifyAdminCadastro($user);
         $this->autoLogin($user, $isLogged);
         $this->setSuccessMessage($msg);
         return true;

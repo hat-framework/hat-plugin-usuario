@@ -1,8 +1,9 @@
 <?php
 
-class loginAdmNotifier extends classes\Classes\Object{
+class admNotifierSubscribe extends classes\Classes\Object{
     
-    public function notifyAdminCadastro($user){
+    public function execute($cod_usuario, $user){
+        $this->cod_usuario = $cod_usuario;
         $this->LoadResource('html','html');
         $perfs = $this->LoadModel('plugins/acesso', 'pacc')->getPerfisOfPermission('Plugins_ANA');
         if(!is_array($perfs)){$perfs = array();}
@@ -17,8 +18,9 @@ class loginAdmNotifier extends classes\Classes\Object{
         }
         if(empty($mails)){return;}
 
-        $nome = $this->uobj->getUserNick($user['cod_usuario']);
-        $msg  = $this->uobj->LoadPerfil($user['cod_usuario']);
+        $nome = $this->uobj->getUserNick($cod_usuario);
+        $msg  = $this->uobj->LoadPerfil($cod_usuario);
+        if(empty($msg)){return true;}
         return $this->sendADMEmails(SITE_NOME . " [Novo Cadastro] $nome", $msg, $mails);
     }
 
@@ -53,7 +55,7 @@ class loginAdmNotifier extends classes\Classes\Object{
 
                             private function getHeader($dados,&$arr){
                                 $pkey  = $this->uobj->getPkey();
-                                $url   = (isset($dados[$pkey]))?$this->html->getLink("usuario/login/seelog/{$arr[$pkey]}"):"";
+                                $url   = (isset($dados[$pkey]))?$this->html->getLink("usuario/login/seelog/$this->cod_usuario"):"";
                                 $c     = "<h1><a href='$url' target='_BLANK'>{$arr['user_name']}";
                                 $c    .= ($arr['user_cargo'] != "")?" ({$arr['user_cargo']})": "";
                                 $c    .= "</a></h1>";
