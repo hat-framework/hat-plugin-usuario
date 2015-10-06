@@ -11,21 +11,17 @@ class emailMarketingSubscribe extends classes\Classes\Object{
     
         private function rdstation($array){
             try{
-                if(!class_exists("resource\api\emailMarketing\rdstationLead")){return;}
-            } catch (Exception $ex) {
-                return;
-            }
-            $rds = new resource\api\emailMarketing\rdstationLead();
-            $rds->addLead($array);
+                $obj = $this->api->LoadApiClass('emailMarketing/rdstationLead');
+                if($obj == null){return true;}
+            } catch (Exception $ex) {return;}
+            $obj->addLead($array);
         }
         
         private function egoi($array){
             try{
-                if(!class_exists("resource\api\emailMarketing\egoiLead")){return;}
-            } catch (Exception $ex) {
-                return;
-            }
-            $egoi      = new resource\api\emailMarketing\egoiLead();
+                $obj = $this->api->LoadApiClass('emailMarketing/egoiLead');
+                if($obj == null){return true;}
+            } catch (Exception $ex) {return;}
             $e         = explode(' ', $array['user_name']);
             $firstname = array_shift($e);
             $lastname  = end($e);
@@ -34,7 +30,7 @@ class emailMarketingSubscribe extends classes\Classes\Object{
                 'first_name'=> $firstname,
                 'last_name' => $lastname
             );
-            $egoi->addLead($arguments);
+            $obj->addLead($arguments);
         }
     
 }

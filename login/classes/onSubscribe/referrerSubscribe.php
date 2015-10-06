@@ -3,16 +3,15 @@
 class referrerSubscribe extends classes\Classes\Object{
     
     public function execute($cod_usuario, $array){
-        $refer = isset($array['referrer'])?$array['referrer']:"";        
+        $refer = isset($array['referrer'])?$array['referrer']:"";
         $this->LoadModel('usuario/referencia', 'ref');
         if($refer === ""){
             $refer = $this->ref->getCookie();
             if($refer === ""){return;}
         }
         if(false === $this->ref->associate($refer, $cod_usuario)){return true;}
-        $this->sendMail($array);
+        return $this->sendMail($array);
     }
-    
     
             private function sendMail($refer, $array){
                 $refuser = $this->LoadModel('usuario/login','uobj')->getSimpleItem($refer);
@@ -26,7 +25,17 @@ class referrerSubscribe extends classes\Classes\Object{
                     Para acessar uma lista contendo todos os seus afiliados clique no link abaixo <br/>
                     <a href='$link'>$link</a>
                 ";
-                return $corpo;
+                
+                $assunto  = SITE_NOME . " [Novo Cadastro] {$array['user_name']}";
+                $obj      = new \classes\Classes\Object();
+                $mail     = $obj->LoadResource('email', 'mail');
+                if(false == $mail->sendMail($assunto, $corpo, array($refuser['email']))){
+                    \classes\Utils\Log::save("system/mail/error", 
+                        "<div class='email_trouble' style='border:1px solid red;'>"
+                        ."<h2>$assunto</h2><div class='msg'><p>$msg</p></div></div><hr/>");
+                    return false;
+                }
+                return true;
             }
     
 }

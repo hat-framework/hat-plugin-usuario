@@ -19,7 +19,7 @@ class usuario_referenciaModel extends \classes\Model\Model{
             classes\Classes\cookie::destroy($this->cookiename);
             classes\Classes\session::destroy($this->cookiename);
         }
-        return $bool;
+        return ($bool !== false);
     }
     
     public function createCookie($cod_referrer){

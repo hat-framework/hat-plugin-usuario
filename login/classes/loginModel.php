@@ -286,10 +286,19 @@ class usuario_loginModel extends \classes\Model\Model{
         $senha = $this->prepareInsertion($array);
         $refer = isset($array['referrer'])?$array['referrer']:"";
         if(!parent::inserir($array)) {return false;}
+                
         $array['referrer'] = $refer;
         $array['senha']    = $senha;
         $cod_usuario       = $this->getLastId();
-        return $this->onSubscribe($cod_usuario, $array);
+        $bool = $this->onSubscribe($cod_usuario, $array);
+        if(false === $this->LoadModel('usuario/login/loginDialogs', 'udi')->inserir($array)){
+            $erro = $this->udi->getErrorMessage();
+            if($erro !== ""){
+                $this->appendErrorMessage($this->udi->getErrorMessage());
+                $bool = false;
+            }
+        }
+        return true;
 
     }//c
     
