@@ -15,7 +15,7 @@ class referrerSubscribe extends classes\Classes\Object{
     
             private function sendMail($refer, $array){
                 $refuser = $this->LoadModel('usuario/login','uobj')->getSimpleItem($refer);
-                $link    = $this->LoadResourece('html','html')->getLink('config/group/form/pessoal/pessoal_referrer');
+                $link    = $this->LoadResource('html','html')->getLink('config/group/form/pessoal/pessoal_referrer');
                 $corpo   = 
                     "<h2>Olá {$refuser['user_name']}</h2>
                     <p>Novo afiliado associado ao seu email no site ".SITE_NOME."</p>
@@ -27,8 +27,7 @@ class referrerSubscribe extends classes\Classes\Object{
                 ";
                 
                 $assunto  = SITE_NOME . " [Novo Cadastro] {$array['user_name']}";
-                $obj      = new \classes\Classes\Object();
-                $mail     = $obj->LoadResource('email', 'mail');
+                $mail     = $this->LoadResource('email', 'mail');
                 if(false == $mail->sendMail($assunto, $corpo, array($refuser['email']))){
                     \classes\Utils\Log::save("system/mail/error", 
                         "<div class='email_trouble' style='border:1px solid red;'>"
