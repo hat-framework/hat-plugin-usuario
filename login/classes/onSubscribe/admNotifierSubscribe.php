@@ -36,7 +36,7 @@ class admNotifierSubscribe extends classes\Classes\Object{
                 $this->refer    = isset($user['referrer'])?$user['referrer']:"";
                 $this->nome     = $this->uobj->getUserNick($this->cod_usuario);
                 $this->userData = $this->uobj->LoadPerfil($this->cod_usuario);
-                return(!empty($this->msg));
+                return(!empty($this->userData));
             }
     
             private function sendADMEmails($assunto, $userData, $emails){
