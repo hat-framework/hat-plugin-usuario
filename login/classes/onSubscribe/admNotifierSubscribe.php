@@ -89,17 +89,17 @@ class admNotifierSubscribe extends classes\Classes\Object{
                             
                             private function refine(&$c){
                                 if($c !== ""){
-                                    $c .= $this->afiliate();
+                                    $this->afiliate($c);
                                     $c .= "<hr/>Horário: ". \classes\Classes\timeResource::getDbDate()."<br/>"
                                          . "url: (http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']})";
                                     return;
                                 }
-                                $c = $this->afiliate();
+                                $this->afiliate($c);
                                 $c .= "Falha ao enviar dados de cadastro do usuário! Nenhum dado encontrado!";
                                 
                             }
                             
-                                    private function afiliate(){
+                                    private function afiliate(&$c){
                                         if($this->refer === ""){return;}
                                         $link = $this->html->getLink("usuario/login/show/$this->refer");
                                         $c .= "Este usuário veio através de um afiliado! <a href='$link'>Ver Afiliado</a>";
