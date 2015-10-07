@@ -10,7 +10,10 @@ class referenciaController extends classes\Controller\TController{
         $this->registerVar('codref', $codref);
         
         if($coduser == 0){
-            $view = (defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== "")?USUARIO_REFERRER_VIEW:LINK."/cadastro";
+            if(defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== ""){
+                Redirect(USUARIO_REFERRER_VIEW);
+            }
+            $view = LINK."/cadastro";
             return $this->display($view);
         }
         
