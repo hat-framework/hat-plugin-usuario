@@ -5,37 +5,44 @@ class admNotifierSubscribe extends classes\Classes\Object{
     public function execute($cod_usuario, $user){
         $this->cod_usuario = $cod_usuario;
         $this->LoadResource('html','html');
-        $perfs = $this->LoadModel('plugins/acesso', 'pacc')->getPerfisOfPermission('Plugins_ANA');
-        if(!is_array($perfs)){$perfs = array();}
-        array_unshift($perfs, Webmaster);
-        array_unshift($perfs, Admin);
-
-        $in     = implode("','", $perfs);
-        $mails  = array();
-        $emails = $this->LoadModel('usuario/login', 'uobj')->selecionar(array('email'), "cod_perfil IN ('$in')");
-        foreach($emails as $mail){
-            $mails[] = $mail['email'];
-        }
-        if(empty($mails)){return;}
-
-        $nome = $this->uobj->getUserNick($cod_usuario);
-        $msg  = $this->uobj->LoadPerfil($cod_usuario);
-        if(empty($msg)){return true;}
-        return $this->sendADMEmails(SITE_NOME . " [Novo Cadastro] $nome", $msg, $mails);
+        
+        $perfs = $this->loadPlugins_ANA();
+        $mails = $this->getWebmasterEmails($perfs);
+        if(empty($mails)){return true;}
+        
+        if(false === $this->initializeVars($user)){return true;}
+        return $this->sendADMEmails(SITE_NOME . " [Novo Cadastro] $this->nome", $this->userData, $mails);
     }
 
-            private function sendADMEmails($assunto, $userData, $emails){
-                $msg             = $this->prepareMessage($userData);
-                if($msg === ""){$msg = "Falha ao enviar dados de cadastro do usuário! Nenhum dado encontrado!";}
-
-                $obj             = new \classes\Classes\Object();
-                $mail            = $obj->LoadResource('email', 'mail');
-                $msg            .= "<hr/>Horário: ". \classes\Classes\timeResource::getDbDate()."<br/>url: (http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']})";
-                if(empty($emails)){
-                    \classes\Utils\Log::save("system/mail/error", "Nenhum webmaster encontrado no método getWebmastersMail");
-                    return false;
+            private function loadPlugins_ANA(){
+                $perfs = $this->LoadModel('plugins/acesso', 'pacc')->getPerfisOfPermission('Plugins_ANA');
+                if(!is_array($perfs)){$perfs = array();}
+                array_unshift($perfs, Webmaster);
+                array_unshift($perfs, Admin);
+                return $perfs;
+            }
+    
+            private function getWebmasterEmails($perfs){
+                $mails  = array();
+                $in     = implode("','", $perfs);
+                $emails = $this->LoadModel('usuario/login', 'uobj')->selecionar(array('email'), "cod_perfil IN ('$in')");
+                foreach($emails as $mail){
+                    $mails[] = $mail['email'];
                 }
-                if(false == $mail->sendMail($assunto, $msg, $emails)){
+                return $mails;
+            }
+            
+            private function initializeVars($user){
+                $this->refer    = isset($user['referrer'])?$user['referrer']:"";
+                $this->nome     = $this->uobj->getUserNick($this->cod_usuario);
+                $this->userData = $this->uobj->LoadPerfil($this->cod_usuario);
+                return(!empty($this->msg));
+            }
+    
+            private function sendADMEmails($assunto, $userData, $emails){
+                $msg = $this->prepareMessage($userData);
+                $this->LoadResource('email', 'mail');
+                if(false == $this->mail->sendMail($assunto, $msg, $emails)){
                     \classes\Utils\Log::save("system/mail/error", 
                         "<div class='email_trouble' style='border:1px solid red;'>"
                         ."<h2>$assunto</h2><div class='msg'><p>$msg</p></div></div><hr/>");
@@ -50,6 +57,7 @@ class admNotifierSubscribe extends classes\Classes\Object{
                         foreach ($arr as $key => $row) {
                             $c .= $this->getStr($key, $row, $dados, $arr);
                         }
+                        $this->refine($c);
                         return $c;
                     }
 
@@ -78,5 +86,23 @@ class admNotifierSubscribe extends classes\Classes\Object{
                                 }
                                 return "<br> <b>$title:</b> $row";
                             }
+                            
+                            private function refine(&$c){
+                                if($c !== ""){
+                                    $c .= $this->afiliate();
+                                    $c .= "<hr/>Horário: ". \classes\Classes\timeResource::getDbDate()."<br/>"
+                                         . "url: (http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']})";
+                                    return;
+                                }
+                                $c = $this->afiliate();
+                                $c .= "Falha ao enviar dados de cadastro do usuário! Nenhum dado encontrado!";
+                                
+                            }
+                            
+                                    private function afiliate(){
+                                        if($this->refer === ""){return;}
+                                        $link = $this->html->getLink("usuario/login/show/$this->refer");
+                                        $c .= "Este usuário veio através de um afiliado! <a href='$link'>Ver Afiliado</a>";
+                                    }
     
 }

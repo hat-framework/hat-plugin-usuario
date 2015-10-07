@@ -20,11 +20,18 @@ class codigoComponent extends \classes\Classes\Object{
        
     public function show(){
         $this->gui->openDiv($this->id);
-            $this->gui->openDiv("{$this->id}_general", 'col-xs-12 col-lg-5');
-                $this->referrerCode();
-                $this->myReferrers();
+            $this->gui->openDiv("{$this->id}_general", 'col-xs-12');
+            
+                $this->gui->openDiv("{$this->id}_refcode", 'col-xs-12 col-md-7');
+                    $this->referrerCode();
+                $this->gui->closeDiv();
+                
+                $this->gui->openDiv("{$this->id}_myreferrer", 'col-xs-12 col-md-5');
+                    $this->myReferrers();
+                $this->gui->closeDiv();
+                
             $this->gui->closeDiv();
-            $this->gui->openDiv("{$this->id}_general", 'col-xs-12 col-lg-7');
+            $this->gui->openDiv("{$this->id}_invitations", 'col-xs-12');
                 $this->myInvitations();
             $this->gui->closeDiv();
         $this->gui->closeDiv();
@@ -35,16 +42,24 @@ class codigoComponent extends \classes\Classes\Object{
         $title = "<b>Compartilhe a url abaixo</b> com os usuários que você deseja convidar para o sistema";
         $this->gui->openPanel('', "{$this->id}_code")
                   ->panelHeader("Url de Compartilhamento", 'fa fa-exchange')
-                  ->panelBody("$title<input type='text' class='form-control' readonly value='$url'/>")
+                  ->panelBody("$title <textarea class='form-control' cols='50' style='resize: none;' readonly>$url</textarea>")
                   ->closePanel();
     }
     
     private function myReferrers(){
         $data = $this->ref->getReferrers($this->cod);
-        if(empty($data)){return;}
+        if(empty($data)){
+            $this->gui->openPanel('', "{$this->id}_code")
+                  ->panelHeader("Convidado Por", 'fa fa-user')
+                  ->panelBody("Você não foi convidado por nenhum usuário")
+                  ->closePanel();
+            return;
+        }else{$data = $data[0];}
+        $date = \classes\Classes\timeResource::getFormatedDate($data['dtindicacao']);
+        $e = explode(" ", $date);
         $this->gui->openPanel('', "{$this->id}_code")
                   ->panelHeader("Convidado Por", 'fa fa-user')
-                  ->panelBody($this->comp->listInTable($this->modelname,$data))
+                  ->panelBody("Você foi convidado no dia <b>{$e[0]}</b> pelo usuário <b>{$data['cod_referencia']}</b>")
                   ->closePanel();
     }
     
@@ -53,7 +68,7 @@ class codigoComponent extends \classes\Classes\Object{
         $data = $this->ref->getMyInvitations($this->cod, $page);
         $this->ref->getMyInvitationsPages($this->cod, $page);
         $this->gui->openPanel('', "{$this->id}_code")
-            ->panelHeader("Meus Convites", 'fa fa-envelope')
+            ->panelHeader("Meus Afiliados", 'fa fa-envelope')
             ->panelBody(!empty($data)?
                   $this->comp->listInTable($this->modelname,$data):
                   "Nenhum usuário se cadastrou ainda no sistema com um convite seu! "

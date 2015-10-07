@@ -10,7 +10,7 @@ class referrerSubscribe extends classes\Classes\Object{
             if($refer === ""){return;}
         }
         if(false === $this->ref->associate($refer, $cod_usuario)){return true;}
-        return $this->sendMail($array);
+        return $this->sendMail($refer, $array);
     }
     
             private function sendMail($refer, $array){
@@ -25,13 +25,12 @@ class referrerSubscribe extends classes\Classes\Object{
                     Para acessar uma lista contendo todos os seus afiliados clique no link abaixo <br/>
                     <a href='$link'>$link</a>
                 ";
-                
-                $assunto  = SITE_NOME . " [Novo Cadastro] {$array['user_name']}";
+                $assunto  = SITE_NOME . " [Novo Afiliado] {$array['user_name']}";
                 $mail     = $this->LoadResource('email', 'mail');
                 if(false == $mail->sendMail($assunto, $corpo, array($refuser['email']))){
                     \classes\Utils\Log::save("system/mail/error", 
                         "<div class='email_trouble' style='border:1px solid red;'>"
-                        ."<h2>$assunto</h2><div class='msg'><p>$msg</p></div></div><hr/>");
+                        ."<h2>$assunto</h2><div class='msg'><p>$corpo</p></div></div><hr/>");
                     return false;
                 }
                 return true;

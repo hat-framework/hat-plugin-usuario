@@ -287,18 +287,13 @@ class usuario_loginModel extends \classes\Model\Model{
         $refer = isset($array['referrer'])?$array['referrer']:"";
         if(!parent::inserir($array)) {return false;}
                 
-        $array['referrer'] = $refer;
-        $array['senha']    = $senha;
-        $cod_usuario       = $this->getLastId();
-        $bool = $this->onSubscribe($cod_usuario, $array);
-        if(false === $this->LoadModel('usuario/login/loginDialogs', 'udi')->inserir($array)){
-            $erro = $this->udi->getErrorMessage();
-            if($erro !== ""){
-                $this->appendErrorMessage($this->udi->getErrorMessage());
-                $bool = false;
-            }
-        }
-        return true;
+        $cod_usuario          = $this->getLastId();
+        $array['referrer']    = $refer;
+        $array['senha']       = $senha;
+        $array['cod_usuario'] = $cod_usuario;
+        $bool                 = $this->onSubscribe($cod_usuario, $array);
+        $this->autoLogin($array);
+        return $bool;
 
     }//c
     
@@ -337,6 +332,12 @@ class usuario_loginModel extends \classes\Model\Model{
                     }
                 }
                 return $bool;
+            }
+            
+            private function autoLogin($user){
+                if($this->IsLoged()){return;}
+                if(!defined ('USUARIO_LOGIN_AUTOLOGIN_CADASTRO') || USUARIO_LOGIN_AUTOLOGIN_CADASTRO !== true){return;}
+                return $this->Login($user['email'], $user['senha'],true,true);
             }
     
     public function editarDados($id, $dados){

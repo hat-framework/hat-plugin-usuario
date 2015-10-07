@@ -4,6 +4,7 @@ class usuario_referenciaModel extends \classes\Model\Model{
     private $cookiename = 'urf';
     public  $tabela     = "usuario_referencia";
     public  $pkey       = array('cod_referencia','cod_usuario');
+    public  $cookietime = '2592000';//1 mês
     public function associate($cod_referencia, $cod_usuario){
         if($cod_referencia == $cod_usuario){
             throw new \classes\Exceptions\InvalidArgumentException("O usuário não pode referenciar a ele mesmo!");
@@ -23,7 +24,7 @@ class usuario_referenciaModel extends \classes\Model\Model{
     }
     
     public function createCookie($cod_referrer){
-        classes\Classes\cookie::create($this->cookiename, 3600);
+        classes\Classes\cookie::create($this->cookiename, $this->cookietime);
         classes\Classes\cookie::setVar($this->cookiename, $cod_referrer);
         classes\Classes\session::setVar($this->cookiename, $cod_referrer);
     }
@@ -55,8 +56,8 @@ class usuario_referenciaModel extends \classes\Model\Model{
         //selecionar
         $this->join('usuario/login', 'cod_usuario','cod_usuario', "LEFT");
         return $this->selecionar(
-                array("user_name as cod_usuario","$this->tabela.cod_usuario as __cod_usuario", 'dtindicacao', "cod_referencia as __cod_referencia"),
-                $where, $this->limit, $offset, "dtindicacao DESC"
+            array("user_name as cod_usuario", 'email',"$this->tabela.cod_usuario as __cod_usuario", 'dtindicacao', "cod_referencia as __cod_referencia"),
+            $where, $this->limit, $offset, "dtindicacao DESC"
         );
     }
     

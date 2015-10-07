@@ -177,7 +177,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
         'pessoal_referrer' => array(
             'cod'   =>'pessoal_referrer',
             'group' =>'pessoal',
-            'title' =>'Referências',
+            'title' =>'Programa de Afiliados',
             'icon'  =>'fa fa-exchange',
             'ordem' =>'6',
             'type'  => 'component', 
