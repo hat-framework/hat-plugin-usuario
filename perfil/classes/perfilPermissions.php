@@ -28,27 +28,26 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadPermissionFile();
     }
     
-    /**
-     * Load file with all user permissions
-     * @throws classes\Exceptions\AcessBloquedException (if permission's file doesn't exists and system cannot create)
-     * @author Thom <thom@hat-framework.com>
-     */
-    private function LoadPermissionFile(){
-        //Load permissions from file
-        $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
-        $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
-        if(!empty($this->permissions)){return;}
-        
-        //if file don't exists or if permissions not setted, create permissions file
-        $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
-        $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
-        
-        //if permission file doesn't exists, throw exception
-        if(empty($this->permissions)){
-            sendEmailToWebmasters("Permissão $this->cod_perfil", "Perfil de usuário '$this->cod_perfil' sem permissão");
-            throw new classes\Exceptions\AcessBloquedException("Este perfil de usuário não possui permissão de acessar o sistema");
-        }
-    }
+            /**
+             * Load file with all user permissions
+             * @throws classes\Exceptions\AcessBloquedException (if permission's file doesn't exists and system cannot create)
+             * @author Thom <thom@hat-framework.com>
+             */
+            private function LoadPermissionFile(){
+                //Load permissions from file
+                $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+                if(!empty($this->permissions)){return;}
+
+                //if file doesn't exists or if permissions not setted, create permissions file
+                $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
+                $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+
+                //if permission file doesn't exists, throw exception
+                if(empty($this->permissions)){
+                    sendEmailToWebmasters("Permissão $this->cod_perfil", "Perfil de usuário '$this->cod_perfil' sem permissão");
+                    throw new classes\Exceptions\AcessBloquedException("Este perfil de usuário não possui permissão de acessar o sistema");
+                }
+            }
     
     /**
      * Verify if user has permission to access some page
