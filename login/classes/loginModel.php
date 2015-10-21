@@ -284,7 +284,10 @@ class usuario_loginModel extends \classes\Model\Model{
     public function inserir($array){
         $this->user_permission($array);
         $senha = $this->prepareInsertion($array);
-        $refer = isset($array['referrer'])?$array['referrer']:"";
+        if(isset($array['referrer']) && trim($array['referrer']) != ""){
+            $refer             = $array['referrer'];
+            $array['indicado'] = $refer;
+        }
         if(!parent::inserir($array)) {return false;}
                 
         $cod_usuario          = $this->getLastId();
