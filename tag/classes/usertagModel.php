@@ -62,6 +62,13 @@ class usuario_usertagModel extends \classes\Model\Model{
         return $this->setSuccessMessage("Tags Importadas com sucesso!");
     }
     
+    public function hasTag($user, $tagname){
+        $tagid = $this->LoadModel('usuario/tag', 'tag')->getTagId($tagname);
+        if(trim($tagid) === ""){return false;}
+        $res = $this->selecionar(array('cod_tag' => $tagid, 'cod_usuario'=>$user));
+        return (!empty($res));
+    }
+    
     public $dados  = array(
         'cod_tag' => array(
 	    'name'    => 'Tag',
