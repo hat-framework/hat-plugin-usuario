@@ -140,8 +140,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
                     'type'          => 'enum',//varchar, text, enum
                     'default'       => 'false',
                     'options'       =>  "'true' => 'Sim', 'false' => 'Não'",
-                    'description'   => 'Se esta opção estiver marcada, as datas listadas aparecerão no formato de redes sociáis: '
-                    . 'há tantos minutos (por exemplo) Ao invés de aparecer a data.',
+                    'description'   => 'Se esta opção estiver marcada, as datas listadas aparecerão no formato de redes sociáis: há tantos minutos (por exemplo) Ao invés de aparecer a data.',
                     'value'         => 'false',
                     'value_default' => 'false'
                 ),
