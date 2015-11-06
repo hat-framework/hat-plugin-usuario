@@ -380,6 +380,12 @@ class usuarioActions extends Actions{
             'permission'  => 'usuario_GU', 'needcod' => false,
             'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/taggroup')
         ),
+        
+        'usuario/tag/exportUserTags' => array(
+            'label'       => 'Exportar Tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => false,
+            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index')
+        ),
 
     );
     

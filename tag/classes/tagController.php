@@ -4,7 +4,7 @@ class tagController extends classes\Controller\CController{
     public $model_name = "usuario/tag";
     
     public function __construct($vars) {
-        $this->addToFreeCod(array("importarTags",'taggroup', 'usertag'));
+        $this->addToFreeCod(array("importarTags",'taggroup', 'usertag','exportUserTags'));
         parent::__construct($vars);
     }
     
@@ -45,6 +45,20 @@ class tagController extends classes\Controller\CController{
     public function importarTags(){
         $this->LoadModel('usuario/tag/usertag', 'utag')->importTagsFromAcesso();
         $this->setVars($this->utag->getMessages());
+        $this->display("");
+    }
+    
+    public function exportUserTags(){
+        set_time_limit(0);
+        $interval = array_shift($this->vars);
+        $egoi     = $this->LoadResource('api', 'api')->LoadApiClass("emailMarketing/egoiLead");
+        $all      = $this->LoadModel('usuario/tag/usertag', 'utag')->getAllTags($interval);
+        foreach($all as $a){
+            if(trim($a['email']) == ""){continue;}
+            if(trim($a['tag'])   == ""){continue;}
+            $egoi->addUserTag($a['tag'], $a['email']);
+            $this->utag->setSync($a['cod_usuario'], $a['cod_tag']);
+        }
         $this->display("");
     }
 }

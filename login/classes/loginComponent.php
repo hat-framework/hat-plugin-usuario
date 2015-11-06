@@ -159,9 +159,9 @@ class loginComponent extends classes\Component\Component{
                     private function tagLinks($tag, $cod_usuario){
                         if(trim($tag['tag']) === ""){return;}
 
-                        $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag'], "", "", "", "",true);
+                        $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag'], "", "", "", "style='color:#FFF;'",true);
                         if(trim($link) === ""){return;}
-                        echo "<button class='btn btn-primary col-xs-12 col-md-5' type='button' style='margin:5px;'> ";
+                        echo "<button class='btn btn-primary col-xs-12 col-md-5' type='button' style='margin:5px; color:#FFF;'> ";
 
                         $link2  = $this->Html->getActionLinkIfHasPermission(
                                 "usuario/tag/usertag/apagar/{$cod_usuario}/{$tag["cod_tag"]}",

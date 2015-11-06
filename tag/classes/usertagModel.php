@@ -3,14 +3,24 @@
 class usuario_usertagModel extends \classes\Model\Model{
     public  $tabela = "usuario_usertag";
     public  $pkey   = array('cod_usuario', 'cod_tag');
-    
+    private $blacklist = array("Usuário Ativo Application");
     public function addTag($tag, $cod_usuario = ''){
         $coduser = $this->getCodUsuario($cod_usuario);
         if($coduser == 0){return false;}
         if($this->cookieExistsTest($coduser, $tag)){return true;}
-        $tagid = $this->LoadModel('usuario/tag', 'tag')->getTagId($tag);
+        
+        $tagname = (is_array($tag))?$tag['tag']:$tag;
+        if(in_array($tagname, $this->blacklist)){return true;}
+        
+        $tagid   = $this->LoadModel('usuario/tag', 'tag')->getTagId($tag);
         if(trim($tagid) === ""){return false;}
-        return $this->updateTag($tagid, $coduser);
+        
+        $data    = $this->selecionar(array('cod_tag'), "cod_usuario='$coduser' AND cod_tag='$tagid'",1);
+        if(!empty($data)){return true;}
+        
+        $bool = $this->updateTag($tagid, $coduser, $data);
+        //$this->updateEmailMarketingTags($tagname, $coduser);
+        return $bool;
         
     }
             private function getCodUsuario($cod_usuario){
@@ -28,8 +38,7 @@ class usuario_usertagModel extends \classes\Model\Model{
                 return false;
             }
             
-            private function updateTag($tagid, $cod_usuario){
-                $data = $this->selecionar(array('cod_tag'), "cod_tag='$tagid' AND cod_usuario='$cod_usuario'", 1);
+            private function updateTag($tagid, $cod_usuario, $data){
                 if(!empty($data)){
                     return $this->editar(array($cod_usuario, $tagid), array(
                         'dt_tag' => 'FUNC_NULL'
@@ -40,7 +49,24 @@ class usuario_usertagModel extends \classes\Model\Model{
                     'cod_usuario' => $cod_usuario,
                 ));
             }
+            
+            private function updateEmailMarketingTags($tagname, $coduser){
+                $user_email = $this->LoadModel('usuario/login','uobj')->getUserMail($coduser);
+                $url = classes\Classes\Registered::getResourceLocationUrl('api').
+                        "/services/emailMarketingService.php?method=addUserTag&tagname=$tagname&user_email=$user_email";
+                simple_curl($url, array(), array(),array(), true, 1);
+            }
     
+    public function getAllTags($interval = "", $interval_type = "minute"){
+        $where = "status='notsync'";
+        if($interval != "" && is_numeric($interval)){
+            $where = " AND dt_tag > date_sub(now(), interval $interval $interval_type) ;";
+        }
+        $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
+        $this->join('usuario/login', array("cod_usuario"), array('cod_usuario'),"LEFT");
+        return $this->selecionar(array('tag',"$this->tabela.cod_tag",'dt_tag',"$this->tabela.cod_usuario",'email'), $where);
+    }
+
     public function getUserTags($cod_usuario = ""){
         if($cod_usuario === ""){$cod_usuario = usuario_loginModel::CodUsuario();}
         $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
@@ -67,6 +93,10 @@ class usuario_usertagModel extends \classes\Model\Model{
         if(trim($tagid) === ""){return false;}
         $res = $this->selecionar(array(), "cod_tag = $tagid AND cod_usuario'$user'");
         return (!empty($res));
+    }
+    
+    public function setSync($cod_user, $cod_tag){
+        return parent::editar(array($cod_user, $cod_tag),array('status' => 'sync'));
     }
     
     public $dados  = array(
@@ -107,6 +137,18 @@ class usuario_usertagModel extends \classes\Model\Model{
 	    'display'  => true,
             'default'  => "CURRENT_TIMESTAMP",
             'especial' => 'hide'
-        )
+        ),
+        'status' => array(
+            'name'     => 'Status',
+            'type'     => 'enum',
+            'display'  => true,
+            'default'  => 'notsync',
+            'options'  => array(
+                'notsync'  => "Não sincronizado", 
+                'sync'     => "Sincronizado"
+            ),
+            'description' => "Sincronizado com as apis de email marketing",
+            'notnull'     => true
+       	 ),
     );
 }
