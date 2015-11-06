@@ -58,7 +58,7 @@ class usuario_usertagModel extends \classes\Model\Model{
             }
     
     public function getAllTags($interval = "", $interval_type = "minute"){
-        $where = "status='notsync'";
+        $where = "$this->tabela.status='notsync'";
         if($interval != "" && is_numeric($interval)){
             $where = " AND dt_tag > date_sub(now(), interval $interval $interval_type) ;";
         }
