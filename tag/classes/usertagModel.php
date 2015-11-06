@@ -56,15 +56,18 @@ class usuario_usertagModel extends \classes\Model\Model{
                         "/services/emailMarketingService.php?method=addUserTag&tagname=$tagname&user_email=$user_email";
                 simple_curl($url, array(), array(),array(), true, 1);
             }
-    
-    public function getAllTags($interval = "", $interval_type = "minute"){
-        $where = "$this->tabela.status='notsync'";
+            
+    public function getAllTags($sync = false, $interval = "", $interval_type = "minute"){
+        $where = ($sync === true)?"$this->tabela.status='notsync'":"";
         if($interval != "" && is_numeric($interval)){
             $where = " AND dt_tag > date_sub(now(), interval $interval $interval_type) ;";
         }
         $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
         $this->join('usuario/login', array("cod_usuario"), array('cod_usuario'),"LEFT");
-        return $this->selecionar(array('tag',"$this->tabela.cod_tag",'dt_tag',"$this->tabela.cod_usuario",'email'), $where);
+        return $this->selecionar(
+            array('tag',"$this->tabela.cod_tag",'dt_tag',"$this->tabela.cod_usuario",'email'), 
+            $where, "","","cod_tag ASC, cod_usuario ASC"
+        );
     }
 
     public function getUserTags($cod_usuario = ""){
