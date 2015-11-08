@@ -67,7 +67,7 @@ class usuario_usertagModel extends \classes\Model\Model{
         $this->join('usuario/login', array("cod_usuario"), array('cod_usuario'),"LEFT");
         return $this->selecionar(
             array('tag',"$this->tabela.cod_tag",'dt_tag',"$this->tabela.cod_usuario",'email'), 
-            $where, "","","cod_tag ASC, cod_usuario ASC"
+            $w, "","","cod_tag ASC, cod_usuario ASC"
         );
     }
 
