@@ -50,18 +50,18 @@ class tagController extends classes\Controller\CController{
     
     public function exportUserTags(){
         set_time_limit(0);
-        $interval = array_shift($this->vars);
+        
+        $logname  = $lastcod = $last = "";
+        $interval = $this->getInterval($logname);
+        $sync     = $this->getSync();
         $egoi     = $this->LoadResource('api', 'api')->LoadApiClass("emailMarketing/egoiLead");
-        $all      = $this->LoadModel('usuario/tag/usertag', 'utag')->getAllTags(false, $interval);
-        $logname  = "usuario/tag";
-        $last     = "";
-        $lastcod  = "";
+        $all      = $this->LoadModel('usuario/tag/usertag', 'utag')->getAllTags($sync, $interval);
         $emails   = array();
-        classes\Utils\Log::delete($logname);
+        
         foreach($all as $a){
             if(trim($a['email']) == "" || trim($a['tag']) == ""){continue;}
             if($last != $a['tag']){
-                $this->doSaveTags($logname, $egoi, $a, $lastcod, $last, $emails);
+                $this->doSaveTags($logname, $egoi, $lastcod, $last, $emails);
                 $emails  = array();
                 $last    = $a['tag'];
                 $lastcod = $a['cod_tag'];
@@ -71,12 +71,27 @@ class tagController extends classes\Controller\CController{
         $this->display("");
     }
     
-            private function doSaveTags($logname, $egoi, $a, $lastcod, $last, $emails){
+            private function getInterval(&$logname){
+                $interval = array_shift($this->vars);
+                $logname  = "usuario/tag/export_$interval";
+                if($interval == ""){
+                    $logname  = "usuario/tag/all";
+                    classes\Utils\Log::delete($logname);
+                }
+                return $interval;
+            }
+            
+            private function getSync(){
+                $sync = array_shift($this->vars);
+                return ($sync == ""|| $sync == 0)?false:true;
+            }
+    
+            private function doSaveTags($logname, $egoi, $lastcod, $last, $emails){
                 if($last == ""){return;}
                 classes\Utils\Log::save($logname, "<h3>Adicionando a tag {{$last}}</h3>");
-                $bool = $egoi->addUserTag($a['tag'], $emails);
+                $bool = $egoi->addUserTag($last, $emails);
                 if(false === $bool){
-                    classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$a['tag']}");
+                    classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$last}");
                 }
                 foreach($emails as $cod_usuario => $email){
                     classes\Utils\Log::save($logname, "Adicionando ao email {$email}");
