@@ -58,18 +58,23 @@ class usuario_usertagModel extends \classes\Model\Model{
             }
             
     public function getAllTags($sync = false, $interval = "", $interval_type = "minute"){
-        $where[] = ($sync === true)?"$this->tabela.status='notsync'":"";
-        if($interval != "" && is_numeric($interval)){
-            $where[] = "dt_tag > date_sub(now(), interval $interval $interval_type) ;";
-        }
-        $w = implode(" AND ", $where);
+        $where = $this->getWhere($sync, $interval, $interval_type);
         $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
         $this->join('usuario/login', array("cod_usuario"), array('cod_usuario'),"LEFT");
         return $this->selecionar(
             array('tag',"$this->tabela.cod_tag",'dt_tag',"$this->tabela.cod_usuario",'email'), 
-            $w, "","","cod_tag ASC, cod_usuario ASC"
+            $where, "","","cod_tag ASC, cod_usuario ASC"
         );
     }
+    
+            private function getWhere($sync, $interval, $interval_type){
+                $where = array();
+                if($sync === true){$where[] = "$this->tabela.status='notsync'";}
+                if($interval != "" && is_numeric($interval)){
+                    $where[] = "dt_tag > date_sub(now(), interval $interval $interval_type) ;";
+                }
+                return empty($where)?"":implode(" AND ", $where);
+            }
 
     public function getUserTags($cod_usuario = ""){
         if($cod_usuario === ""){$cod_usuario = usuario_loginModel::CodUsuario();}
