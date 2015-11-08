@@ -58,10 +58,11 @@ class usuario_usertagModel extends \classes\Model\Model{
             }
             
     public function getAllTags($sync = false, $interval = "", $interval_type = "minute"){
-        $where = ($sync === true)?"$this->tabela.status='notsync'":"";
+        $where[] = ($sync === true)?"$this->tabela.status='notsync'":"";
         if($interval != "" && is_numeric($interval)){
-            $where = " AND dt_tag > date_sub(now(), interval $interval $interval_type) ;";
+            $where[] = "dt_tag > date_sub(now(), interval $interval $interval_type) ;";
         }
+        $w = implode(" AND ", $where);
         $this->join('usuario/tag', array('cod_tag'), array('cod_tag'),"LEFT");
         $this->join('usuario/login', array("cod_usuario"), array('cod_usuario'),"LEFT");
         return $this->selecionar(
