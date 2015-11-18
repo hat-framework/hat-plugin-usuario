@@ -1,0 +1,8 @@
+<?php
+
+echo "<h2>".$gadget['titulo']."</h2>";
+$method = $gadget['comp_method'];
+$this->LoadComponent($gadget['model'], 'comp');
+if(method_exists($this->comp, $method)){
+    $this->comp->$method($cod_usuario);
+}

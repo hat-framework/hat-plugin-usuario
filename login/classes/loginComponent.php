@@ -290,10 +290,17 @@ class loginComponent extends classes\Component\Component{
             
     private function gadgets($item){
         if(!isset($item['cod_usuario'])) {return;}
+        $gadgets     = $this->LoadModel('usuario/gadget', 'uga')->selecionar();
         $cod_usuario = $item['cod_usuario'];
         $this->gui->opendiv('gadget_header', 'col-xs-12');
             if($cod_usuario == \usuario_loginModel::CodUsuario()){
-                $this->makeGadgetLink("usuario/login/logado", 'Alterar Dados');
+                $this->makeGadgetLink("config/group/form/acesso/acesso_email", 'Alterar Dados');
+            }
+            if(!empty($gadgets)){
+                foreach($gadgets as $ga){
+                    $link = "usuario/gadget/exec/{$ga['cod']}/$cod_usuario";
+                    $this->makeGadgetLink($link, $ga['titulo']);
+                }
             }
             $this->makeGadgetLink("usuario/login/show/$cod_usuario", 'Sobre');
         $this->gui->closediv();

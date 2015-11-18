@@ -42,6 +42,13 @@ class usuarioActions extends Actions{
             'descricao' => "Permite visualizar informações de usuários",
             'default'   => 'n',
         ),
+        
+        'GerenciarGadgets' => array(
+            'nome'      => "usuario_gadget",
+            'label'     => "Gerenciar Gadgets",
+            'descricao' => "Permite adicionar novos gadgets para a página do usuário",
+            'default'   => 'n',
+        ),
     );
     
     protected $actions = array(
@@ -50,27 +57,27 @@ class usuarioActions extends Actions{
             'label' => 'Tipos de Usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GP', 
             'menu' => array('usuario/perfil/formulario'),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index'),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index'),
         ),
         'usuario/perfil/userpermissions' => array(
             'label' => 'Permissões do perfil', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
             'permission' => 'usuario_AC', 
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
         ),
         
         'usuario/perfil/formulario' => array(
             'label' => 'Criar perfil', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GP', 
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
         ),
         
         'usuario/perfil/permissoes' => array(
             'label' => 'Editar Permissões', 'publico' => 'n', 'default_no' => 'n',
             'permission' => 'usuario_GP', 'needcod' => true,
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/show', 'usuario/perfil/permissoes' ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/show', 'usuario/perfil/permissoes' ),
         ),
         'usuario/perfil/padrao' => array(
             'label' => 'Setar Perfil Padrão', 'publico' => 'n', 'default_no' => 'n',
@@ -89,7 +96,7 @@ class usuarioActions extends Actions{
                     'Excluir'    => 'usuario/perfil/apagar',
                 )
             ),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/show' ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/show' ),
         ),
         
         'usuario/perfil/sublist' => array(
@@ -110,7 +117,7 @@ class usuarioActions extends Actions{
             'label' => 'Editar perfil', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
             'permission' => 'usuario_GP', 'needcod' => true,
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/perfil/index', 'usuario/perfil/show', 'usuario/perfil/edit' ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/show', 'usuario/perfil/edit' ),
         ),
 
         'usuario/perfil/apagar' => array(
@@ -210,7 +217,11 @@ class usuarioActions extends Actions{
         ),
         
         
-        
+        'usuario/login/todos' => array(
+            'label' => 'Gerenciar ', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_analisar', 
+            'breadscrumb' => array('usuario/login/todos'),
+        ),
         
         'usuario/login/report'=> array(
             'label' => 'Relatório de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
@@ -242,19 +253,13 @@ class usuarioActions extends Actions{
             'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/login/personalreport')
         ),
         
-        'usuario/login/todos' => array(
-            'label' => 'Gerenciar ', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_analisar', 
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos'),
-        ),
-        
         
         
         'usuario/login/widgets'=> array(
             'label' => 'Visualizar Widget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/widgets')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/widgets')
         ),
         
         
@@ -266,14 +271,14 @@ class usuarioActions extends Actions{
                 'Dados Extras'   => "usuario/login/seedata",
                 'Opções' => array('usuario/login/edit', 'usuario/login/apagar')
              ),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/show')
         ),
         
          'usuario/login/seelog' => array(
             'label' => 'Visualizar log', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
         
         
@@ -281,7 +286,7 @@ class usuarioActions extends Actions{
             'label' => 'Visualizar Dados Extras', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 'needcod' => true,
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/seelog')
         ),
         
         'usuario/login/apagar' => array(
@@ -303,14 +308,14 @@ class usuarioActions extends Actions{
             'label' => 'Novo usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GU', 
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/formulario')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/formulario')
         ),
         
         'usuario/login/edit' => array(
             'label' => 'Editar usuário', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GU', 'needcod' => true,
             'menu' => array(),
-            'breadscrumb' => array('usuario/login/report', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/edit')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/show', 'usuario/login/edit')
         ),
         
         'usuario/login/editar' => array(
@@ -346,12 +351,12 @@ class usuarioActions extends Actions{
         'usuario/tag/index' => array(
             'label' => 'Todas as tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_GU',
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index')
         ),
         'usuario/tag/formulario' => array(
             'label'       => 'Adicionar tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU',
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/formulario'),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index', 'usuario/tag/formulario'),
         ),
         'usuario/tag/show' => array(
             'label'       => 'Visualizar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
@@ -363,12 +368,12 @@ class usuarioActions extends Actions{
                     'Apagar' => array('Apagar'=>'usuario/tag/apagar', '__icon'=>'fa fa-times'),
                 )
             ),
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/show')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index', 'usuario/tag/show')
         ),
         'usuario/tag/edit' => array(
             'label'       => 'Editar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => true,
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/show', 'usuario/tag/edit')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index', 'usuario/tag/show', 'usuario/tag/edit')
         ),
         'usuario/tag/apagar' => array(
             'label'       => 'Apagar tag', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
@@ -378,14 +383,61 @@ class usuarioActions extends Actions{
         'usuario/tag/taggroup' => array(
             'label'       => 'Grupos de tags', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => false,
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index', 'usuario/tag/taggroup')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index', 'usuario/tag/taggroup')
         ),
         
         'usuario/tag/exportUserTags' => array(
             'label'       => 'Exportar Tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => false,
-            'breadscrumb' => array('usuario/login/report', 'usuario/tag/index')
+            'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index')
         ),
+        
+        
+        
+        
+        'usuario/gadget/index' => array(
+            'label' => 'Todos os Gadgets', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_gadget',
+            'menu' => array(
+                'usuario/gadget/formulario',
+             ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/gadget/index')
+        ),
+        
+        'usuario/gadget/formulario' => array(
+            'label' => 'Criar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_gadget',
+            'breadscrumb' => array('usuario/login/todos', 'usuario/gadget/index', 'usuario/gadget/formulario')
+        ),
+        
+        'usuario/gadget/show' => array(
+            'label' => 'Visualizar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_gadget', 'needcod' => true,
+            'menu' => array(
+                'Ações' => array(
+                    'Editar'     => 'usuario/gadget/edit', 
+                    'Excluir'    => 'usuario/gadget/apagar',
+                )
+            ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/gadget/index', 'usuario/gadget/show')
+        ),
+        
+        'usuario/gadget/edit' => array(
+            'label' => 'Editar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n', 
+            'permission' => 'usuario_gadget', 'needcod' => true,
+            'breadscrumb' => array('usuario/login/todos', 'usuario/gadget/index', 'usuario/gadget/show', 'usuario/gadget/edit')
+        ),
+
+        'usuario/gadget/apagar' => array(
+            'label' => 'Apagar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_gadget', 'needcod' => true
+        ),
+        
+        'usuario/gadget/exec' => array(
+            'label' => 'Acessar Gadget', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_AC', 'needcod' => true,
+            'breadscrumb' => array('usuario/login/todos', 'usuario/login/show', 'usuario/gadget/exec')
+        )
 
     );
     
@@ -456,6 +508,15 @@ class usuarioActions extends Actions{
                 "divider2"               => '__divider',
                 
                 
+                'Novo Gadget' => array(
+                    "__icon"        => 'fa fa-plus',
+                    'Novo Gadget' => 'usuario/gadget/formulario',
+                ), 
+                'Lista de Gadgets' => array(
+                    "__icon"        => 'fa fa-tag',
+                    'Lista de Gadgets' => 'usuario/gadget/index',
+                ), 
+                "divider3"       => '__divider',
                 'Nova Tag' => array(
                     "__icon"     => 'fa fa-plus',
                     'Nova Tag'   => 'usuario/tag/formulario', 
@@ -471,8 +532,7 @@ class usuarioActions extends Actions{
                 'Grupos de Tags' => array(
                     "__icon"        => 'fa fa-tags',
                     'Grupos de Tags' => 'usuario/tag/taggroup/index',
-                ), 
-                
+                )
             ),
 
             'Relatórios'             => array(
