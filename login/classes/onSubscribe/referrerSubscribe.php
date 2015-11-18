@@ -9,7 +9,11 @@ class referrerSubscribe extends classes\Classes\Object{
             $refer = $this->ref->getCookie();
             if($refer === ""){return;}
         }
-        if(false === $this->ref->associate($refer, $cod_usuario)){return true;}
+        
+        try{
+            if(false === $this->ref->associate($refer, $cod_usuario)){return true;}
+        } catch (Exception $ex) { return true; }
+        
         return $this->sendMail($refer, $array);
     }
     
@@ -17,7 +21,7 @@ class referrerSubscribe extends classes\Classes\Object{
                 $refuser = $this->LoadModel('usuario/login','uobj')->getSimpleItem($refer);
                 $link    = $this->LoadResource('html','html')->getLink('config/group/form/pessoal/pessoal_referrer');
                 $corpo   = 
-                    "<h2>Ol√° {$refuser['user_name']}</h2>
+                    "<h2>Ol· {$refuser['user_name']}</h2>
                     <p>Novo afiliado associado ao seu email no site ".SITE_NOME."</p>
                     <p><b>dados do afiliado:</b></p>
                     <p>Nome: ".$array['user_name']." </p>
