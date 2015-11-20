@@ -38,11 +38,12 @@ class codigoComponent extends \classes\Classes\Object{
     }
     
     private function referrerCode(){
-        $url = $this->html->getLink("usuario/referencia/cadastro/$this->cod");
-        $title = "<b>Compartilhe a url abaixo</b> com os usuários que você deseja convidar para o sistema";
+        $cod_usuario = usuario_loginModel::CodUsuario();
+        $url         = $this->html->getLink("usuario/referencia/cadastro/{$this->cod}&utm_source=affiliate&utm_medium=affiliate_{$cod_usuario}&utm_campaign=affiliate_{$cod_usuario}", true,true);
+        $title       = "<b>Compartilhe a url abaixo</b> com os usuários que você deseja convidar para o sistema";
         $this->gui->openPanel('', "{$this->id}_code")
                   ->panelHeader("Url de Compartilhamento", 'fa fa-exchange')
-                  ->panelBody("$title <textarea class='form-control' cols='50' style='resize: none;' readonly>$url</textarea>")
+                  ->panelBody("$title <textarea class='form-control' cols='50' rows='3' style='resize: none;' readonly>$url</textarea>")
                   ->closePanel();
     }
     

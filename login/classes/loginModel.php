@@ -54,7 +54,7 @@ class usuario_loginModel extends \classes\Model\Model{
         return $var;
     }
 
-    //verifica se o usuario est· logado
+    //verifica se o usuario est√° logado
     public function IsLoged(){
         return (session::exists($this->cookie));
     }//c
@@ -93,7 +93,7 @@ class usuario_loginModel extends \classes\Model\Model{
     public function disableTutorial(){
         $var = session::getVar($this->cookie);
         if($var == "") {
-            $this->setErrorMessage('Usu·rio n„o est· logado');
+            $this->setErrorMessage('Usu√°rio n√£o est√° logado');
             return false;
         }
         $var['usuario_login_tutorial'] = "inativo";
@@ -114,7 +114,7 @@ class usuario_loginModel extends \classes\Model\Model{
         
         $var = session::getVar($this->cookie);
         if($var == "") {
-            $this->setErrorMessage('Usu·rio n„o est· logado');
+            $this->setErrorMessage('Usu√°rio n√£o est√° logado');
             return false;
         }
         $var['usuario_login_tutorial'] = 'ativo';
@@ -138,7 +138,7 @@ class usuario_loginModel extends \classes\Model\Model{
                 $this->LoadResource('html', 'html');
                 $url = $this->html->getLink("usuario/login/why_confirm");
                 EventTube::addEvent('page-top', "<span id='erro'>
-                    Caro Usu·rio o seu email ainda n„o foi confirmado 
+                    Caro Usu√°rio o seu email ainda n√£o foi confirmado 
                     <a href='$url'>saiba mais</a>
                  </span>");
             }
@@ -154,7 +154,7 @@ class usuario_loginModel extends \classes\Model\Model{
             $v['confirmkey'] = genKey(16);
             if(!parent::editar($id, $v)){
                 $this->setErrorMessage('
-                    N„o foi possÌvel gerar uma nova chave de confirmaÁ„o para sua conta.
+                    N√£o foi poss√≠vel gerar uma nova chave de confirma√ß√£o para sua conta.
                 ');
                 return false;
             }
@@ -224,25 +224,25 @@ class usuario_loginModel extends \classes\Model\Model{
 
     /*faz o login do usuario*/
     public function Login($login, $senha, $enc = true,$login_first = false){
-        //procura no banco de dados um usu·rio e senha iguais ao digitado pelo usu·rio
+        //procura no banco de dados um usu√°rio e senha iguais ao digitado pelo usu√°rio
         $login = str_replace(array("'", '"'), "", $login);
         $senha = str_replace(array("'", '"'), "", $senha);
         $w     = (!$enc)?"`senha` = '$senha'":"`senha` = PASSWORD('$senha')";
         $where = "`email` = '$login' AND $w";
         $value = $this->db->Read($this->tabela, NULL, $where);
         
-        //se login n„o existe ou senha est· incorreta
+        //se login n√£o existe ou senha est√° incorreta
         if(empty ($value)){
-            $this->setErrorMessage("Usu·rio ou senha incorretos");
+            $this->setErrorMessage("Usu√°rio ou senha incorretos");
             return false;
         }
-        //verifica se o usu·rio est· bloqueado
+        //verifica se o usu√°rio est√° bloqueado
         $refer = (isset($_GET['refer']))?$_GET['refer']:session::getVar('refer');
         $user  = array_shift($value);
         if($refer == "") {$refer = URL;}
         $this->makeLogin($user, $refer);
         
-        //redireciona, caso necess·rio
+        //redireciona, caso necess√°rio
         $this->Redirect(true,$login_first);
         return true;
     }
@@ -254,7 +254,7 @@ class usuario_loginModel extends \classes\Model\Model{
         }
         if(empty($user)){return false;}
         
-        //seta os dados a serem salvos na sess„o
+        //seta os dados a serem salvos na sess√£o
         $var['cod_usuario']            = $user['cod_usuario'];
         $var['email']                  = $user['email'];
         $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
@@ -352,7 +352,7 @@ class usuario_loginModel extends \classes\Model\Model{
     public function editarDados($id, $dados){
         $var = $this->selecionar(array('cod_usuario'), "`cod_usuario` = '$id' AND `senha` = PASSWORD('".$dados['senha']."')");
         if(empty($var)){
-            $this->setErrorMessage("Caro usu·rio, sua senha est· incorreta!");
+            $this->setErrorMessage("Caro usu√°rio, sua senha est√° incorreta!");
             return false;
         }
         return $this->editar($id, $dados);
@@ -366,7 +366,7 @@ class usuario_loginModel extends \classes\Model\Model{
     
     private function user_permission(&$dados){
         
-        //se n„o existe nenhum webmasters, seta a permiss„o de webmaster
+        //se n√£o existe nenhum webmasters, seta a permiss√£o de webmaster
         $count = $this->selecionar(array('cod_usuario'), "`permissao` = 'Webmaster'", '1');
         if(empty($count)){
             $dados['permissao'] = 'Webmaster';
@@ -374,11 +374,11 @@ class usuario_loginModel extends \classes\Model\Model{
         }
         if(!isset($dados['permissao'])) return;
         
-        //se usu·rio n„o È admin a permiss„o sÛ pode ser de visitante
+        //se usu√°rio n√£o √© admin a permiss√£o s√≥ pode ser de visitante
         if(!$this->UserIsAdmin()) {$dados['permissao'] = 'Visitante';}
         //if(!$this->UserIsAdmin()) $dados['permissao'] = 'Admin';
         
-        //se usu·rio È admin mas n„o È webmaster sÛ pode criar um novo admin ou um novo visitante
+        //se usu√°rio √© admin mas n√£o √© webmaster s√≥ pode criar um novo admin ou um novo visitante
         elseif(!$this->UserIsWebmaster() && ($dados['permissao'] == "Webmaster")){
             //$dados['permissao'] = "Visitante";
             $dados['permissao'] = "Admin";
@@ -397,13 +397,13 @@ class usuario_loginModel extends \classes\Model\Model{
         
         $this->getMessages(true);
         
-        //se usu·rio n„o tem permiss„o para alterar outros usu·rios
+        //se usu√°rio n√£o tem permiss√£o para alterar outros usu√°rios
         if(false === $this->UserCanAlter($id)){return false;}
         if(!isset($dados['senha_confirmacao'])){
-            //se usu·rio que est· alterando os dados È o dono da conta
+            //se usu√°rio que est√° alterando os dados √© o dono da conta
             $cod_user = self::CodUsuario();
             if($id === $cod_user){
-                return $this->setErrorMessage("Para alterar seus dados a senha de confirmaÁ„o deve ser enviada!");
+                return $this->setErrorMessage("Para alterar seus dados a senha de confirma√ß√£o deve ser enviada!");
             }
         }
         
@@ -411,11 +411,11 @@ class usuario_loginModel extends \classes\Model\Model{
         $where = (LINK ."/".CURRENT_ACTION != "usuario/login/edit")?"AND senha = PASSWORD('".$dados['senha_confirmacao']."')":'';
         $user = $this->selecionar(array(), "$camp = '$id' $where");
         if(empty($user)){
-            return $this->setErrorMessage("Usu·rio ou senha incorretos");
+            return $this->setErrorMessage("Usu√°rio ou senha incorretos");
         }
         
         if(isset($dados['senha_nova']) && $dados['senha_nova'] != $dados['confirmar_senha']){
-            return $this->setErrorMessage("A senha nova deve ser idÍntica ‡ confirmaÁ„o de senha");
+            return $this->setErrorMessage("A senha nova deve ser id√™ntica √† confirma√ß√£o de senha");
         }
         
         $this->user_permission($dados);
@@ -441,29 +441,29 @@ class usuario_loginModel extends \classes\Model\Model{
     public function apagar($valor, $chave = "") {
         $user = $this->getItem($valor, $chave);
         
-        //impede que o usu·rio se exclua
+        //impede que o usu√°rio se exclua
         if($this->getCodUsuario($user) == $this->getCodUsuario()){
-            $this->setErrorMessage("VocÍ n„o pode excluir sua prÛpria conta!");
+            $this->setErrorMessage("Voc√™ n√£o pode excluir sua pr√≥pria conta!");
             return false;
         }
         
-        //se usu·rio a ser excluido È webmaster
+        //se usu√°rio a ser excluido √© webmaster
         elseif($user['cod_perfil'] == Webmaster){
             
-            //se o usu·rio que est· excluindo um webmaster n„o for webmaster, ent„o bloqueia
+            //se o usu√°rio que est√° excluindo um webmaster n√£o for webmaster, ent√£o bloqueia
             if($this->getCodPerfil() != Webmaster){
-                $this->setErrorMessage("VocÍ n„o tem permiss„o de excluir um Administrador do Sistema!");
+                $this->setErrorMessage("Voc√™ n√£o tem permiss√£o de excluir um Administrador do Sistema!");
                 return false;
             }
 
-            //se quem est· excluindo um webmaster È um webmaster
+            //se quem est√° excluindo um webmaster √© um webmaster
             else{
                 
-                //se sÛ existe um webmaster, bloqueia
+                //se s√≥ existe um webmaster, bloqueia
                 $total = $this->getCount("cod_perfil = '".Webmaster."'");
                 if($total == 1){
-                    $this->setErrorMessage("Para excluir uma conta de Webmaster È necess·rio 
-                        que exista pelo menos outra conta com o mesmo privilÈgio");
+                    $this->setErrorMessage("Para excluir uma conta de Webmaster √© necess√°rio 
+                        que exista pelo menos outra conta com o mesmo privil√©gio");
                     return false;
                 }
             }
@@ -472,7 +472,7 @@ class usuario_loginModel extends \classes\Model\Model{
         //apaga
         if(!parent::apagar($valor, $chave)) return false;
         $name = $user['user_name'] . " (".$user['user_cargo'].")";
-        $this->setSuccessMessage("Usu·rio $name removido do sistema com sucesso!");
+        $this->setSuccessMessage("Usu√°rio $name removido do sistema com sucesso!");
         return true;
     }
 
@@ -487,18 +487,18 @@ class usuario_loginModel extends \classes\Model\Model{
         $value = $this->db->Read($this->tabela, NULL, "`cod_usuario` = '$usuario'", 1); 
         if(empty($value)){
             echo $this->db->getSentenca();
-            $this->setErrorMessage("O usu·rio que vocÍ procura n„o existe");
+            $this->setErrorMessage("O usu√°rio que voc√™ procura n√£o existe");
             return false;
         }
         
-        //verifica se È necess·rio atualizar a session do usu·rio
+        //verifica se √© necess√°rio atualizar a session do usu√°rio
         $user            = array_shift($value);
         $online          = $this->IsLoged();
         $codUserOnline   = $this->getCodUsuario();
         $codUserConfirm  = $this->getCodUsuario($user);
         $atualizaSession = ($online === true && $codUserOnline == $codUserConfirm && session::exists($this->cookie))?true:false;
         
-        //recupera o nome do usu·rio que est· sendo recuperada a session
+        //recupera o nome do usu√°rio que est√° sendo recuperada a session
         $name            = $this->getUserNick($user);
         
         //se a chave de confirmacao esta vazia
@@ -508,25 +508,25 @@ class usuario_loginModel extends \classes\Model\Model{
                 $co['confirmed'] = '1';
                 session::setVar($this->cookie, $co);
             }
-            $this->setErrorMessage("O usu·rio $name foi confirmado no site anteriormente!");
+            $this->setErrorMessage("O usu√°rio $name foi confirmado no site anteriormente!");
             return false;
         }
         
         //se a chave de confirmacao esta errada
         if($user['confirmkey'] != $chave){
-            $this->setErrorMessage("A chave de confirmaÁ„o do usu·rio $name est· incorreta!");
+            $this->setErrorMessage("A chave de confirma√ß√£o do usu√°rio $name est√° incorreta!");
             return false;
         }
         
-        //edita o usu·rio no banco de dados
+        //edita o usu√°rio no banco de dados
         $Var['confirmkey'] = "FUNC_NULL";
         $Var['confirmed'] = "1";
         if(!parent::editar($user['cod_usuario'], $Var)){
-            $this->setErrorMessage("N„o foi possÌvel confirmar o usu·rio $name");
+            $this->setErrorMessage("N√£o foi poss√≠vel confirmar o usu√°rio $name");
             return false;
         }
         
-        //atualiza a session se necess·rio
+        //atualiza a session se necess√°rio
         if($atualizaSession){
             $co = session::getVar($this->cookie);
             $co['confirmed'] = '1';
@@ -534,10 +534,10 @@ class usuario_loginModel extends \classes\Model\Model{
         }
         
         //atualiza as mensagens
-        $this->setSuccessMessage("Usu·rio $name confirmado com sucesso!");
+        $this->setSuccessMessage("Usu√°rio $name confirmado com sucesso!");
         session::setVar('controller_alerts', $this->getMessages());
         
-        //se usu·rio n„o est· online e n„o existe outra sess„o de usu·rio online, faz o login do usu·rio
+        //se usu√°rio n√£o est√° online e n√£o existe outra sess√£o de usu√°rio online, faz o login do usu√°rio
         if(!$online) $this->Login(@$user['email'], @$user['senha'], false);
         return true;
 
@@ -548,15 +548,15 @@ class usuario_loginModel extends \classes\Model\Model{
         //procura o usuario no banco de dados
         $value = $this->db->Read($this->tabela, NULL, "`email` = '$email'");
         if(empty($value)){
-            $this->setErrorMessage("Este email n„o est· registrado em nossa base de dados");
+            $this->setErrorMessage("Este email n√£o est√° registrado em nossa base de dados");
             return false;
         }
         $user = array_shift($value);
         
         /*
         Edita os dados no banco
-        Se confirmkey estiver encriptada, ent„o ela contÈm a nova senha do usu·rio. 
-        Do contr·rio gera uma nova chave de confirmaÁ„o
+        Se confirmkey estiver encriptada, ent√£o ela cont√©m a nova senha do usu√°rio. 
+        Do contr√°rio gera uma nova chave de confirma√ß√£o
          */
         $confkey = ($user['confirmkey'] != "")?$user['confirmkey']:genKey(16);
         $Var['confirmkey'] = $confkey;
@@ -564,45 +564,45 @@ class usuario_loginModel extends \classes\Model\Model{
 
         if($confkey == $user['confirmkey'] && strlen($confkey) > 16) $confkey = "";
         
-        //envia um alerta por email ara o usu·rio
+        //envia um alerta por email ara o usu√°rio
         $this->LoadModel('usuario/login/loginDialogs', 'udi');
         $bool = $this->udi->RecoverPassword($user, $confkey);
         $this->setMessages($this->udi->getMessages());
         return $bool;
     }
 
-    //confirma a recuperaÁ„o de senha
+    //confirma a recupera√ß√£o de senha
     public function ConfirmRecoverPassword($dados){
 
         $dados   = explode("-", $dados);
         $usuario = array_shift($dados);
         $chave   = array_shift($dados);
 
-        //verifica se existe algum usuario com esta chave de recuperaÁ„o
+        //verifica se existe algum usuario com esta chave de recupera√ß√£o
         $value = $this->db->Read($this->tabela,NULL, "`cod_usuario` = '$usuario' AND`confirmkey` = '$chave'");
         $user = array_shift($value);
         if(empty ($user)){
             $value = $this->db->Read($this->tabela, NULL, "`cod_usuario` = '$usuario'");
             
-            //verifica se usu·rio existe
+            //verifica se usu√°rio existe
             $user = array_shift($value);
             if(empty ($user)) {
-                $this->setErrorMessage("Usu·rio n„o existe");
+                $this->setErrorMessage("Usu√°rio n√£o existe");
                 return false;
             }
             
-            //verifica se a chave de confirmaÁ„o existe
+            //verifica se a chave de confirma√ß√£o existe
             elseif(array_key_exists("confirmkey", $user) && $user['confirmkey'] != "") {
                 
-                //verifica se a chave de confirmaÁ„o contÈm a nova senha do usu·rio
+                //verifica se a chave de confirma√ß√£o cont√©m a nova senha do usu√°rio
                 if($user['confirmkey'] ==  \classes\Classes\crypt::decrypt_camp($user['confirmkey'])){
-                    $this->setErrorMessage("Chave de confirmaÁ„o inv·lida.");
+                    $this->setErrorMessage("Chave de confirma√ß√£o inv√°lida.");
                     return false;
                 }
             }
             
             else{
-                $this->setSuccessMessage('Usu·rio j· confirmado');
+                $this->setSuccessMessage('Usu√°rio j√° confirmado');
                 return true;
             }
             
@@ -616,7 +616,7 @@ class usuario_loginModel extends \classes\Model\Model{
         $Var['senha']      = "FUNC_PASSWORD('".$senha."')";
         $Var['confirmkey'] =  \classes\Classes\crypt::encrypt_camp($senha);
         if(!$this->db->Update($this->tabela, $Var, "`cod_usuario` = '".$user['cod_usuario'] ."'")){
-            $this->setErrorMessage("N„o foi possÌvel gerar sua nova senha");
+            $this->setErrorMessage("N√£o foi poss√≠vel gerar sua nova senha");
             return false;
         }
 
@@ -631,13 +631,13 @@ class usuario_loginModel extends \classes\Model\Model{
     	//procura o usuario no banco de dados
         $value = $this->db->Read($this->tabela, NULL, "`cod_usuario` LIKE '$login' || `email` LIKE '$login'"); 
         if(empty($value)){
-            $this->setErrorMessage("Usu·rio inexistente");
+            $this->setErrorMessage("Usu√°rio inexistente");
             return false;
         }
         $value = array_shift($value);
         
         if($value['confirmkey'] == NULL || $value['key'] == ""){
-            $this->setSuccessMessage("Email j· confirmado");
+            $this->setSuccessMessage("Email j√° confirmado");
             return true;
         }
         
@@ -645,46 +645,46 @@ class usuario_loginModel extends \classes\Model\Model{
 
         //Se nao conseguiu atualizar tabela
         if(!$this->db->Update($this->tabela, $Var, "`cod_usuario` = '".$value['cod_usuario'] ."'")){
-            $this->setErrorMessage("N„o foi possÌvel atualizar o banco de dados");
+            $this->setErrorMessage("N√£o foi poss√≠vel atualizar o banco de dados");
             return false;
         }
 
         //prepara o email
         $this->LoadResource("html", 'html');
         $url     = $this->html->getLink("usuario/login/confirmar/".$value['cod_usuario']."/".$Var['confirmkey']);
-        $msg     = "<p><a href='$url'>clique aqui</a> Para completar sua inscriÁ„o</p>";
-        $assunto = "Reenviar ConfirmaÁ„o";
+        $msg     = "<p><a href='$url'>clique aqui</a> Para completar sua inscri√ß√£o</p>";
+        $assunto = "Reenviar Confirma√ß√£o";
         $corpo   = $msg;
         
         $this->LoadResource("email", "email");
         $this->email->SendMail($assunto, $corpo, $value['email']);
 
-        $this->setSuccessMessage("Um novo email de confirmaÁ„o foi enviado para vocÍ.");
+        $this->setSuccessMessage("Um novo email de confirma√ß√£o foi enviado para voc√™.");
         return true;
     }
     
     public function needWebmasterLogin($url = ''){
         
-        //se usu·rio n„o est· logado ou n„o È admin
+        //se usu√°rio n√£o est√° logado ou n√£o √© admin
         if(!$this->IsLoged() || !$this->UserIsWebmaster()){
             $this->Logout();
             $this->needLogin($url);
         }
         
-        //se usu·rio È admin
+        //se usu√°rio √© admin
         else $this->Redirect();
         return true;
     }
     
     public function needAdminLogin($url = ""){
         
-        //se usu·rio n„o est· logado ou n„o È admin
+        //se usu√°rio n√£o est√° logado ou n√£o √© admin
         if(!$this->IsLoged() || !$this->UserIsAdmin()){
             $this->Logout();
             $this->needLogin($url);
         }
         
-        //se usu·rio È admin
+        //se usu√°rio √© admin
         else $this->Redirect();
         return true;
     }
@@ -733,7 +733,7 @@ class usuario_loginModel extends \classes\Model\Model{
     }
 
     public static function IsWebmaster(){
-        //usu·rios deslogados n„o s„o webmaster. Isto evita lanÁamento de exceÁ„o quando db n„o instalado
+        //usu√°rios deslogados n√£o s√£o webmaster. Isto evita lan√ßamento de exce√ß√£o quando db n√£o instalado
         if(!session::exists(self::$__cookie)) {return false;}
         $var = session::getVar(self::$__cookie);
         if(!isset($var['cod_perfil'])){return false;}
@@ -823,19 +823,19 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function blockUser($cod_usuario){
         if($this->getCodPerfil($cod_usuario) == Webmaster){
-            $this->setErrorMessage("N„o È possÌvel bloquear um usu·rio com permiss„o de Webmaster");
+            $this->setErrorMessage("N√£o √© poss√≠vel bloquear um usu√°rio com permiss√£o de Webmaster");
             return false;
         }
         $bool = parent::editar($cod_usuario, array('status' => 'bloqueado', 'update_permission' => 's'));
-        if(!$bool) $this->setErrorMessage("N„o foi possÌvel bloquer o acesso a este usu·rio");
-        else       $this->setSuccessMessage ('Usu·rio bloqueado com sucesso!');
+        if(!$bool) $this->setErrorMessage("N√£o foi poss√≠vel bloquer o acesso a este usu√°rio");
+        else       $this->setSuccessMessage ('Usu√°rio bloqueado com sucesso!');
         return $bool;
     }
     
     public function unblockUser($cod_usuario){
         $bool = parent::editar($cod_usuario, array('status' => 'offline', 'update_permission' => 's'));
-        if(!$bool) $this->setErrorMessage("N„o foi possÌvel desbloquer o acesso deste usu·rio");
-        else       $this->setSuccessMessage ('Usu·rio desbloqueado com sucesso!');
+        if(!$bool) $this->setErrorMessage("N√£o foi poss√≠vel desbloquer o acesso deste usu√°rio");
+        else       $this->setSuccessMessage ('Usu√°rio desbloqueado com sucesso!');
         return $bool;
     }
     
@@ -865,17 +865,17 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function UserCanAlter($cod_usuario){
         
-        //se usu·rio est· alterando a prÛpria conta.
+        //se usu√°rio est√° alterando a pr√≥pria conta.
         $cod_autor = $this->getCodUsuario();
         if($cod_autor == $cod_usuario) {return true;}
         
-        //se usu·rio È webmaster
+        //se usu√°rio √© webmaster
         if($this->IsWebmaster() && !isset($_GET['_perfil'])) {return true;}
         
-        //Somente um webmaster pode editar o prÛprio perfil
+        //Somente um webmaster pode editar o pr√≥prio perfil
         $cod_perfil = $this->getCodPerfil($cod_usuario);
         if($cod_perfil == Webmaster){
-            $this->setErrorMessage('VocÍ n„o tem permiss„o para modificar um usu·rio com perfil de Webmaster!');
+            $this->setErrorMessage('Voc√™ n√£o tem permiss√£o para modificar um usu√°rio com perfil de Webmaster!');
             return false;
         }
         
@@ -885,11 +885,11 @@ class usuario_loginModel extends \classes\Model\Model{
         
         //somente um administrador pode editar um perfil de administrador
         if($cod_perfil == Admin && $cod_perfil2 != $cod_perfil) {
-            $this->setErrorMessage('VocÍ n„o tem permiss„o para modificar um usu·rio com perfil de Administrador!');
+            $this->setErrorMessage('Voc√™ n√£o tem permiss√£o para modificar um usu√°rio com perfil de Administrador!');
             return false;
         }
         
-        //verifica se usu·rio tem permiss„o de alterar dados de outros usu·rios
+        //verifica se usu√°rio tem permiss√£o de alterar dados de outros usu√°rios
         return $this->LoadModel('usuario/perfil', 'perf')->hasPermissionByName('usuario_GU');
     }
     
@@ -937,7 +937,7 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public static function user_action_log($loguser = 'acesso', $msg = '', $loggroup = array()){
         if(!isset($_SERVER['REQUEST_URI'])){
-            \classes\Utils\Log::save("Errors", "Vari·vel request uri inexistente");
+            \classes\Utils\Log::save("Errors", "Vari√°vel request uri inexistente");
             return;
         }
         $cod_perfil  = usuario_loginModel::CodPerfil();
@@ -955,14 +955,14 @@ class usuario_loginModel extends \classes\Model\Model{
         $obj = new \classes\Classes\Object();
         $obj->LoadModel('usuario/acesso', 'acc')->saveLog($loguser,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg, $loggroup);
         /*if(!\classes\Utils\Log::exists($logname))
-        \classes\Utils\Log::save($logname, ", CÛdigo do usu·rio, Perfil de usu·rio, Link, IP, Link Anterior, Mensagem;");
+        \classes\Utils\Log::save($logname, ", C√≥digo do usu√°rio, Perfil de usu√°rio, Link, IP, Link Anterior, Mensagem;");
         else \classes\Utils\Log::save($logname, ",'$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");*/
     }
     
     public function getLastAccess($where){
         $res = $this->selecionar(array(),"$where");
         $count = count($res);
-        return array('DescriÁ„o'=>'Cadastro','Quantidade'=>$count);
+        return array('Descri√ß√£o'=>'Cadastro','Quantidade'=>$count);
     }
     
     public function getDailyAcesso(){
