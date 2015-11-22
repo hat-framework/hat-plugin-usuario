@@ -334,18 +334,17 @@ class usuarioActions extends Actions{
         
         
         'usuario/referencia/index' => array(
-            'label' => 'Todos os Afiliados', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'label' => 'Todos os Afiliados', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar'
         ),
         'usuario/referencia/dataList' => array(
-            'label' => 'Detalhes da lista', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
+            'label' => 'Detalhes da lista', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar'
         ),
         'usuario/referencia/cadastro' => array(
             'label' => 'Cadastro Afiliado', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_FL'
         ),
-        
         
         
         'usuario/tag/index' => array(
