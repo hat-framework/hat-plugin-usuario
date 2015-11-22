@@ -249,7 +249,7 @@ class loginComponent extends classes\Component\Component{
                             $i++;
                             if(!isset($current['cod']) || !isset($out[$current['cod']])){continue;}
                             $values = $out[$current['cod']];
-                            if(false === $this->tableData($current['title'], $values, '', $current['icon'], false, "panel_{$current['cod']}")){
+                            if(false === $this->tableData($current['title'], $values, 'personal_data', $current['icon'], false, "panel_{$current['cod']}")){
                                 $dir--;
                             }
                             if($i == $dir){

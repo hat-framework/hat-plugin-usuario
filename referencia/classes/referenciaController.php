@@ -14,35 +14,45 @@ class referenciaController extends classes\Controller\TController{
         $this->model->createCookie($codref);
         $this->registerVar('codref', $codref);
         if($coduser == 0){
-            $url = $this->getRedirectUrl();
+            $url = $this->getRedirectUrl($codref);
             if($url != ""){Redirect($url);}
             $view = LINK."/cadastro";
             return $this->display($view);
         }
         
         //if($this->model->associate($codref, $coduser)){
-            $url = $this->getRedirectUrl(true, true);
+            $url = $this->getRedirectUrl($codref,true, true);
             Redirect($url);
         //}
         //$this->setVars($this->model->getMessages());
         //$this->display("");        
     }
     
-    private function getRedirectUrl($allow_empty = false, $force_empty = false){
-        $get = $_GET;
-        if(isset($get['url'])){unset($get['url']);}
-        $argss = array();
-        foreach($get as $key => $val){
-            $argss[] = "$key=$val";
-        }
-        $args = implode("&",$argss);
-        $this->LoadResource('html', 'html');
-        if(!$force_empty){
-            if(defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== ""){
-                return $this->html->getLink(USUARIO_REFERRER_VIEW."&$args", true, true);
+            private function getRedirectUrl($codref, $allow_empty = false, $force_empty = false){
+                $args   = $this->prepareArgs($codref);
+                $this->LoadResource('html', 'html');
+                if(!$force_empty){
+                    if(defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== ""){
+                        return $this->html->getLink(USUARIO_REFERRER_VIEW."&$args", true, true);
+                    }
+                }
+                return($allow_empty)?$this->html->getLink("", true, true)."?$args":"";
             }
-        }
-        
-        return($allow_empty)?$this->html->getLink("", true, true)."?$args":"";
-    }
+            
+            
+                    private function prepareArgs($codref){
+                        $get = $_GET;
+                        if(isset($get['url'])){unset($get['url']);}
+                        if(!isset($get['utm_source'])){
+                            $get['utm_source']   = "affiliate";
+                            $get['utm_medium']   = "recovery_site";
+                            $get['utm_campaign'] = "affiliate_{$codref}";
+                        }
+                        
+                        $args = array();
+                        foreach($get as $key => $val){
+                            $args[] = "$key=$val";
+                        }
+                        return implode("&",$args);
+                    }
 }
