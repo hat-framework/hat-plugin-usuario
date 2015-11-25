@@ -48,15 +48,23 @@ class loginRedirection extends classes\Classes\Object{
             private function getRedirectionPage($refer, $first_login){
                 if($refer != "" || !$first_login){return $refer;}
 
+                
                 //recupera o plugin padrão
-                $default = $this->plug->getDefault();
-                if($default === 'usuario'){return $this->login_default_page;}
+                if(defined('USUARIO_FIRST_LOGIN_VIEW') && USUARIO_FIRST_LOGIN_VIEW != ""){
+                    $temp         = explode("/", USUARIO_FIRST_LOGIN_VIEW);
+                    $default      = array_shift($temp);
+                    $default_page = USUARIO_FIRST_LOGIN_VIEW;
+                }
+                else{
+                    $default = $this->plug->getDefault();
+                    if($default === 'usuario'){return $this->login_default_page;}
+                    $default_page = "$default/index/index";
+                }
                 
                 //retorna a página padrão
                 try{
                     $this->plug->IsAvaible($default); 
-                    $default_page = "$default/index/index";
-                    return (!$this->perf->hasPermission($default_page))?$this->login_default_page:"$default/index/index";
+                    return (!$this->perf->hasPermission($default_page))?$this->login_default_page:$default_page;
                 }
                 catch (\classes\Exceptions\PageNotFoundException $pne){return $this->login_default_page;}
             }

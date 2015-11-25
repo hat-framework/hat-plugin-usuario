@@ -54,24 +54,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
     );
     
     protected $files   = array(
-        /*'usuario/frases' => array(
-            'title'        => 'Mensagens do plugin de Usuários',
-            'descricao'    => 'Configurações das mensagens exibidas no plugin de usuários',
-            'visibilidade' => 'admin', //'usuario', 'admin', 'webmaster'
-            'grupo'        => 'Frases do Sistema',
-            'path'         => 'usuario/frases',
-            'configs'      => array(
-                'AMBIENTE_SEGURO' => array(
-                    'name'          => 'AMBIENTE_SEGURO',
-                    'label'         => 'Ambiente Seguro',
-                    'type'          => 'varchar',//varchar, text, enum
-                    'description'   => 'Mensagem exibida na tela de login no momento de digitar o email',
-                    'value'         => 'Você está prestes a acessar um ambiente seguro',
-                    'value_default' => 'Você está prestes a acessar um ambiente seguro'
-                ),
-            ),
-        ),*/
-        
+
        'usuario/options' => array(
             'title'        => 'Opções de Funcionamento',
             'descricao'    => 'Exibe as opções do plugin de usuários',
@@ -132,6 +115,16 @@ class usuarioConfigurations extends \classes\Classes\Options{
                     'description'   => 'mude esta opção se você criou uma página de captura para o seu site',
                     'value'         => 'usuario/referencia/cadastro',
                     'value_default' => 'usuario/referencia/cadastro'
+                ),
+                
+                'USUARIO_FIRST_LOGIN_VIEW' => array(
+                    'name'          => 'USUARIO_FIRST_LOGIN_VIEW',
+                    'label'         => 'Primeira página após login',
+                    'type'          => 'varchar',//varchar, text, enum
+                    'default'       => '',
+                    'description'   => 'Mude esta opção se após o cadastro você deseja redirecionar o usuário para uma página customizada',
+                    'value'         => '',
+                    'value_default' => ''
                 ),
                 
                 'USUARIO_FRIENDLY_DATE' => array(

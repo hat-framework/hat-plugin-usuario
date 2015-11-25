@@ -31,7 +31,7 @@ class usuario_acessoModel extends \classes\Model\Model{
         return true;
     }
     
-            private function getCookieKey($cod_usuario){
+            public function getCookieKey($cod_usuario){
                 $cookiename = "usuario_acesso_uid";
                 $key        = \classes\Classes\cookie::getVar($cookiename);
                 if($cod_usuario == 0){
