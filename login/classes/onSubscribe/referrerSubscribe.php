@@ -1,5 +1,4 @@
 <?php
-
 class referrerSubscribe extends classes\Classes\Object{
     
     public function execute($cod_usuario, $array){
@@ -18,10 +17,11 @@ class referrerSubscribe extends classes\Classes\Object{
     }
     
             private function sendMail($refer, $array){
+                if(!$this->LoadModel('usuario/tag/usertag', 'ut')->hasTag($refer, 'afiliado')){return true;}
                 $refuser = $this->LoadModel('usuario/login','uobj')->getSimpleItem($refer);
                 $link    = $this->LoadResource('html','html')->getLink('config/group/form/pessoal/pessoal_referrer');
                 $corpo   = 
-                    "<h2>Ol· {$refuser['user_name']}</h2>
+                    "<h2>Ol√° {$refuser['user_name']}</h2>
                     <p>Novo afiliado associado ao seu email no site ".SITE_NOME."</p>
                     <p><b>dados do afiliado:</b></p>
                     <p>Nome: ".$array['user_name']." </p>
