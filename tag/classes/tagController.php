@@ -99,6 +99,9 @@ class tagController extends classes\Controller\CController{
                 $bool = $egoi->addUserTag($last, $emails);
                 if(false === $bool){
                     classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$last} <br/>". $egoi->getErrorMessage());
+                    foreach($emails as $cod_usuario => $email){
+                        classes\Utils\Log::save($logname, "Não adicionada ao email '{$email}'");
+                    }
                     return;
                 }
                 foreach($emails as $cod_usuario => $email){
