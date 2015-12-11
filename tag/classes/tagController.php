@@ -23,13 +23,9 @@ class tagController extends classes\Controller\CController{
                 $this->LoadModel($this->model_name, 'model');
                 if(!method_exists($this, $action)){throw new \classes\Exceptions\PageNotFoundException();}
                 if(in_array($action, array('show','edit','apagar'))){
-                    $this->cod = array_shift($this->vars);
-                    if($arr === true){
-                        $this->cod = array($this->cod);
-                        $this->cod[] = array_shift($this->vars);
-                    }
+                    $cod                     = $this->getCode($arr);
                     $this->item              = $this->model->getItem($this->cod);
-                    $this->redirect_link     = array('usertag' => "$this->model_name/index");
+                    $this->redirect_link     = array('usertag' => ($cod == "")?"$this->model_name/index":"usuario/tag/show/$cod");
                     $this->redirect_droplink = "$this->model_name/index";
                     $this->registerVar('cod' , $this->cod);
                     $this->registerVar('item', $this->item);
@@ -41,6 +37,17 @@ class tagController extends classes\Controller\CController{
                 $this->registerVar('component' , $this->model_name);
                 $this->$action();
             }
+            
+                    private function getCode($arr){
+                        $cod       = "";
+                        $this->cod = array_shift($this->vars);
+                        if($arr === true){
+                            $this->cod = array($this->cod);
+                            $cod       = array_shift($this->vars);
+                            $this->cod[] = $cod;
+                        }
+                        return $cod;
+                    }
     
     public function importarTags(){
         $this->LoadModel('usuario/tag/usertag', 'utag')->importTagsFromAcesso();
@@ -91,7 +98,8 @@ class tagController extends classes\Controller\CController{
                 classes\Utils\Log::save($logname, "<h3>Adicionando a tag {{$last}}</h3>");
                 $bool = $egoi->addUserTag($last, $emails);
                 if(false === $bool){
-                    classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$last}");
+                    classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$last} <br/>". $egoi->getErrorMessage());
+                    return;
                 }
                 foreach($emails as $cod_usuario => $email){
                     classes\Utils\Log::save($logname, "Adicionando ao email {$email}");
