@@ -132,10 +132,11 @@ class usuario_usertagModel extends \classes\Model\Model{
 	    'pkey'    => true,
 	    'grid'    => true,
 	    'display' => true,
+            'select_type'   => 'chosen',
             'fkey'    => array(
 	        'model'         => 'usuario/login',
 	        'cardinalidade' => '1n',
-	        'keys'          => array('cod_usuario', 'user_name', 'cod_perfil'),
+	        'keys'          => array('cod_usuario', 'user_name', 'email'),
                 'onupdate'      => 'CASCADE',
                 'ondelete'      => 'CASCADE',
 	    ),
