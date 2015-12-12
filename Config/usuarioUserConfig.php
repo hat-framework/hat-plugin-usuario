@@ -184,38 +184,7 @@ class usuarioUserConfig extends \classes\Classes\UserConfig{
             'ref'   => 'usuario/referencia/codigo', 
             'method'=> 'show'
          ),
-        /*'pessoal_dados' =>array(
-            'cod'       => 'pessoal_dados', 
-            'group'     => 'notify', 
-            'title'     => 'Informações Pessoais',
-            'ordem'     => '5',
-            'icon'      => 'fa fa-user',
-            'type'      => 'directdata', 
-            'form_data' => array(
-                'cpf' => array(
-                    'name'     => 'Cpf',
-                    'type'     => 'varchar',
-                    'size'     => '16',
-                    'especial' => 'cpf',
-                    'display' => true,
-                ),
-                 'rg' => array(
-                    'name'     => 'Rg',
-                    'type'     => 'varchar',
-                    'size'     => '32',
-                    'grid'    => true,
-                    'display' => true,
-                ),
-                 'nascimento' => array(
-                    'name'     => 'Nascimento',
-                    'type'     => 'date',
-                    'grid'    => true,
-                    'display' => true,
-                ),
-
-                'button' => array('button' => "Salvar Informações pessoais")
-            ),
-        ),*/
+        
         'notify_conta' =>array(
             'cod'       => 'notify_conta', 
             'group'     => 'notify', 
