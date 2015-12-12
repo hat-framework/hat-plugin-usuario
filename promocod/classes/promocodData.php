@@ -44,7 +44,6 @@ class usuario_promocodData extends \classes\Model\DataModel{
             'display'  => true,
             'default'  => 'andamento',
             'grid'     => true,
-            'private'  => true,
             'options'  => array(
                 'andamento'   => "Em andamento", 
                 'concluido'   => "Concluído",

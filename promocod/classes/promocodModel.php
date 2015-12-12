@@ -9,7 +9,7 @@ class usuario_promocodModel extends \classes\Model\Model {
     public function avaiblePromo($cod_promo){
         $promo = $this->getItem($cod_promo);
         if(empty($promo)){return $this->setErrorMessage('Código promocional não existe!');}
-        if(classes\Classes\timeResource::diffDate($promo['dt_inicio'] , '', "D") < 0){
+        if($promo['dt_inicio'] !== "" && classes\Classes\timeResource::diffDate($promo['dt_inicio'] , '', "D") > 0){
             return $this->setErrorMessage("A promoção inicia no dia: " . classes\Classes\timeResource::getFormatedDate($promo['dt_termino']));
         }
         
@@ -18,7 +18,7 @@ class usuario_promocodModel extends \classes\Model\Model {
         }
         
         $total = $this->LoadModel('usuario/promocod/promouser', 'puser')->getPromoTotal($cod_promo);
-        if($promo['max_cadastros'] > $total ){
+        if($promo['max_cadastros'] < $total ){
             $this->terminate($cod_promo);
             return $this->setErrorMessage("Promoção encerrada pois o número máximo de usuários para esta promoção foi atingido!");
         }
@@ -34,7 +34,7 @@ class usuario_promocodModel extends \classes\Model\Model {
     public function terminaPromocao($cod_promo){
         $total = $this->LoadModel('usuario/promocod/promouser', 'puser')->getPromoTotal($cod_promo);
         $promo = $this->getItem($cod_promo);
-        if($promo['max_cadastros'] > $total ){return $this->terminate($cod_promo);}
+        if($promo['max_cadastros'] !== "" && $promo['max_cadastros'] > 0 && $promo['max_cadastros'] < $total ){return $this->terminate($cod_promo);}
         if(classes\Classes\timeResource::diffDate($promo['dt_termino'], '', "D") < 0){return $this->terminate($cod_promo);}
         return false;
     }
