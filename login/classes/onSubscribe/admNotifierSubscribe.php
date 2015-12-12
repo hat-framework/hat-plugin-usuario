@@ -34,6 +34,7 @@ class admNotifierSubscribe extends classes\Classes\Object{
             
             private function initializeVars($user){
                 $this->refer    = isset($user['referrer'])?$user['referrer']:"";
+                $this->promocod = isset($user['promocod'])?$user['promocod']:"";
                 $this->nome     = $this->uobj->getUserNick($this->cod_usuario);
                 $this->userData = $this->uobj->LoadPerfil($this->cod_usuario);
                 return(!empty($this->userData));
@@ -90,19 +91,28 @@ class admNotifierSubscribe extends classes\Classes\Object{
                             private function refine(&$c){
                                 if($c !== ""){
                                     $this->afiliate($c);
+                                    $this->promo($c);
                                     $c .= "<hr/>Horário: ". \classes\Classes\timeResource::getDbDate()."<br/>"
                                          . "url: (http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']})";
                                     return;
                                 }
                                 $this->afiliate($c);
+                                $this->promo($c);
                                 $c .= "Falha ao enviar dados de cadastro do usuário! Nenhum dado encontrado!";
                                 
                             }
                             
                                     private function afiliate(&$c){
                                         if($this->refer === ""){return;}
+                                        $nick = $this->uobj->getUserNick($this->refer);
                                         $link = $this->html->getLink("usuario/login/show/$this->refer");
-                                        $c .= "Este usuário veio através de um afiliado! <a href='$link'>Ver Afiliado</a>";
+                                        $c .= "<br/>Usuário veio através do afiliado <a href='$link'>$nick</a>";
+                                    }
+                                    
+                                    private function promo(&$c){
+                                        if($this->promocod === ""){return;}
+                                        $link = $this->html->getLink("usuario/promocod/show/$this->promocod");
+                                        $c .= "<br/>Usuário aderiu a promoção <a href='$link'>$this->promocod</a>";
                                     }
     
 }

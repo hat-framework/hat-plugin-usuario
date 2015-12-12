@@ -285,12 +285,14 @@ class usuario_loginModel extends \classes\Model\Model{
         $this->user_permission($array);
         $senha = $this->prepareInsertion($array);
         $refer = $this->getReferrer($array);
+        $promo = $this->getPromo($array);
         if(!parent::inserir($array)) {return false;}
                 
         $cod_usuario          = $this->getLastId();
         $array['referrer']    = $refer;
         $array['senha']       = $senha;
         $array['cod_usuario'] = $cod_usuario;
+        $array['promocod']    = $promo;
         $bool                 = $this->onSubscribe($cod_usuario, $array);
         $this->autoLogin($array);
         return $bool;
@@ -317,6 +319,10 @@ class usuario_loginModel extends \classes\Model\Model{
                 else{$ref = $this->LoadModel('usuario/referencia', 'ref')->getCookie();}
                 if(trim($ref) != ""){$array['indicado'] = $ref;}
                 return $ref;
+            }
+            
+            private function getPromo(){
+                return $this->LoadModel('usuario/promocod', 'pcod')->getCookie();
             }
 
             private function onSubscribe($cod_usuario, $array){

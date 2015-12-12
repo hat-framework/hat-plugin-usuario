@@ -202,6 +202,15 @@ class usuario_loginData extends \classes\Model\DataModel{
             )
        	 ),
         
+        'promo_cod' => array(
+            'name'        => 'Código Promocional',
+            'type'        => 'varchar',
+            //'display'     => true,
+            'size'        => '64',
+            'grid'        => true,
+            'description' => "Digite o código promocional",
+         ),
+        
         'indicado' => array(
             'name'     => 'Quem Indicou',
             'especial' => 'hide',

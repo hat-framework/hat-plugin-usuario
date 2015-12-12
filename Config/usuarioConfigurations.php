@@ -44,6 +44,14 @@ class usuarioConfigurations extends \classes\Classes\Options{
             ),
         
             array(
+                'menuid' => 'promo',
+                'menu'   => 'Todas as Promoções',
+                'pai'    => 'usuarios',
+                'icon'   => 'fa fa-bookmark',
+                'url'    => 'usuario/promocod/index',
+            ),
+        
+            array(
                 'menuid' => 'report',
                 'menu'   => 'Relatórios',
                 'pai'    => 'usuarios',

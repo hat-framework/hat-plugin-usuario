@@ -196,14 +196,7 @@ class usuarioActions extends Actions{
             'permission' => 'usuario_AC', 
             'menu' => array()
         ),
-        
-        'usuario/login/logado' => array(
-            'label' => 'Minha Conta', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_AC', 
-            'menu' => array('Preferência de Notificação' => 'usuario/notify/index','Recuperar Senha' => 'usuario/login/recuperar'),
-            'breadscrumb' => array('usuario/login/logado')
-        ),
-        
+                
         'usuario/login/alterar' => array(
             'label' => 'Alterar dados', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_AC', 
@@ -323,15 +316,7 @@ class usuarioActions extends Actions{
             'permission' => 'usuario_GU', 'needcod' => true,
             'menu' => array('usuario/login/logado', 'usuario/login/todos', 'usuario/login/show')
         ),
-        
-       
-        
-         'usuario/notify/index' => array(
-            'label' => 'Preferência de Notificação', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_AC', 
-             'breadscrumb' => array('usuario/login/logado','usuario/notify/index')
-        ),
-        
+                
         
         'usuario/referencia/index' => array(
             'label' => 'Todos os Afiliados', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
@@ -345,6 +330,7 @@ class usuarioActions extends Actions{
             'label' => 'Cadastro Afiliado', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_FL'
         ),
+        
         
         
         'usuario/tag/index' => array(
@@ -389,6 +375,51 @@ class usuarioActions extends Actions{
             'label'       => 'Exportar Tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => false,
             'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index')
+        ),
+        
+        
+        
+        'usuario/promocod/index' => array(
+            'label' => 'Todas as Promoções', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_GU',
+            'breadscrumb' => array('usuario/login/todos', 'usuario/promocod/index')
+        ),
+        'usuario/promocod/formulario' => array(
+            'label'       => 'Adicionar Promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU',
+            'breadscrumb' => array('usuario/login/todos', 'usuario/promocod/index', 'usuario/promocod/formulario'),
+        ),
+        'usuario/promocod/show' => array(
+            'label'       => 'Visualizar promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+            'menu' => array(
+                'Opções' => array(
+                    '__icon'=>'fa fa-gear',
+                    'Editar' => array('Editar'=>'usuario/promocod/edit'  , '__icon'=>'fa fa-pencil'),
+                    'Apagar' => array('Apagar'=>'usuario/promocod/apagar', '__icon'=>'fa fa-times'),
+                )
+            ),
+            'breadscrumb' => array('usuario/login/todos', 'usuario/promocod/index', 'usuario/promocod/show')
+        ),
+        'usuario/promocod/edit' => array(
+            'label'       => 'Editar promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+            'breadscrumb' => array('usuario/login/todos', 'usuario/promocod/index', 'usuario/promocod/show', 'usuario/promocod/edit')
+        ),
+        'usuario/promocod/apagar' => array(
+            'label'       => 'Apagar promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+        ),
+        
+        'usuario/promocod/aderir' => array(
+            'label'       => 'Aderir a promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => true,
+        ),
+        
+        'usuario/promocod/promouser' => array(
+            'label'       => 'Promoções de usuários', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission'  => 'usuario_GU', 'needcod' => false,
+            'breadscrumb' => array('usuario/login/todos', 'usuario/promocod/index', 'usuario/promocod/promocod')
         ),
         
         
@@ -531,7 +562,13 @@ class usuarioActions extends Actions{
                 'Grupos de Tags' => array(
                     "__icon"        => 'fa fa-tags',
                     'Grupos de Tags' => 'usuario/tag/taggroup/index',
-                )
+                ),
+                
+                "divider4"       => '__divider',
+                'Promoções' => array(
+                    "__icon"     => 'fa fa-plus',
+                    'Promoções'   => 'usuario/promocod/index', 
+                ),
             ),
 
             'Relatórios'             => array(
