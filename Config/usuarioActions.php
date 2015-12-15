@@ -412,7 +412,7 @@ class usuarioActions extends Actions{
         ),
         
         'usuario/promocod/aderir' => array(
-            'label'       => 'Aderir a promoção', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'label'       => 'Aderir a promoção', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
             'permission'  => 'usuario_GU', 'needcod' => true,
         ),
         
