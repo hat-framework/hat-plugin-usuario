@@ -32,7 +32,7 @@ class referenciaController extends classes\Controller\TController{
                 $args   = $this->prepareArgs($codref);
                 $this->LoadResource('html', 'html');
                 if(!$force_empty){
-                    if(defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== ""){
+                    if(defined('USUARIO_REFERRER_VIEW') && USUARIO_REFERRER_VIEW !== "" && USUARIO_REFERRER_VIEW != "usuario/referencia/cadastro"){
                         return $this->html->getLink(USUARIO_REFERRER_VIEW."&$args", true, true);
                     }
                 }

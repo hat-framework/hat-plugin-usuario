@@ -332,10 +332,12 @@ class usuario_loginModel extends \classes\Model\Model{
                 if(empty($files)){return $bool;}
                 foreach($files as $file){
                     $class = str_replace('.php', '', $file);
-                    $file  = "$folder/$file";
-                    getTrueDir($file);
-                    if(!file_exists($file)){continue;}
-                    require_once $file;
+                    if(!class_exists($class, false)){
+                        $file  = "$folder/$file";
+                        getTrueDir($file);
+                        if(!file_exists($file)){continue;}
+                        require_once $file;
+                    }
                     if(!class_exists($class, false)){continue;}
                     $obj = new $class();
                     if(!method_exists($obj, 'execute')){continue;}
