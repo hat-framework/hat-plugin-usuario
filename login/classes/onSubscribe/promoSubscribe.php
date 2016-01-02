@@ -1,5 +1,5 @@
 <?php
-class referrerSubscribe extends classes\Classes\Object{
+class promoSubscribe extends classes\Classes\Object{
     
     public function execute($cod_usuario, $array){
         $codpromo = isset($array['promocod'])?$array['promocod']:"";
