@@ -21,7 +21,7 @@ class referenciaController extends classes\Controller\TController{
         }
         
         //if($this->model->associate($codref, $coduser)){
-            $url = $this->getRedirectUrl($codref,true, true);
+            $url = $this->getRedirectUrl($codref,true, false);
             Redirect($url);
         //}
         //$this->setVars($this->model->getMessages());
