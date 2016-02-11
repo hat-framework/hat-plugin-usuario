@@ -965,6 +965,29 @@ class usuario_loginModel extends \classes\Model\Model{
         else \classes\Utils\Log::save($logname, ",'$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");*/
     }
     
+    public function checkPasswordIsCorrect($email, $senha){
+        $where = "email='$email' AND (`senha` = '$senha' OR `senha` = PASSWORD('$senha'))";
+        $value = $this->db->Read($this->tabela, array('cod_usuario'), $where);
+        return !empty($value);
+    }
+    
+    public static function ConfirmPassword(){
+        $cookie = "ucopa";
+        if(classes\Classes\cookie::exists($cookie)){
+            return true;
+        }
+        $actual_link = self::getActualLink();
+        $obj         = new \classes\Classes\Object();
+        $page        = $obj->LoadResource('html', 'html')->getLink("usuario/login/requestPassword", true, false);
+        SRedirect("$page&redirect=$actual_link");
+    }
+    
+    public static function getActualLink(){
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == true)?'https':'http';
+        $actual_link.= "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+        return $actual_link;
+    }
+    
     public function getLastAccess($where){
         $res = $this->selecionar(array(),"$where");
         $count = count($res);

@@ -11,7 +11,7 @@ class loginController extends CController{
     
     public function AfterLoad() {    
         $this->free_cod = array('index', 'formulario','inserir', 'logout', 'report', 'identidade',
-            'reenviar',  'recuperar', 'confirmar', 'confirmrec', 'logado', 'widgets', 'alterar');
+            'reenviar',  'recuperar', 'confirmar', 'confirmrec', 'logado', 'widgets', 'alterar', 'requestPassword');
         $current_action = CURRENT_ACTION;
         $this->getCanonicalCurrentAction($current_action);
         if($current_action == "index") {return;}
@@ -292,6 +292,23 @@ class loginController extends CController{
     
     public function seedata(){
         Redirect("config&_user=$this->cod&_click=login");
+    }
+    
+    public function requestPassword(){
+        if(!isset($_GET['redirect'])){Redirect("");}
+        if(!empty($_POST)){
+            $cod_usuario = usuario_loginModel::CodUsuario();
+            $email       = $this->model->getUserMail($cod_usuario);
+            if($this->model->checkPasswordIsCorrect($email, $_POST['senha_login'])){
+                classes\Classes\cookie::create('ucopa', 600);
+                classes\Classes\cookie::setVar('ucopa', 'autenticated');
+                Redirect($_GET['redirect']);
+            }
+            $this->registerVar('status', '0');
+            $this->registerVar('erro', 'Senha incorreta');
+        }
+        $this->registerVar('url', $_GET['redirect']);
+        $this->display(LINK ."/requestPassword");
     }
     
     private function detectRedirect(){

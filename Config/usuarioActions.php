@@ -196,6 +196,12 @@ class usuarioActions extends Actions{
             'permission' => 'usuario_AC', 
             'menu' => array()
         ),
+        
+        'usuario/login/requestPassword'=> array(
+            'label' => 'Reenviar Confirmação', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_AC', 
+            'menu' => array()
+        ),
                 
         'usuario/login/alterar' => array(
             'label' => 'Alterar dados', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
