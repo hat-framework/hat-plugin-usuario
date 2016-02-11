@@ -974,6 +974,7 @@ class usuario_loginModel extends \classes\Model\Model{
     public static function ConfirmPassword(){
         $cookie = "ucopa";
         if(classes\Classes\cookie::exists($cookie)){
+            classes\Classes\cookie::destroy('ucopa');
             return true;
         }
         $actual_link = self::getActualLink();
