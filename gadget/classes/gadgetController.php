@@ -6,7 +6,7 @@ class gadgetController extends CController{
     
     public function exec(){
         $cod_usuario = usuario_loginModel::CodUsuario();
-        if(usuario_loginModel::IsWebmaster()){
+        if($this->LoadModel('usuario/perfil', 'perf')->hasPermissionByName('usuario_analisar')){
             $cod_usuario = isset($this->vars[1])?$this->vars[1]:$cod_usuario;
         }
         $this->registerVar('gadget', $this->item);
