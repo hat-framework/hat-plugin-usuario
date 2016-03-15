@@ -28,7 +28,7 @@ class referenciaController extends classes\Controller\TController{
         //$this->display("");        
     }
     
-            private function getRedirectUrl($codref, $allow_empty = false, $force_empty = false){
+            protected function getRedirectUrl($codref, $allow_empty = false, $force_empty = false){
                 $args   = $this->prepareArgs($codref);
                 $this->LoadResource('html', 'html');
                 if(!$force_empty){
