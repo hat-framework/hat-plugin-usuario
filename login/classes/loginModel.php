@@ -24,8 +24,13 @@ class usuario_loginModel extends \classes\Model\Model{
     }
 
     public function setLastAccessOfUser(){
-        if(!$this->IsLoged()) {return;}
-        parent::editar($this->getCodUsuario(), array('user_uacesso' => "FUNC_NOW()"));
+        if(!$this->IsLoged()) {return false;}
+        if(!\classes\Classes\cookie::exists('_usersess')){
+            setcookie ("_usersess", 'true', time()+600, "/");
+            parent::editar($this->getCodUsuario(), array('user_uacesso' => "FUNC_NOW()"));
+            return true;
+        }
+        return false;
     }
 
     public function getDados() {
@@ -857,8 +862,8 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function has_permission_alterada($cod_usuario = ""){
-        if($cod_usuario == "") $cod_usuario = $this->getCodUsuario ();
-        if($cod_usuario == 0) return false;
+        if($cod_usuario == "") {$cod_usuario = $this->getCodUsuario ();}
+        if($cod_usuario == 0) {return false;}
         $total = $this->selecionar(array('cod_usuario'), "cod_usuario = '$cod_usuario' AND update_permission = 's'", 1);
         return (!empty($total));
     }
