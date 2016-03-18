@@ -136,7 +136,7 @@ class loginComponent extends classes\Component\Component{
             private function tagsSection($cod_usuario){
                 $tags  = $this->LoadModel('usuario/tag/usertag', 'utag')->getUserTags($cod_usuario);
                 ob_start();
-                $this->AddTagLink();                
+                $this->AddTagLink($cod_usuario, $tags);                
                 foreach($tags as $tag){
                     $this->tagLinks($tag, $cod_usuario);
                 }
@@ -145,23 +145,38 @@ class loginComponent extends classes\Component\Component{
                 $this->tableData("Tags", $content, 'col-xs-12 col-sm-12 col-md-5', 'fa fa-tags');
             }
             
-                    private function AddTagLink(){
-                        $lk  = $this->Html->getActionLinkIfHasPermission(
-                                "usuario/tag/usertag/formulario",
-                                "Adicionar Tag <span class='badge' style='float:right; top:0;'><i class='fa fa-plus'></i></span>",
-                                "", "", "_BLANK", "",true
-                        );
-                        if(trim($lk) !== ""){
-                            echo "<button class='btn btn-lg btn-success col-xs-12' type='button' style='margin:5px;'>$lk</button>";
-                        }
+                    private function AddTagLink($cod_usuario, $tags){
+                        $lk  = $this->Html->getActionLinkIfHasPermission("usuario/tag/usertag/formulario", "");
+                        if(trim($lk) == ""){return;}
+                        $out = $this->getArray($tags);
+                        $this->LoadResource('formulario', 'form')->NewForm($out, array('cod_usuario' => $cod_usuario), array(), true, 'usuario/tag/usertag/formulario');
                     }
+                    
+                            private function getArray($tags){
+                                $filter = $this->getFilter($tags);
+                                $dados = $this->LoadModel('usuario/tag/usertag', 'utag')->getDados();
+                                $out['cod_tag']     = $dados['cod_tag'];
+                                $out['cod_usuario'] = $dados['cod_usuario'];
+                                $out['cod_tag']['filther'] = "cod_tag NOT IN('$filter')";
+                                $out['cod_usuario']['especial'] = 'hidden';
+                                $out['button']      = array('button'=>'Adicionar Tag');
+                                return $out;
+                            }
+                            
+                                    private function getFilter($tags){
+                                        $in = array();
+                                        foreach($tags as $tag){
+                                            $in[] = $tag['cod_tag'];
+                                        }
+                                        return implode("','", $in);
+                                    }
                     
                     private function tagLinks($tag, $cod_usuario){
                         if(trim($tag['tag']) === ""){return;}
 
                         $link  = $this->Html->getActionLinkIfHasPermission("usuario/tag/show/{$tag["cod_tag"]}",$tag['tag'], "", "", "", "style='color:#FFF;'",true);
                         if(trim($link) === ""){return;}
-                        echo "<button class='btn btn-primary col-xs-12 col-md-5' type='button' style='margin:5px; color:#FFF;'> ";
+                        echo "<div class='col-xs-12 col-sm-6'><button class='btn btn-primary col-xs-12' type='button' style='margin:5px; color:#FFF;'> ";
 
                         $link2  = $this->Html->getActionLinkIfHasPermission(
                                 "usuario/tag/usertag/apagar/{$cod_usuario}/{$tag["cod_tag"]}",
@@ -169,22 +184,41 @@ class loginComponent extends classes\Component\Component{
                         );
                         if(trim($link2) !== ""){echo "<span class='badge' style='float:right; top:0;'>$link2</span>";}
 
-                        echo "$link</button>";
+                        echo "$link</button></div>";
                     }
             
             private function configSection($cod_usuario){
                 $cod    = 'pessoal';
                 $forms  = $this->LoadModel('config/form', 'frm')->selecionar(array('cod','title','description','icon','form_data'),"`group`='$cod'");
                 if(empty($forms)){return array();}
-                $forms2 = array();
-                foreach($forms as $data){
-                    $forms2[$data['cod']] = $data;
-                }
-                
-                $out = $this->prepareData($cod_usuario, $forms2);
+                $this->LoadMansonry();
+                $forms2 = $this->prepareLinks($forms, $cod_usuario);
+                $out    = $this->prepareData($cod_usuario, $forms2);
                 $this->printSide($forms2,$out);
                 
             }
+            
+                    private function LoadMansonry(){
+                        $this->LoadResource('html', 'html')->LoadBowerComponent("masonry/dist/masonry.pkgd.min.js");
+                        $this->html->LoadJqueryFunction("$('#grid').masonry({
+                                itemSelector: '.grid_item',
+                                fitWidth: true
+                              });");
+                        echo "<style>#grid{width:95%;}</style>";
+                    }
+            
+                    private function prepareLinks($forms, $cod_usuario){
+                        $forms2 = array();
+                        echo "<div class='col-xs-12' style='padding:5px; margin:5px;'>";
+                        echo "<h2>Acesso Rápido</h2>";
+                        foreach($forms as $data){
+                            $link = $this->html->getLink("usuario/login/show/$cod_usuario");
+                            echo "<a href='{$link}panel_{$data['cod']}' class='btn btn-default'>{$data['title']}</a>";
+                            $forms2[$data['cod']] = $data;
+                        }
+                        echo "</div>";
+                        return $forms2;
+                    }
             
                     private function prepareData($cod_usuario, $forms2){
                         $this->LoadModel('config/response', 'resp')->Join('config/form', array('form'), array('cod'),"LEFT");
@@ -236,29 +270,32 @@ class loginComponent extends classes\Component\Component{
                                     $res = $this->LoadModel($current[$name]['fkey']['model'],'tmp')->selecionar(
                                             $current[$name]['fkey']['keys'], "$key='$val'"
                                     );
+                                    if(!is_array($res)){return;}
                                     $res2  = array_shift($res);
                                     $val = $this->Html->getActionLinkIfHasPermission($current[$name]['fkey']['model']."/show/{$res2[$key]}",$res2[$k2]);
                                 }
                     
                     private function printSide($forms2, $out){
-                        $dir = ceil(count($out)/2);
-                        $this->gui->opendiv('dir', 'pull-left col-xs-12 col-md-6');
-                  
-                        $i = 0;
+                        $this->gui->opendiv('grid', "col-xs-12");
+                        $style = "col-xs-12 col-sm-6 col-lg-4";
                         foreach($forms2 as $current){
-                            $i++;
                             if(!isset($current['cod']) || !isset($out[$current['cod']])){continue;}
-                            $values = $out[$current['cod']];
-                            if(false === $this->tableData($current['title'], $values, 'personal_data', $current['icon'], false, "panel_{$current['cod']}")){
-                                $dir--;
-                            }
-                            if($i == $dir){
-                                $this->gui->closediv();
-                                $this->gui->opendiv('esq', 'pull-right col-xs-12 col-md-6');
-                            }
+                            $content = $this->getContentArray($out[$current['cod']]);
+                            $this->tableData($current['title'], $content, "grid_item $style", $current['icon'], false, "panel_{$current['cod']}");
                         }
                         $this->gui->closediv();
                     }
+                    
+                            private function getContentArray($values){
+                                $content= array();
+                                foreach($values as $val){
+                                    foreach($val as $key => $v){
+                                        if(!array_key_exists($key, $content)){$content[$key] = array($key);}
+                                        $content[$key][] = $v;
+                                    }
+                                }
+                                return $content;
+                            }
     
     private function tableData($title, $data, $class, $icon = "", $multitable = false, $id = ""){
         $content = $this->getContent($data, $multitable);

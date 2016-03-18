@@ -26,10 +26,15 @@ class tagController extends classes\Controller\CController{
                     $cod                     = $this->getCode($arr);
                     $this->item              = $this->model->getItem($this->cod);
                     $this->redirect_link     = array('usertag' => ($cod == "")?"$this->model_name/index":"usuario/tag/show/$cod");
-                    $this->redirect_droplink = "$this->model_name/index";
+                    $this->redirect_droplink = "usuario/login/show/{$this->cod[0]}";
                     $this->registerVar('cod' , $this->cod);
                     $this->registerVar('item', $this->item);
-                }else{
+                }elseif($action == 'formulario'){
+                    $link = "usuario/tag/index";
+                    if(isset($_POST['cod_usuario'])){$link = "usuario/login/show/{$_POST['cod_usuario']}";}
+                    $this->redirect_link = array('usertag' => $link);
+                }
+                else{
                     $page       = array_shift($this->vars);
                     $this->item = $this->model->paginate($page);
                 }
