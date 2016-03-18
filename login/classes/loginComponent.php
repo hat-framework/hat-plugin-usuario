@@ -194,7 +194,7 @@ class loginComponent extends classes\Component\Component{
                 $this->LoadMansonry();
                 $forms2 = $this->prepareLinks($forms, $cod_usuario);
                 $out    = $this->prepareData($cod_usuario, $forms2);
-                $this->printSide($forms2,$out);
+                $this->printSide($forms2,$out, $cod_usuario);
                 
             }
             
@@ -275,13 +275,14 @@ class loginComponent extends classes\Component\Component{
                                     $val = $this->Html->getActionLinkIfHasPermission($current[$name]['fkey']['model']."/show/{$res2[$key]}",$res2[$k2]);
                                 }
                     
-                    private function printSide($forms2, $out){
+                    private function printSide($forms2, $out, $cod_user){
                         $this->gui->opendiv('grid', "col-xs-12");
                         $style = "col-xs-12 col-sm-6 col-lg-4";
                         foreach($forms2 as $current){
                             if(!isset($current['cod']) || !isset($out[$current['cod']])){continue;}
                             $content = $this->getContentArray($out[$current['cod']]);
-                            $this->tableData($current['title'], $content, "grid_item $style", $current['icon'], false, "panel_{$current['cod']}");
+                            $link    = $this->html->getActionLinkIfHasPermission("config/group/form/pessoal/{$current['cod']}&_user=$cod_user&_click=login", "<i class='fa fa-pencil'></i>");
+                            $this->tableData($current['title'] . "<span class='pull-right'>$link<span>", $content, "grid_item $style", $current['icon'], false, "panel_{$current['cod']}");
                         }
                         $this->gui->closediv();
                     }
