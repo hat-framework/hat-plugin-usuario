@@ -252,6 +252,14 @@ class usuario_loginModel extends \classes\Model\Model{
         return true;
     }
     
+    public function autenticate($cod_user, $token){
+        $where = "`cod_usuario` = '$cod_user' AND `token` = '$token'";
+        $user = $this->db->Read($this->tabela, NULL, $where);
+        if(empty ($user)){return $this->setErrorMessage("Não foi possível autenticar este usuário");}
+        if(false === $this->makeLogin($user)){return false;}
+        return true;
+    }
+    
     private function makeLogin($user, $refer = ''){
         if($user['status'] == 'bloqueado'){
             throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");
