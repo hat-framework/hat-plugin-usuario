@@ -71,6 +71,10 @@ class loginRedirection extends classes\Classes\Object{
 
             private function doRedirection($page){
                 if($page == ""){return;}
+                if(isset($_GET['gentoken']) && $_GET['gentoken'] == '1'){
+                    $arr['token'] = $this->LoadModel('usuario/login', 'uobj')->genToken();
+                    $arr['cod']   = usuario_loginModel::CodUsuario();
+                }
                 $link           = $this->html->getLink($page);
                 $arr['status']  = "1";
                 $arr['success'] = "Login efetuado com sucesso! Autenticando... ";

@@ -637,6 +637,14 @@ class usuario_loginModel extends \classes\Model\Model{
         return $bool;
     }
     
+    public function genToken(){
+        if(!self::isLogged()){return false;}
+        $arr['token'] = genKey('32');
+        $id           = usuario_loginModel::CodUsuario();
+        if(false == parent::editar($id, $arr)){return false;}
+        return $arr['token'];
+    }
+    
     public function resend($login){
     	
     	//procura o usuario no banco de dados
