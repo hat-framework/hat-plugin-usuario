@@ -256,42 +256,55 @@ class usuario_loginModel extends \classes\Model\Model{
         $where = "`cod_usuario` = '$cod_user' AND `token` = '$token'";
         $user = $this->db->Read($this->tabela, NULL, $where);
         if(empty ($user)){return $this->setErrorMessage("Não foi possível autenticar este usuário");}
-        if(false === $this->makeLogin($user)){return false;}
         return true;
     }
     
     private function makeLogin($user, $refer = ''){
-        if($user['status'] == 'bloqueado'){
-            throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");
-            return false;
-        }
+        if($user['status'] == 'bloqueado'){throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");}
         if(empty($user)){return false;}
         
         //seta os dados a serem salvos na sessão
-        $var['cod_usuario']            = $user['cod_usuario'];
-        $var['email']                  = $user['email'];
-        $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
-        $var['user_name']              = $user['user_name'];
-        $var['user_cargo']             = $user['user_cargo'];
-        $var['cod_perfil']             = $user['cod_perfil'];
-        $var['confirmed']              = @$user['confirmed'];
-        
-        session::destroyAll();
-        session::setVar($this->cookie, $var);
-        if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
-            \classes\Classes\cookie::setVar($this->cookieuid, $var['cod_usuario']);
-        }
-        if($refer != ""){session::setVar('refer', $refer);}
-        
-        
-        //seta os dados a serem editados
-        $v['status']     = 'online';
-        if($user['confirmkey'] != ""){
-            $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
-            if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
-        }
-        parent::editar($user['cod_usuario'], $v);
+        $var = $this->getAuthArray($user);
+        $this->setAuthCookie($refer, $var);
+        return $this->updateUserStatus($user);
     }
+    
+            private function getAuthArray($user){
+                $var['cod_usuario']            = $user['cod_usuario'];
+                $var['email']                  = $user['email'];
+                $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
+                $var['user_name']              = $user['user_name'];
+                $var['user_cargo']             = $user['user_cargo'];
+                $var['cod_perfil']             = $user['cod_perfil'];
+                $var['confirmed']              = isset($user['confirmed'])?$user['confirmed']:"";
+                return $var;
+            } 
+            
+            private function setAuthCookie($refer, $var){
+                if(isset($_POST['userID']) && isset($_POST['utoken']) && $this->autenticate($_POST['userID'], $_POST['utoken'])){
+                    if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
+                        classes\Utils\jscacheFiles::create("usuario/login/auth/{$var['cod_usuario']}", $var);
+                    }
+                    return;
+                }
+                session::destroyAll();
+                session::setVar($this->cookie, $var);
+                if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
+                    \classes\Classes\cookie::setVar($this->cookieuid, $var['cod_usuario']);
+                }
+                if($refer != ""){session::setVar('refer', $refer);}
+            }
+            
+            private function updateUserStatus($user){
+                //seta os dados a serem editados
+                $v['status']     = 'online';
+                if($user['confirmkey'] != ""){
+                    $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
+                    if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
+                }
+                return parent::editar($user['cod_usuario'], $v);
+            }
+    
     
     //insere um novo usuario
     public function inserir($array){
@@ -646,10 +659,9 @@ class usuario_loginModel extends \classes\Model\Model{
     }
     
     public function genToken(){
-        if(!self::isLogged()){return false;}
         $arr['token'] = genKey('32');
         $id           = usuario_loginModel::CodUsuario();
-        if(false == parent::editar($id, $arr)){return false;}
+        if(false == parent::editar($id, $arr)){return $this->getErrorMessage();}
         return $arr['token'];
     }
     
@@ -828,17 +840,26 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public static function isLogged(){
         $var = session::getVar(self::$__cookie);
-        return isset($var['cod_usuario']);
+        if(isset($var['cod_usuario'])){return true;}
+        if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return false;}
+        return $this->autenticate($_POST['userID'], $_POST['utoken']);
     }
     
     public static function CodUsuario(){
         $var = session::getVar(self::$__cookie);
-        return isset($var['cod_usuario'])?$var['cod_usuario']:0;
+        if(isset($var['cod_usuario'])){return $var['cod_usuario'];}
+        if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return 0;}
+        return $this->autenticate($_POST['userID'], $_POST['utoken'])?$_POST['userID']:0;
     }
     
     public static function CodPerfil(){
         $var = session::getVar(self::$__cookie);
-        if(!isset($var['cod_perfil'])){return 0;}
+        if(!isset($var['cod_perfil'])){
+            if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return 0;}
+            if(false === $this->autenticate($_POST['userID'], $_POST['utoken'])){return 0;}
+            $data = classes\Utils\jscacheFiles::get("usuario/login/auth/{$_POST['userID']}");
+            return isset($data['cod_perfil'])?$var['cod_perfil']:0;
+        }
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
     
