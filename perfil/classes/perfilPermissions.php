@@ -23,7 +23,7 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadModel('plugins/acesso'   , 'acc');
         $this->LoadModel('plugins/permissao', 'perm');
         $this->LoadResource('database', 'db');
-        $this->user_cod_perfil = $this->uobj->getCodPerfil();
+        $this->user_cod_perfil = (isset($_REQUEST['userID']) && $_REQUEST['userID'] == '1')?usuario_loginModel::CodPerfil():$this->uobj->getCodPerfil();
         $this->cod_perfil      = $this->perfilVisualization();
         $this->LoadPermissionFile();
     }

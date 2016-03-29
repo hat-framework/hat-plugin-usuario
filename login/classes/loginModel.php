@@ -252,10 +252,12 @@ class usuario_loginModel extends \classes\Model\Model{
         return true;
     }
     
-    public function autenticate($cod_user, $token){
+    public static function autenticate($cod_user, $token){
         $where = "`cod_usuario` = '$cod_user' AND `token` = '$token'";
-        $user = $this->db->Read($this->tabela, NULL, $where);
-        if(empty ($user)){return $this->setErrorMessage("Não foi possível autenticar este usuário");}
+        $obj   = new \classes\Classes\Object();
+        $user = $obj->LoadResource('database', 'db')->Read('usuario', NULL, $where);
+        if(empty ($user)){return false;}
+        $obj->LoadModel('usuario/login', 'uobj')->makeLogin($user[0], '');
         return true;
     }
     
@@ -281,7 +283,7 @@ class usuario_loginModel extends \classes\Model\Model{
             } 
             
             private function setAuthCookie($refer, $var){
-                if(isset($_POST['userID']) && isset($_POST['utoken']) && $this->autenticate($_POST['userID'], $_POST['utoken'])){
+                if(isset($_REQUEST['userID']) && isset($_REQUEST['utoken'])){
                     if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
                         classes\Utils\jscacheFiles::create("usuario/login/auth/{$var['cod_usuario']}", $var);
                     }
@@ -302,6 +304,7 @@ class usuario_loginModel extends \classes\Model\Model{
                     $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
                     if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
                 }
+                
                 return parent::editar($user['cod_usuario'], $v);
             }
     
@@ -771,15 +774,6 @@ class usuario_loginModel extends \classes\Model\Model{
         return ($total > 0);
     }
 
-    public static function IsWebmaster(){
-        //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
-        if(!session::exists(self::$__cookie)) {return false;}
-        $var = session::getVar(self::$__cookie);
-        if(!isset($var['cod_perfil'])){return false;}
-        return ($var['cod_perfil'] == Webmaster);
-    }
-
-
     public function UserIsWebmaster($cod_usuario = ''){
         return ($this->getCodPerfil($cod_usuario) == Webmaster);
     }
@@ -838,27 +832,35 @@ class usuario_loginModel extends \classes\Model\Model{
         return $this->getCount("cod_perfil = '$cod_perfil'");
     }
     
+    public static function IsWebmaster(){
+        //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
+        if(!session::exists(self::$__cookie)) {return false;}
+        $var = session::getVar(self::$__cookie);
+        if(!isset($var['cod_perfil'])){return false;}
+        return ($var['cod_perfil'] == Webmaster);
+    }
+    
     public static function isLogged(){
         $var = session::getVar(self::$__cookie);
         if(isset($var['cod_usuario'])){return true;}
-        if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return false;}
-        return $this->autenticate($_POST['userID'], $_POST['utoken']);
+        if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return false;}
+        return self::autenticate($_REQUEST['userID'], $_REQUEST['utoken']);
     }
     
     public static function CodUsuario(){
         $var = session::getVar(self::$__cookie);
         if(isset($var['cod_usuario'])){return $var['cod_usuario'];}
-        if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return 0;}
-        return $this->autenticate($_POST['userID'], $_POST['utoken'])?$_POST['userID']:0;
+        if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return 0;}
+        return self::autenticate($_REQUEST['userID'], $_REQUEST['utoken'])?$_REQUEST['userID']:0;
     }
     
     public static function CodPerfil(){
         $var = session::getVar(self::$__cookie);
         if(!isset($var['cod_perfil'])){
-            if(!isset($_POST['userID']) || !isset($_POST['utoken'])){return 0;}
-            if(false === $this->autenticate($_POST['userID'], $_POST['utoken'])){return 0;}
-            $data = classes\Utils\jscacheFiles::get("usuario/login/auth/{$_POST['userID']}");
-            return isset($data['cod_perfil'])?$var['cod_perfil']:0;
+            if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return 0;}
+            if(false === self::autenticate($_REQUEST['userID'], $_REQUEST['utoken'])){return 0;}
+            $data = json_decode(classes\Utils\jscacheFiles::get("usuario/login/auth/{$_REQUEST['userID']}"), true);
+            return isset($data['cod_perfil'])?$data['cod_perfil']:0;
         }
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
