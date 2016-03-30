@@ -248,8 +248,9 @@ class loginController extends CController{
             $this->redirect(LINK);
         }
         
-        $var = explode('?code=', $_SERVER[REQUEST_URI]);
-        if(count($var) < 2) $this->redirect (LINK);
+        if(!isset($_SERVER['REQUEST_URI'])){return;}
+        $var = explode('?code=', $_SERVER['REQUEST_URI']);
+        if(count($var) < 2) {$this->redirect (LINK);}
         $code = end($var);
         $this->LoadClassFromPlugin('usuario/login/loginFacebook', 'lfb');
         $this->lfb->setUserModel($this->model);

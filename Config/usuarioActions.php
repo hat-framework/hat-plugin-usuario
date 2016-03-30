@@ -61,7 +61,7 @@ class usuarioActions extends Actions{
         ),
         'usuario/perfil/userpermissions' => array(
             'label' => 'Permissões do perfil', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_AC', 
+            'permission' => 'usuario_AC', 'noindex' => 's',
             'menu' => array(),
             'breadscrumb' => array('usuario/login/todos', 'usuario/perfil/index', 'usuario/perfil/formulario' ),
         ),
@@ -134,13 +134,13 @@ class usuarioActions extends Actions{
         
         'usuario/login/reenviar'=> array(
             'label' => 'Reenviar Confirmação', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array()
         ),
         
         'usuario/login/logout' => array(
             'label' => 'Sair do Sistema', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array()
         ),
         
@@ -152,7 +152,7 @@ class usuarioActions extends Actions{
         
         'usuario/login/facebook' => array(
             'label' => 'Login com Facebook', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array()
         ),
         
@@ -164,19 +164,19 @@ class usuarioActions extends Actions{
         
         'usuario/login/recuperar' => array(
             'label' => 'Recuperar Conta', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array('Voltar' => 'usuario/login/index')
         ),
         
         'usuario/login/confirmar' => array(
             'label' => 'Confirmar Conta', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array()
         ),
         
         'usuario/login/confirmrec' => array(
             'label' => 'Confirmar Recuperação', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
-            'permission' => 'usuario_FL', 
+            'permission' => 'usuario_FL', 'noindex' => 's',
             'menu' => array()
         ),
         'usuario/login/why_confirm' => array(
@@ -334,7 +334,7 @@ class usuarioActions extends Actions{
         ),
         'usuario/referencia/cadastro' => array(
             'label' => 'Cadastro Afiliado', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
-            'permission' => 'usuario_FL'
+            'permission' => 'usuario_FL', 'noindex' => 's',
         ),
         
         
@@ -379,7 +379,7 @@ class usuarioActions extends Actions{
         
         'usuario/tag/exportUserTags' => array(
             'label'       => 'Exportar Tags', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
-            'permission'  => 'usuario_GU', 'needcod' => false,
+            'permission'  => 'usuario_GU', 'needcod' => false,'noindex' => 's',
             'breadscrumb' => array('usuario/login/todos', 'usuario/tag/index')
         ),
         
@@ -419,7 +419,7 @@ class usuarioActions extends Actions{
         
         'usuario/promocod/aderir' => array(
             'label'       => 'Aderir a promoção', 'publico' => 's', 'default_yes' => 's','default_no' => 'n',
-            'permission'  => 'usuario_GU', 'needcod' => true,
+            'permission'  => 'usuario_GU', 'needcod' => true,'noindex' => 's',
         ),
         
         'usuario/promocod/promouser' => array(
