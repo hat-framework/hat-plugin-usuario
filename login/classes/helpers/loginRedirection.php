@@ -74,6 +74,7 @@ class loginRedirection extends classes\Classes\Object{
                 if(isset($_GET['gentoken']) && $_GET['gentoken'] == '1'){
                     $arr['token'] = $this->LoadModel('usuario/login', 'uobj')->genToken();
                     $arr['cod']   = usuario_loginModel::CodUsuario();
+                    $arr['user_name'] = $this->uobj->getUserNick($arr['cod']);
                 }
                 $link           = $this->html->getLink($page);
                 $arr['status']  = "1";
