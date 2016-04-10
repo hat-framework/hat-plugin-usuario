@@ -23,7 +23,7 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadModel('plugins/acesso'   , 'acc');
         $this->LoadModel('plugins/permissao', 'perm');
         $this->LoadResource('database', 'db');
-        $this->user_cod_perfil = $this->uobj->getCodPerfil();
+        $this->user_cod_perfil = (isset($_REQUEST['userID']) && $_REQUEST['userID'] == '1')?usuario_loginModel::CodPerfil():$this->uobj->getCodPerfil();
         $this->cod_perfil      = $this->perfilVisualization();
         $this->LoadPermissionFile();
     }
@@ -65,9 +65,11 @@ class perfilPermissions extends classes\Classes\Object{
         
         //se não possui a permissão
         if(false === in_array($action_name, $this->permissions)){
-            $last = $action_name[strlen($action_name)-1];
+            $i = strlen($action_name)-1;
+            if($i < 0){$i = 0;}
+            $last = $action_name[$i];
             if(!is_numeric($last)){return ($getPermissionString)?'n':false;}
-            $trueaction = substr($action_name, 0, strlen($action_name)-1);
+            $trueaction = substr($action_name, 0, $i);
             return $this->hasPermission($trueaction, $getPermissionString);
         }
         

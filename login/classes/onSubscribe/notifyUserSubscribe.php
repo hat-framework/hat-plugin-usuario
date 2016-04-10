@@ -33,10 +33,7 @@ class notifyUserSubscribe extends classes\Classes\Object{
                     $corpo   .= "<p>Você foi inscrito no site pelo usuário </b> $nome ($mail)</p><hr/>";
                     $msg      = "Usuário cadastrado com sucesso";
                 }
-                $corpo .= "<p>Confira seus dados de acesso e <b><a href='$link'>clique aqui</a></b> para concluir o cadastro no site</p>
-                   <p><b>dados de acesso:</b></p>
-                   <p>Login: ".$user['email']." </p>
-                   <p>Senha: ".$user['senha']." </p>
+                $corpo .= "<p>Para confirmar que foi você mesmo quem se cadastrou seu email no site <b><a href='$link'>clique aqui</a></b></p>
                    <hr/><p>Caso não consiga visualizar o link acima: $link</p>
                 ";
                 return $corpo;

@@ -69,16 +69,21 @@ class tagController extends classes\Controller\CController{
         $egoi     = $this->LoadResource('api', 'api')->LoadApiClass("emailMarketing/egoiLead");
         $all      = $this->LoadModel('usuario/tag/usertag', 'utag')->getAllTags($sync, $interval);
         $emails   = array();
-        
+        $error    = false;
         foreach($all as $a){
             if(trim($a['email']) == "" || trim($a['tag']) == ""){continue;}
             if($last != $a['tag']){
-                $this->doSaveTags($logname, $egoi, $lastcod, $last, $emails);
+                if(false === $this->doSaveTags($logname, $egoi, $lastcod, $last, $emails)){$error = true;}
                 $emails  = array();
                 $last    = $a['tag'];
                 $lastcod = $a['cod_tag'];
             }
             $emails[$a['cod_usuario']] = $a['email'];
+        }
+        
+        if($error == true){
+            $url = URL ."index.php?url=site/index/log&folder=/usuario/tag&file=/usuario/tag/export_ALL.html";
+            sendMailToUser("Falha ao exportar tags", "Verifique os detalhes do erro <a href='$url'>no log</a>", 1);
         }
         $this->display("");
     }
@@ -103,15 +108,26 @@ class tagController extends classes\Controller\CController{
                 classes\Utils\Log::save($logname, "<h3>Adicionando a tag {{$last}}</h3>");
                 $bool = $egoi->addUserTag($last, $emails);
                 if(false === $bool){
-                    classes\Utils\Log::save($logname, "Erro ao adicionar a tag {$last} <br/>". $egoi->getErrorMessage());
-                    foreach($emails as $cod_usuario => $email){
-                        classes\Utils\Log::save($logname, "Não adicionada ao email '{$email}'");
-                    }
-                    return;
+                    $msg = $egoi->getErrorMessage();
+                    classes\Utils\Log::save($logname, "<div class='alert alert-danger'>Erro ao adicionar a tag {$last} <br/>$msg</div>");
+                    $this->execArray($logname, $lastcod, $emails, false);
+                    return false;
                 }
-                foreach($emails as $cod_usuario => $email){
-                    classes\Utils\Log::save($logname, "Adicionando ao email {$email}");
-                    $this->utag->setSync($cod_usuario, $lastcod);
-                }
+                $this->execArray($logname, $lastcod, $emails, true);
+                return true;
             }
+            
+                    private function execArray($logname, $lastcod, $emails, $dosync){
+                        $i = 1;
+                        foreach($emails as $cod_usuario => $email){
+                            $link = URL."/usuario/login/show/$cod_usuario";
+                            $msg  = ($dosync)?
+                                    "$i - Adicionando ao email <a href='$link'>$email</a>":
+                                    "$i - Não adicionada ao email <a href='$link'>$email</a>";
+                            
+                            classes\Utils\Log::save($logname, $msg);
+                            $i++;
+                            if($dosync){$this->utag->setSync($cod_usuario, $lastcod);}
+                        }
+                    }
 }

@@ -210,6 +210,14 @@ class usuario_loginData extends \classes\Model\DataModel{
             'grid'        => true,
             'description' => "Digite o código promocional",
          ),
+        'token' => array(
+            'name'        => 'Token de acesso',
+            'type'        => 'varchar',
+            'especial'    => 'hide',
+            'size'        => '32',
+            'grid'        => true,
+            'description' => "",
+         ),
         
         'indicado' => array(
             'name'     => 'Quem Indicou',

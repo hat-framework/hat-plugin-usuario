@@ -252,38 +252,62 @@ class usuario_loginModel extends \classes\Model\Model{
         return true;
     }
     
+    public static function autenticate($cod_user, $token){
+        $where = "`cod_usuario` = '$cod_user' AND `token` = '$token'";
+        $obj   = new \classes\Classes\Object();
+        $user = $obj->LoadResource('database', 'db')->Read('usuario', NULL, $where);
+        if(empty ($user)){return false;}
+        $obj->LoadModel('usuario/login', 'uobj')->makeLogin($user[0], '');
+        return true;
+    }
+    
     private function makeLogin($user, $refer = ''){
-        if($user['status'] == 'bloqueado'){
-            throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");
-            return false;
-        }
+        if($user['status'] == 'bloqueado'){throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");}
         if(empty($user)){return false;}
         
         //seta os dados a serem salvos na sessão
-        $var['cod_usuario']            = $user['cod_usuario'];
-        $var['email']                  = $user['email'];
-        $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
-        $var['user_name']              = $user['user_name'];
-        $var['user_cargo']             = $user['user_cargo'];
-        $var['cod_perfil']             = $user['cod_perfil'];
-        $var['confirmed']              = @$user['confirmed'];
-        
-        session::destroyAll();
-        session::setVar($this->cookie, $var);
-        if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
-            \classes\Classes\cookie::setVar($this->cookieuid, $var['cod_usuario']);
-        }
-        if($refer != ""){session::setVar('refer', $refer);}
-        
-        
-        //seta os dados a serem editados
-        $v['status']     = 'online';
-        if($user['confirmkey'] != ""){
-            $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
-            if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
-        }
-        parent::editar($user['cod_usuario'], $v);
+        $var = $this->getAuthArray($user);
+        $this->setAuthCookie($refer, $var);
+        return $this->updateUserStatus($user);
     }
+    
+            private function getAuthArray($user){
+                $var['cod_usuario']            = $user['cod_usuario'];
+                $var['email']                  = $user['email'];
+                $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
+                $var['user_name']              = $user['user_name'];
+                $var['user_cargo']             = $user['user_cargo'];
+                $var['cod_perfil']             = $user['cod_perfil'];
+                $var['confirmed']              = isset($user['confirmed'])?$user['confirmed']:"";
+                return $var;
+            } 
+            
+            private function setAuthCookie($refer, $var){
+                if(isset($_REQUEST['userID']) && isset($_REQUEST['utoken'])){
+                    if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
+                        classes\Utils\jscacheFiles::create("usuario/login/auth/{$var['cod_usuario']}", $var);
+                    }
+                    return;
+                }
+                session::destroyAll();
+                session::setVar($this->cookie, $var);
+                if(is_numeric($var['cod_usuario']) && $var['cod_usuario'] > 0){
+                    \classes\Classes\cookie::setVar($this->cookieuid, $var['cod_usuario']);
+                }
+                if($refer != ""){session::setVar('refer', $refer);}
+            }
+            
+            private function updateUserStatus($user){
+                //seta os dados a serem editados
+                $v['status']     = 'online';
+                if($user['confirmkey'] != ""){
+                    $recsenha =  \classes\Classes\crypt::decrypt_camp($user['confirmkey']);
+                    if($recsenha != $user['confirmkey']) {$v['confirmkey'] = "FUNC_NULL";}
+                }
+                
+                return parent::editar($user['cod_usuario'], $v);
+            }
+    
     
     //insere um novo usuario
     public function inserir($array){
@@ -637,6 +661,13 @@ class usuario_loginModel extends \classes\Model\Model{
         return $bool;
     }
     
+    public function genToken(){
+        $arr['token'] = genKey('32');
+        $id           = usuario_loginModel::CodUsuario();
+        if(false == parent::editar($id, $arr)){return $this->getErrorMessage();}
+        return $arr['token'];
+    }
+    
     public function resend($login){
     	
     	//procura o usuario no banco de dados
@@ -743,15 +774,6 @@ class usuario_loginModel extends \classes\Model\Model{
         return ($total > 0);
     }
 
-    public static function IsWebmaster(){
-        //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
-        if(!session::exists(self::$__cookie)) {return false;}
-        $var = session::getVar(self::$__cookie);
-        if(!isset($var['cod_perfil'])){return false;}
-        return ($var['cod_perfil'] == Webmaster);
-    }
-
-
     public function UserIsWebmaster($cod_usuario = ''){
         return ($this->getCodPerfil($cod_usuario) == Webmaster);
     }
@@ -810,19 +832,36 @@ class usuario_loginModel extends \classes\Model\Model{
         return $this->getCount("cod_perfil = '$cod_perfil'");
     }
     
+    public static function IsWebmaster(){
+        //usuários deslogados não são webmaster. Isto evita lançamento de exceção quando db não instalado
+        if(!session::exists(self::$__cookie)) {return false;}
+        $var = session::getVar(self::$__cookie);
+        if(!isset($var['cod_perfil'])){return false;}
+        return ($var['cod_perfil'] == Webmaster);
+    }
+    
     public static function isLogged(){
         $var = session::getVar(self::$__cookie);
-        return isset($var['cod_usuario']);
+        if(isset($var['cod_usuario'])){return true;}
+        if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return false;}
+        return self::autenticate($_REQUEST['userID'], $_REQUEST['utoken']);
     }
     
     public static function CodUsuario(){
         $var = session::getVar(self::$__cookie);
-        return isset($var['cod_usuario'])?$var['cod_usuario']:0;
+        if(isset($var['cod_usuario'])){return $var['cod_usuario'];}
+        if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return 0;}
+        return self::autenticate($_REQUEST['userID'], $_REQUEST['utoken'])?$_REQUEST['userID']:0;
     }
     
     public static function CodPerfil(){
         $var = session::getVar(self::$__cookie);
-        if(!isset($var['cod_perfil'])){return 0;}
+        if(!isset($var['cod_perfil'])){
+            if(!isset($_REQUEST['userID']) || !isset($_REQUEST['utoken'])){return 0;}
+            if(false === self::autenticate($_REQUEST['userID'], $_REQUEST['utoken'])){return 0;}
+            $data = json_decode(classes\Utils\jscacheFiles::get("usuario/login/auth/{$_REQUEST['userID']}"), true);
+            return isset($data['cod_perfil'])?$data['cod_perfil']:0;
+        }
         return (isset($_GET['_perfil']) && $var['cod_perfil'] == Webmaster)?$_GET['_perfil']:$var['cod_perfil'];
     }
     
