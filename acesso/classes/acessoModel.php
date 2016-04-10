@@ -21,6 +21,7 @@ class usuario_acessoModel extends \classes\Model\Model{
         if($key !== ""){$log['key'] = $key;}
         
         $this->findGroups($log, $action, $loggroup);
+        $this->findUtm($log);
         if(false === $this->db->Insert($this->tabela, $log)){
             $logname = "usuario/usuario/u$cod_usuario/$logname";
             \classes\Utils\Log::save('usuario/acesso/erro', "<hr/>Erro ao salvar log de usuário!");
@@ -86,7 +87,33 @@ class usuario_acessoModel extends \classes\Model\Model{
                             if(strstr($nm, 'index.php') || strstr($nm, $action)){continue;}
                             $loggroup[] = $nm;
                         }
-
+                    }
+                    
+            private function findUtm(&$array){
+                if(!is_array($array)){return"";}
+                $founded = false;
+                $keys    = array('utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_expid', 'utm_referrer');
+                foreach($keys as $k){$array[$k] = "";}
+                foreach($array as $key => $val){
+                    if(strstr($val, "utm_") === false){continue;}
+                    $e = explode('=', $val);
+                    foreach($keys as $k){
+                        if(true === $this->filterUtm($k, $key, $val, $e, $founded, $array)){break;}
+                    }
+                }
+                return $founded;
+            }
+            
+                    private function filterUtm($find, $key, $val, $e, &$founded, &$array){
+                        if(strstr($val, $find) !== false){
+                            if(!isset($e[1])){die("adsfasd");}
+                            $array[$find] = $e[1];
+                            $founded      = true;
+                            $array[$key]  = "";
+                            return true;
+                        }
+                        if(!isset($array[$find])){$array[$find] = "";}
+                        return false;
                     }
     
     public function getChartData($qtd = 10, $cod_usuario = '') {
@@ -196,6 +223,47 @@ class usuario_acessoModel extends \classes\Model\Model{
         }
         return $this->importDataFromArray($out);
     }
+    
+    public function migrateUtm(){
+        $limit = 1000;
+        $where = $this->getWhere();
+        $count = $this->getCount($where);
+        $pages = ceil($count/$limit);
+        $out   = array();
+        $keys  = array('cod', 'group8','group9','group10','group11','group12','group13','group14','group15');
+        
+        $i     = 0;
+        while($i < $pages){
+            $arr = $this->selecionar($keys, $where, $limit, $i*$limit,'cod ASC');
+            foreach($arr as $a){
+                if(false == $this->findUtm($a)){continue;}
+                $out[] = $a;
+            }
+            if(count($out) < $limit){continue;}
+            if(false == $this->doImportData($out, $limit)){
+                $this->db->printSentenca();
+                die($this->db->getErrorMessage());
+            }
+        }
+        if(empty($out)){return;}
+        return $this->importDataFromArray($out);
+    }
+    
+            private function doImportData($out, $limit){
+                if(count($out) < $limit){return true;}
+                return $this->importDataFromArray($out);
+            }
+    
+            private function getWhere(){
+                $wh = array();
+                $i  = 8;
+                while($i <= 15){
+                    $wh[] = "group$i LIKE '%utm_%'";
+                    $i++;
+                }
+                $where = implode($wh, " OR ");
+                return "group8 != '' AND ($where)";
+            }
     
     public function dropitem($action) {
         $cod_usuario = usuario_loginModel::CodUsuario();

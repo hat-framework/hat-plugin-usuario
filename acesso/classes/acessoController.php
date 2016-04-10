@@ -9,7 +9,8 @@ class acessoController extends CController{
     }
     
     public function migrate(){
-        $this->model->migrateGroups();
+        //$this->model->migrateGroups();
+        $this->model->migrateUtm();
         print_r($this->model->getMessages());
     }
     
