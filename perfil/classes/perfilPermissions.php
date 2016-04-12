@@ -67,6 +67,7 @@ class perfilPermissions extends classes\Classes\Object{
         if(false === in_array($action_name, $this->permissions)){
             $i = strlen($action_name)-1;
             if($i < 0){$i = 0;}
+            if(strlen($action_name) == 0 || !isset($action_name[$i])){return false;}
             $last = $action_name[$i];
             if(!is_numeric($last)){return ($getPermissionString)?'n':false;}
             $trueaction = substr($action_name, 0, $i);
