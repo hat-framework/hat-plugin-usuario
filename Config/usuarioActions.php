@@ -228,6 +228,12 @@ class usuarioActions extends Actions{
             'breadscrumb' => array('usuario/login/todos','usuario/login/report')
         ),
         
+        'usuario/login/utm'=> array(
+            'label' => 'Campanhas de marketing', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
+            'permission' => 'usuario_analisar', 
+            'breadscrumb' => array('usuario/login/todos','usuario/login/report','usuario/login/show','usuario/login/utm')
+        ),
+        
         'usuario/acesso/index'=> array(
             'label' => 'Relatório Geral', 'publico' => 'n', 'default_yes' => 's','default_no' => 'n',
             'permission' => 'usuario_analisar', 
@@ -268,7 +274,8 @@ class usuarioActions extends Actions{
             'menu' => array(
                 'Visualizar Log' => "usuario/login/seelog",
                 'Dados Extras'   => "usuario/login/seedata",
-                'Opções' => array('usuario/login/edit', 'usuario/login/apagar')
+                'Utm Data'       => "usuario/login/utm",
+                'Opções'         => array('usuario/login/edit', 'usuario/login/apagar')
              ),
             'breadscrumb' => array('usuario/login/todos', 'usuario/login/todos', 'usuario/login/show')
         ),

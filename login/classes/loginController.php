@@ -62,6 +62,19 @@ class loginController extends CController{
         parent::show($display, $link);
     }
     
+    public function utm(){
+        $cod = $this->cod;
+        if($cod == ""){die("codigo de usuário não informado!");}
+        $where = "cod_usuario='$cod' AND (utm_source != '' OR utm_medium != '' OR utm_campaign != '')";
+        $arr   = array('cod','action','utm_source','utm_medium','utm_campaign','utm_term','utm_content','data');
+        $out   = $this->LoadModel('usuario/acesso', 'acc')->selecionar($arr, $where, '', '', "data DESC");
+        $this->registerVar('item'        , $out);
+        $this->registerVar("show_links"  , '');
+        $this->registerVar("component"   , 'usuario/acesso');
+        $this->registerVar("comp_action" , 'listInTable');
+        $this->display("admin/auto/areacliente/page");
+    }
+    
     public function inserir(){
         if(!empty ($_POST)){
             $status = $this->model->inserir($_POST);
