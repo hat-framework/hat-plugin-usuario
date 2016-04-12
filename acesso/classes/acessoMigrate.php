@@ -3,7 +3,7 @@
 class acessoMigrate extends classes\Classes\Object{
     
     public function __construct() {
-        $this->LoadModel('minhaconta/acesso', 'acc');
+        $this->LoadModel('usuario/acesso', 'acc');
     }
     
     public function migrateUtm(){
