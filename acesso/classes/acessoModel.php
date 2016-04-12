@@ -203,14 +203,6 @@ class usuario_acessoModel extends \classes\Model\Model{
          );
     }
     
-    public function migrateGroups(){
-        $this->LoadClassFromPlugin('usuario/acesso/acessoMigrate', 'accm')->migrateGroups();
-    }
-    
-    public function migrateUtm(){
-        $this->LoadClassFromPlugin('usuario/acesso/acessoMigrate', 'accm')->migrateUtm();
-    }
-            
     public function dropitem($action) {
         $cod_usuario = usuario_loginModel::CodUsuario();
         return $this->db->Delete($this->tabela, "action='$action' AND cod_usuario='$cod_usuario'");

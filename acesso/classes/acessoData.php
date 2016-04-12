@@ -135,6 +135,52 @@ class usuario_acessoData extends \classes\Model\DataModel{
 	    'display'  => true,
         ),
         
+        
+        'utm_source' => array(
+	    'name'     => 'Utm Source',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_medium' => array(
+	    'name'     => 'Utml Medium',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_term' => array(
+	    'name'     => 'Utm Term',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_content' => array(
+	    'name'     => 'Utm Content',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_campaign' => array(
+	    'name'     => 'Utm Campaing',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_expid' => array(
+	    'name'     => 'Utm Expid',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        'utm_referrer' => array(
+	    'name'     => 'Utm Referrer',
+	    'type'     => 'varchar',
+	    'size'     => '128',
+	    'display'  => true,
+        ),
+        
+        
+        
         'key' => array(
 	    'name'     => 'Track Key',
 	    'type'     => 'varchar',
@@ -170,8 +216,7 @@ class usuario_acessoData extends \classes\Model\DataModel{
         
         'action' => array(
 	    'name'     => 'Action',
-	    'type'     => 'varchar',
-	    'size'     => '128',
+	    'type'     => 'text',
 	    'display'  => true,
         ),
         
