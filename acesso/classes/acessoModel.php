@@ -13,7 +13,7 @@ class usuario_acessoModel extends \classes\Model\Model{
         
         $this->findGroups($log, $action, $loggroup);
         $this->getUtm($log);
-        return $this->doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg);
+        return $this->doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg, $logname);
     }
     
             public function getCookieKey($cod_usuario){
