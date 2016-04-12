@@ -8,27 +8,12 @@ class usuario_acessoModel extends \classes\Model\Model{
         $gr     = array_shift($loggroup);
         $action = substr($action_str, 1, strlen($action_str));
         if($action == 'notificacao/notifycount/load'){return true;}
-        $log = array(
-            'logname'     => $logname,
-            'cod_usuario' => $cod_usuario,
-            'cod_perfil'  => $cod_perfil,
-            'group0'      => $gr,
-            'action'      => $action,
-            'ip'          => $ip,
-            'refer'       => $refer,
-            'msg'         => $msg,
-        );
+        $log = $this->getBaseArray($logname, $cod_usuario, $cod_perfil, $gr, $action, $ip, $refer, $msg);
         if($key !== ""){$log['key'] = $key;}
         
         $this->findGroups($log, $action, $loggroup);
-        if(false === $this->db->Insert($this->tabela, $log)){
-            $logname = "usuario/usuario/u$cod_usuario/$logname";
-            \classes\Utils\Log::save('usuario/acesso/erro', "<hr/>Erro ao salvar log de usuário!");
-            \classes\Utils\Log::save('usuario/acesso/erro', $this->db->getMessages());
-            \classes\Utils\Log::save('usuario/acesso/erro', "$logname, '$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';<hr/>");
-            \classes\Utils\Log::save($logname, ",'$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");
-        }
-        return true;
+        $this->getUtm($log);
+        return $this->doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg);
     }
     
             public function getCookieKey($cod_usuario){
@@ -40,13 +25,10 @@ class usuario_acessoModel extends \classes\Model\Model{
                 }else{
                     if($key != ""){
                         $this->cookieTrackUser($cod_usuario, $key);
-                        //$this->db->printSentenca();
-                        //die('fooo');
                         $key = "";
                     }
                     \classes\Classes\cookie::destroy($cookiename);
                 }
-                //echoBr($key);
                 return $key;
             }
 
@@ -54,7 +36,20 @@ class usuario_acessoModel extends \classes\Model\Model{
                         $post = array('cod_usuario' => $cod_usuario, 'key' => "FUNC_NULL");
                         return parent::editar($key, $post, 'key');
                     }
-    
+                    
+            private function getBaseArray($logname, $cod_usuario, $cod_perfil, $gr, $action, $ip, $refer, $msg){
+                return array(
+                    'logname'     => $logname,
+                    'cod_usuario' => $cod_usuario,
+                    'cod_perfil'  => $cod_perfil,
+                    'group0'      => $gr,
+                    'action'      => $action,
+                    'ip'          => $ip,
+                    'refer'       => $refer,
+                    'msg'         => $msg,
+                );
+            }
+            
             private function findGroups(&$log, $action, $loggroup){
                 $this->captureGet($action, $loggroup);
                 $groups = explode("/", $action);
@@ -65,12 +60,12 @@ class usuario_acessoModel extends \classes\Model\Model{
                     $log["group$i"] = $gr;
                     if($i == 7){break;}
                 }
-                $i = 7;
+                $i2 = 7;
                 foreach($loggroup as $gr){
                     if(trim($gr) === ""){continue;}
-                    $i++;
-                    $log["group$i"] = $gr;
-                    if($i == 15)break;
+                    $i2++;
+                    $log["group$i2"] = $gr;
+                    if($i2 == 15){break;}
                 }
             }
 
@@ -86,8 +81,37 @@ class usuario_acessoModel extends \classes\Model\Model{
                             if(strstr($nm, 'index.php') || strstr($nm, $action)){continue;}
                             $loggroup[] = $nm;
                         }
-
                     }
+                    
+            private function getUtm(&$array){
+                if(!is_array($array)){return"";}
+                $founded = false;
+                $keys    = array('utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_expid', 'utm_referrer');
+                foreach($keys as $k){$array[$k] = "";}
+                if(!isset($array['action'])){return;}
+                $e = explode("?", $array['action']);
+                if(count($e) < 2){return;}
+                $val = $e[1];
+                $e2 = explode("&", $val);
+                foreach($e2 as $v){
+                    $e3 = explode('=', $v);
+                    if(!isset($e3[1])){continue;}
+                    if(!in_array($e3[0], $keys)){continue;}
+                    $array[$e3[0]] = $e3[1];
+                }
+                return $founded;
+            }
+            
+            private function doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg){
+                if(false === $this->db->Insert($this->tabela, $log)){
+                    $logname = "usuario/usuario/u$cod_usuario/$logname";
+                    \classes\Utils\Log::save('usuario/acesso/erro', "<hr/>Erro ao salvar log de usuário!");
+                    \classes\Utils\Log::save('usuario/acesso/erro', $this->db->getMessages());
+                    \classes\Utils\Log::save('usuario/acesso/erro', "$logname, '$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';<hr/>");
+                    \classes\Utils\Log::save($logname, ",'$cod_usuario','$cod_perfil','$action','$ip','$refer', '$msg';");
+                }
+                return true;
+            }
     
     public function getChartData($qtd = 10, $cod_usuario = '') {
         $where = ($cod_usuario == "")?"1":"cod_usuario='$cod_usuario'";
@@ -111,7 +135,7 @@ class usuario_acessoModel extends \classes\Model\Model{
     }
     
     public function getChartGroupData($grupos, $qtd = 10, $cod_usuario = ''){
-        if(empty($grupos)) return array();
+        if(empty($grupos)) {return array();}
         foreach($grupos as $grupo){
             $where[] = "loggroup LIKE '%$grupo%'";
         }
@@ -161,8 +185,8 @@ class usuario_acessoModel extends \classes\Model\Model{
     }
     
     
-    private function getDailyAccess($group = "", $where = ""){
-        $where = ($where === "")?"":" AND ($where)";
+    private function getDailyAccess($group = "", $wh = ""){
+        $where = ($where === "")?"":" AND ($wh)";
         $gr    = ($group === "")?"":", $group";
         $arr = array(
             "DATE(data) as data", 
@@ -180,23 +204,13 @@ class usuario_acessoModel extends \classes\Model\Model{
     }
     
     public function migrateGroups(){
-        $arr = $this->selecionar(array());
-        $out = array();
-        foreach($arr as $a){
-            $temp     = $a;
-            $i        = 0;
-            $groups   = explode('/',$a['action']);
-            foreach($groups as $group){
-                if(trim($group) == ""){continue;}
-                $i++;
-                if($i == 10){break;}
-                $temp["group$i"] = $group;
-            }
-            $out[] = $temp;
-        }
-        return $this->importDataFromArray($out);
+        $this->LoadClassFromPlugin('usuario/acesso/acessoMigrate', 'accm')->migrateGroups();
     }
     
+    public function migrateUtm(){
+        $this->LoadClassFromPlugin('usuario/acesso/acessoMigrate', 'accm')->migrateUtm();
+    }
+            
     public function dropitem($action) {
         $cod_usuario = usuario_loginModel::CodUsuario();
         return $this->db->Delete($this->tabela, "action='$action' AND cod_usuario='$cod_usuario'");
