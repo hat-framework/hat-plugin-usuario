@@ -17,6 +17,7 @@ class acessoMigrate extends classes\Classes\Object{
         $i     = 0;
         while($i < $pages){
             $arr = $this->acc->selecionar($keys, $where, $limit, $i*$limit,'cod ASC');
+            $i++;
             foreach($arr as $a){
                 if(false == $this->findUtm($a)){continue;}
                 $out[] = $a;
