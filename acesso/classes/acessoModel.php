@@ -102,7 +102,7 @@ class usuario_acessoModel extends \classes\Model\Model{
                 return $founded;
             }
             
-            private function doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg){
+            private function doImport($log,$cod_usuario,$cod_perfil,$action,$ip,$refer,$msg, $logname){
                 if(false === $this->db->Insert($this->tabela, $log)){
                     $logname = "usuario/usuario/u$cod_usuario/$logname";
                     \classes\Utils\Log::save('usuario/acesso/erro', "<hr/>Erro ao salvar log de usuário!");
