@@ -45,6 +45,19 @@ class searchUserWidget extends \classes\Component\widget{
 	    ),
         ),
         
+        'utms' => array(
+            'name'     => 'Pesquisa por Utms',
+            'type'     => 'enum',
+            'especial' => 'multi_enum',
+            'options'  => array(
+                'utm_source'   => "Utm Source",
+                'utm_medium'   => "Utm Medium",
+                'utm_campaign' => "Utm Campaign",
+                'utm_term'     => "Utm Term",
+                'utm_content'  => "Utm Content",
+            )
+       	 ),
+        
         'status' => array(
             'name'     => 'Status',
             'type'     => 'enum',

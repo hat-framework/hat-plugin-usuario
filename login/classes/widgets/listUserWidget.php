@@ -20,7 +20,10 @@ class listUserWidget extends \classes\Component\widget{
         $this->tb = $this->LoadModel('usuario/login', 'uobj')->getTable();
         $search   = filter_input(INPUT_GET, 'widget');
         if($search !== "listUserWidget"){return;}
-        $this->filter_camp("user_string"        , array("cod_usuario","user_name", "user_cargo", "email"), "LIKE");
+        if(false === $this->utms()){
+            $data = array("cod_usuario","user_name", "user_cargo", "email");
+            $this->filter_camp("user_string", $data, "LIKE");
+        }
         $this->filter_camp("cod_perfil"         , array("cod_perfil"));
         $this->filter_camp("confirmed"          , array("confirmed"));
         $this->filter_camp("status"             , array("status"));
@@ -90,5 +93,27 @@ class listUserWidget extends \classes\Component\widget{
             $arr[] = "$tbn.cod_tag = '$e'";
         }
         $this->wh[] = implode(" AND ", $arr);
+    }
+    
+    private function utms(){
+        $utms   = isset($_GET['utms'])?$_GET['utms']:'';
+        $string = isset($_GET['user_string'])?$_GET['user_string']:'';
+        
+        if(trim($utms) === "" || trim($string) == ""){return false;}
+        
+        $this->LoadModel('usuario/acesso', 'acc');
+        $str = array();
+        foreach($utms as $utm){
+            $str[] = "$utm='$string'";
+        }
+        
+        $or  = implode(" OR ", $str);
+        $var = $this->acc->selecionar(array("DISTINCT cod_usuario"), $or);
+        $out = array();
+        foreach($var as $v){$out[] = $v['cod_usuario'];}
+        
+        $in = implode("','", $out);
+        $this->wh[] = "usuario.cod_usuario IN('$in')";
+        return true;
     }
 }
