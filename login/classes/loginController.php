@@ -64,7 +64,10 @@ class loginController extends CController{
     
     public function utm(){
         $cod = $this->cod;
-        if($cod == ""){die("codigo de usuário não informado!");}
+        if($cod == ""){
+            $cod = array_shift($this->vars);
+            if($cod == ""){die("codigo de usuário não informado!");}
+        }
         $where = "cod_usuario='$cod' AND (utm_source != '' OR utm_medium != '' OR utm_campaign != '')";
         $arr   = array('cod','action','utm_source','utm_medium','utm_campaign','utm_term','utm_content','data');
         $out   = $this->LoadModel('usuario/acesso', 'acc')->selecionar($arr, $where, '', '', "data DESC");

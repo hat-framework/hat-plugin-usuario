@@ -165,7 +165,7 @@ class usuarioActions extends Actions{
         'usuario/login/recuperar' => array(
             'label' => 'Recuperar Conta', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
             'permission' => 'usuario_FL', 'noindex' => 's',
-            'menu' => array('Voltar' => 'usuario/login/index')
+            'breadscrumb' => array('usuario/login/index','usuario/login/todos')
         ),
         
         'usuario/login/confirmar' => array(
