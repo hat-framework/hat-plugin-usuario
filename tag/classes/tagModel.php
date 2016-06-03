@@ -10,6 +10,9 @@ class usuario_tagModel extends \classes\Model\Model{
             $data    = $tagname;
             $tagname = $tagname['tag'];
             $this->groupid($data);
+        }else{
+            $data['taggroup'] = 'Manual Tag';
+            $this->groupid($data);
         }
         $tag  = $this->antinjection($tagname);
         if(trim($tag) === ""){return "";}
