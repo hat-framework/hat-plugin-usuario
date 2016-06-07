@@ -7,7 +7,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
             'menuid' => 'usuarios',
             'menu'   => 'Usuários',
             'url'    => 'usuario/login/todos',
-            'icon'   => 'glyphicon glyphicon-user',
+            'icon'   => 'fa fa-users',
             'ordem'  => '10',
         ),
         
@@ -55,7 +55,7 @@ class usuarioConfigurations extends \classes\Classes\Options{
                 'menuid' => 'report',
                 'menu'   => 'Relatórios',
                 'pai'    => 'usuarios',
-                'icon'   => 'glyphicon glyphicon-tasks',
+                'icon'   => 'fa fa-tasks',
                 'url'    => 'usuario/login/report',
             ),
         
