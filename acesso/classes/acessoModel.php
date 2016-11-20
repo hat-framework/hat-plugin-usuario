@@ -186,7 +186,7 @@ class usuario_acessoModel extends \classes\Model\Model{
     
     
     private function getDailyAccess($group = "", $wh = ""){
-        $where = ($where === "")?"":" AND ($wh)";
+        $where = ($wh    === "")?"":" AND ($wh)";
         $gr    = ($group === "")?"":", $group";
         $arr = array(
             "DATE(data) as data", 
