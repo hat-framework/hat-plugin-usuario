@@ -41,6 +41,7 @@ class loginRedirection extends classes\Classes\Object{
                 //se não tem página de boas vindas
                 if(!$this->perf->hasPermission($this->welcomePage)){return;}
 
+                if(strstr($this->welcomePage, "/admin")){return $this->doRedirection("install.php?url=webmaster");}
                 //redireciona o usuário para a página de boas vindas
                 $this->doRedirection($this->welcomePage);
             }
