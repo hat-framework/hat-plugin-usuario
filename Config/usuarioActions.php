@@ -144,6 +144,13 @@ class usuarioActions extends Actions{
             'menu' => array()
         ),
         
+        'usuario/login/logado' => array(
+            'label' => 'Meu Perfil', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
+            'permission' => 'usuario_FL', 'noindex' => 's',
+            'menu' => array()
+        ),
+        
+        
         'usuario/login/index' => array(
             'label' => 'Login', 'publico' => 's', 'default_yes' => 's','default_no' => 's',
             'permission' => 'usuario_FL', 

@@ -25,6 +25,11 @@ class perfilPermissions extends classes\Classes\Object{
         $this->LoadResource('database', 'db');
         $this->user_cod_perfil = (isset($_REQUEST['userID']) && $_REQUEST['userID'] == '1')?usuario_loginModel::CodPerfil():$this->uobj->getCodPerfil();
         $this->cod_perfil      = $this->perfilVisualization();
+        if(is_array($this->cod_perfil)){
+            $temp = array_keys($this->cod_perfil);
+            $this->cod_perfil = array_shift($temp);
+        }
+        $this->cod_usuario = usuario_loginModel::CodUsuario();
         $this->LoadPermissionFile();
     }
     
@@ -33,19 +38,31 @@ class perfilPermissions extends classes\Classes\Object{
              * @throws classes\Exceptions\AcessBloquedException (if permission's file doesn't exists and system cannot create)
              * @author Thom <thom@hat-framework.com>
              */
-            private function LoadPermissionFile(){
+            private function LoadPermissionFile($forceRemount = false){
                 //Load permissions from file
-                $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
-                if(!empty($this->permissions)){return;}
-
+                if(!$forceRemount){
+                    $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
+                    if(!empty($this->permissions)){return;}
+                }
                 //if file doesn't exists or if permissions not setted, create permissions file
                 $this->LoadModel('plugins/plug', 'plug')->mountPerfilPermissions();
                 $this->permissions = json_decode(classes\Utils\cache::get("usuario/perfil/p$this->cod_perfil", 'php'));
 
                 //if permission file doesn't exists, throw exception
                 if(empty($this->permissions)){
-                    sendEmailToWebmasters("Permissão $this->cod_perfil", "Perfil de usuário '$this->cod_perfil' sem permissão");
-                    throw new classes\Exceptions\AcessBloquedException("Este perfil de usuário não possui permissão de acessar o sistema");
+                    $url = $_SERVER['HTTP_HOST'];
+                    sendEmailToWebmasters("Permissão $this->cod_perfil", "Perfil de usuário '$this->cod_perfil' sem permissão. "
+                            . "Usuário que tentou acessar: <a href='$url/usuario/login/show/$this->cod_usuario'>$this->cod_usuario</a>");
+                    if($_GET['url'] == 'usuario/login/logout'){
+                        $this->uobj->Logout();
+                        throw new classes\Exceptions\AcessBloquedException(
+                            "Você não pode acessar o sistema. "
+                            . "Pode ser algum problema temporário com as permissões"
+                            . " ou algum administrador bloqueou o seu acesso. "
+                            . "Tente novamente mais tarde. <hr> Recarregue a página para deslogar.");
+                    }else{
+                        Redirect('usuario/login/logout');
+                    }
                 }
             }
     
@@ -56,7 +73,14 @@ class perfilPermissions extends classes\Classes\Object{
      * @return mixed string if getPermissionString === true, boolena otherwise
      * @author Thom <thom@hat-framework.com>
      */
-    public function hasPermission(&$action_name, $getPermissionString){
+    public function hasPermission(&$action_name, $getPermissionString, $changedPermission = false){
+        //atualiza as permissoes
+        if($changedPermission){
+            $this->uobj->makeLogin($this->cod_usuario);
+            $this->LoadPermissionFile(true);
+//            $this->uobj->permissoes_alteradas_done();
+        }
+        
         //corrige o nome da action
         $this->act->prepare_action($action_name);
         

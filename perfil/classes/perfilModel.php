@@ -208,9 +208,9 @@ class usuario_perfilModel extends \classes\Model\Model{
      * Retorna true caso o usuário tenha permissão de acessar o sistema,
      * false caso contrário
      */
-    public function hasPermission(&$action_name, $getPermissionString = false){
+    public function hasPermission(&$action_name, $getPermissionString = false, $updatedPermission = false){
         $this->LoadClassFromPlugin('usuario/perfil/perfilPermissions', 'pp');
-        return $this->pp->hasPermission($action_name, $getPermissionString);
+        return $this->pp->hasPermission($action_name, $getPermissionString, $updatedPermission);
     }
     
     private function getPath($id){

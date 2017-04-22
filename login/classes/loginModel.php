@@ -261,7 +261,8 @@ class usuario_loginModel extends \classes\Model\Model{
         return true;
     }
     
-    private function makeLogin($user, $refer = ''){
+    public function makeLogin($user, $refer = ''){
+        if(is_numeric($user)){$user = $this->getItem($user);}
         if($user['status'] == 'bloqueado'){throw new AcessDeniedException("O seu acesso foi bloquado por um administrador do sistema!");}
         if(empty($user)){return false;}
         
@@ -277,7 +278,7 @@ class usuario_loginModel extends \classes\Model\Model{
                 $var['usuario_login_tutorial'] = $user['usuario_login_tutorial'];
                 $var['user_name']              = $user['user_name'];
                 $var['user_cargo']             = $user['user_cargo'];
-                $var['cod_perfil']             = $user['cod_perfil'];
+                $var['cod_perfil']             = (isset($user['__cod_perfil'])?$user['__cod_perfil']:$user['cod_perfil']);
                 $var['confirmed']              = isset($user['confirmed'])?$user['confirmed']:"";
                 return $var;
             } 
@@ -898,6 +899,11 @@ class usuario_loginModel extends \classes\Model\Model{
     
     public function permissoes_alteradas($cod_perfil){
         return parent::editar($cod_perfil, array('update_permission' => 's'), 'cod_perfil');
+    }
+    
+    public function permissoes_alteradas_done(){
+        $cod_usuario = self::CodUsuario();
+        return parent::editar($cod_usuario, array('update_permission' => 'n'));
     }
     
     public function has_permission_alterada($cod_usuario = ""){
